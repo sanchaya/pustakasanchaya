@@ -1,14 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Pustaka</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? yield(:title) : "Pustaka" %></title>
   <%= csrf_meta_tags %>
-</head>
-<body>
-
-<%= yield %>
-
-</body>
-</html>
+  <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+      <![endif]-->
+      <%= stylesheet_link_tag "application", :media => "all" %>
+      <%= javascript_include_tag "application" %>
+    </head>
+    <body>
+      <header class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <div> 
+              <div  style="float:right">
+                <ul class="nav navbar-nav">
+                  <li><a href="/"><%= t :pada_sanchaya %> </a></li>
+                  <li><a href="/about_us"> <%= t :about_us %> </a></li>
+                  <li><a href="#"><%= t :contact %></a></li>
+                </ul>        
+              </div><!--/.nav-collapse -->
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- /header -->
+      <div class="container" style="min-height: 500px;">
+        <div class="row">
+          <%= bootstrap_flash %>
+          <%= yield %>
+        </div><!--/row-->
+      </div> <!-- /container -->
+      <!--Footer-->
+      <footer id="footer">
+        <div class="container">
+          <div class="row-fluid">
+            <div class="span5 cp">
+              &copy; 2013  All Rights Reserved.
+            </div>
+            <div class="span2" style="float:right">
+              <a id="gototop" class="gototop pull-right" href="#"><i class="icon-angle-up"></i></a>
+            </div>
+            <!--/Goto Top-->
+          </div>
+        </div>
+      </footer>
+      <!--/Footer-->
+    </body>
+    </html>
