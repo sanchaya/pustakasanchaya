@@ -49,3 +49,4 @@ gem "twitter-bootstrap-rails"
 gem 'will_paginate'
 gem "font-awesome-rails"
 gem 'ransack'
+gem 'httparty'

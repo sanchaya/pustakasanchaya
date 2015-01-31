@@ -1,6 +1,9 @@
 class BooksController < ApplicationController
 
   def index
-   @books = Book.search(params[:search])#.page(params[:page])
+   @books = JSON.parse Book.search(params[:search])#.page(params[:page])
+   p @books
+   p @books.first
+   
   end
 end

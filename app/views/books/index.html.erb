@@ -2,7 +2,7 @@
   <h1>  <%= image_tag('logo.png', style: "width: 35%") %> </h1>
   <div class="form-group">
     <%= form_tag root_path, method: :get do %>
-    <%= search_field_tag "search" ," ", autofocus: true , class: 'form-control' %>
+    <%= search_field_tag "search" ,params[:search], autofocus: true , class: 'form-control' %>
     <% end %>
   </div>
 </div>
