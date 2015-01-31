@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get '/about' => 'books#about'
+  get '/help' => 'books#help'
+  get '/contact' => 'books#contact'
   get 'books/index'
   root 'books#index'
   # The priority is based upon order of creation: first created -> highest priority.

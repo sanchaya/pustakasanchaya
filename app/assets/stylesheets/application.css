@@ -150,3 +150,14 @@
  	height: 35px;
  	width: 40%;	
  }
+
+/*Introduction to samooha on landing page text*/
+.intoduction-text {
+	margin: auto;
+	text-align: center;
+	width: 90%;
+}
+
+.into-header {
+	font-weight: bold;
+}
