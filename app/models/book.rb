@@ -1,10 +1,12 @@
 class Book
 
-  BASE_SEARCH_URL = Rails.env == 'production' ? 'http://samooha.sanchaya.net/search.json?search=' : 'http://localhost:3000/search.json?search='
+  BASE_SEARCH_URL = 'http://samooha.sanchaya.net/search.json?search='
 
   def self.search params
     search_items = params.squish
-    response = HTTParty.get("#{BASE_SEARCH_URL}#{search_items}")
-     return response.body
+    full_url = "#{BASE_SEARCH_URL}#{search_items}"
+    parsed_url = URI.parse(URI.encode(full_url))
+    response = HTTParty.get parsed_url
+    return response.body
   end
 end
