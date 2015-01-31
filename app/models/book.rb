@@ -1,6 +1,6 @@
 class Book
 
-  BASE_SEARCH_URL = 'http://localhost:3000/search.json?search='
+  BASE_SEARCH_URL = Rails.env == 'production' ? 'http://samooha.sanchaya.net/search.json?search=' : 'http://localhost:3000/search.json?search='
 
   def self.search params
     search_items = params.squish

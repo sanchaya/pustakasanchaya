@@ -1,6 +1,10 @@
 class BooksController < ApplicationController
 
   def index
-   @books = params && params[:search] ? JSON.parse(Book.search(params[:search])) : {}
+    begin
+     @books = params && params[:search] ? JSON.parse(Book.search(params[:search])) : {}
+   rescue
+    @books = {}
   end
+end
 end
