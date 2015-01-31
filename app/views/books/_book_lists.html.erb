@@ -10,11 +10,13 @@
       <td>
         <%= book['book_title'] %>
       </td>
-      <td><%= "Result" %></td>
+      <td>
+      <%= link_to(clean_link(book['link']), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
+      </td>
     </tr>
     <% end %>
   </tbody>
 </table>
-<div class="apple_pagination">
+<!-- <div class="apple_pagination">
   <%#= will_paginate @books  %>
-</div>
+</div> -->
