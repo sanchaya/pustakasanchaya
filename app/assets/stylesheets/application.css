@@ -162,3 +162,8 @@
  .into-header {
  	font-weight: bold;
  }
+
+ .main-search-field {
+ 	width: 50%; 
+ 	margin: auto;
+ }
