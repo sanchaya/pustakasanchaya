@@ -14,21 +14,25 @@
       <%= javascript_include_tag "application" %>
     </head>
     <body>
-      <header class="navbar">
-        <div class="navbar-inner">
-          <div class="container">
-            <div> 
-              <div  style="float:right">
-                <ul class="nav navbar-nav">
-                  <li><a href="/"> <%= t :pustaka_sanchaya %> </a></li>
-                  <li><a href="/about"> <%= t :about_us %> </a></li>
-                  <li><a href='#'> <%= t :contact %></a></li>
-                </ul>        
-              </div><!--/.nav-collapse -->
-            </div>
+
+      <div class="navbar navbar-default navbar-static-top">
+        <div class="container">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <%= link_to t(:pustaka_sanchaya), root_path, class: "navbar-brand" %>
+          <div class="navbar-collapse collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav">
+              <li> <%= link_to t(:about_us), '/about' %> </li>
+              <li> <%= link_to t(:help), '#' %> </li>
+              <li> <%= link_to t(:contact), '#' %> </li>
+            </ul>
           </div>
         </div>
-      </header>
+      </div>
+
       <!-- /header -->
       <div class="container" style="min-height: 500px;">
         <div class="row">
@@ -37,19 +41,13 @@
         </div><!--/row-->
       </div> <!-- /container -->
       <!--Footer-->
-      <footer id="footer">
-        <div class="container">
-          <div class="row-fluid">
-            <div class="span5 cp">
-              &copy; 2013  All Rights Reserved.
-            </div>
-            <div class="span2" style="float:right">
-              <a id="gototop" class="gototop pull-right" href="#"><i class="icon-angle-up"></i></a>
-            </div>
-            <!--/Goto Top-->
+      <div class="footer">
+        <div class="navbar-inner">
+          <div class="copy-right">
+            © 2014  <a href="http://kannada.sanchaya.net" target="_blank"> ಕನ್ನಡ ಸಂಚಯ  </a>| ಸಾಹಿತ್ಯ ಸಂಶೋಧನೆ ಹಾಗೂ ಅಧ್ಯಯನ ವೇದಿಕೆ
           </div>
         </div>
-      </footer>
+      </div>
       <!--/Footer-->
     </body>
     </html>
