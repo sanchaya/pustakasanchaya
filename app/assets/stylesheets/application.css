@@ -176,3 +176,10 @@
  .main-search hr {
  	width: 60%;
  }
+
+ /* Blocking ime selector pop up as we have bug with current version and botstrap 3
+We need to fix this later and remove below css
+*/
+.imeselector,.imeselector-toggle {
+	display: none !important ;
+}
