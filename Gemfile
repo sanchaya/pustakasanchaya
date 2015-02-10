@@ -50,3 +50,5 @@ gem 'will_paginate'
 gem "font-awesome-rails"
 gem 'ransack'
 gem 'httparty'
+gem 'google-analytics-rails'
+gem 'newrelic_rpm'

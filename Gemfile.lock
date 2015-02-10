@@ -63,6 +63,7 @@ GEM
     execjs (2.2.2)
     font-awesome-rails (4.2.0.0)
       railties (>= 3.2, < 5.0)
+    google-analytics-rails (0.0.6)
     hike (1.2.3)
     httparty (0.13.3)
       json (~> 1.8)
@@ -90,6 +91,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
+    newrelic_rpm (3.9.9.275)
     orm_adapter (0.5.0)
     polyamorous (1.1.0)
       activerecord (>= 3.0)
@@ -178,10 +180,12 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   font-awesome-rails
+  google-analytics-rails
   httparty
   jbuilder (~> 2.0)
   jquery-rails
   less-rails
+  newrelic_rpm
   rails (= 4.1.6)
   ransack
   sass-rails (~> 4.0.3)
