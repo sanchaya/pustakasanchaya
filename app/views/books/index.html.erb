@@ -1,14 +1,16 @@
-<div>
+<div class="main-search">
   <div class="intoduction-text">
    <p>
      ಓಸ್ಮಾನಿಯ ವಿಶ್ವವಿದ್ಯಾನಿಲಯದ ಡಿಜಿಟಲ್ ಲೈಬ್ರರಿಯ ಕನ್ನಡ ಪುಸ್ತಕ, ಅವನ್ನು ಬರೆದ ಲೇಖಕರು, ಪ್ರಕಾಶಕರ ಹೆಸರುಗಳನ್ನು ಸಮೂಹ ಸಂಚಯದಲ್ಲಿ ಕನ್ನಡೀಕರಿಸಲಾಗಿದ್ದು ಅವುಗಳನ್ನು  ಪುಸ್ತಕ ಸಂಚಯ ಸುಲಭವಾಗಿ ಹುಡುಕಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.
    </p>
  </div>
+ <hr />
  <div class="form-group main-search-field">
   <%= form_tag root_path, method: :get do %>
-  <%= search_field_tag "search" ,params[:search], autofocus: true , class: 'form-control kan-ime' %>
+  <%= search_field_tag "search" ,params[:search], autofocus: true , class: 'form-control kan-ime', placeholder: "#{t(:huduku)}" %>
   <% end %>
 </div>
+<hr />
 </div>
 
 <% if params[:search] %>
