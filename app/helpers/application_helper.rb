@@ -1,5 +1,5 @@
 module ApplicationHelper
  def clean_link link
-  link.gsub('_', '.')
+  link.gsub('_', '.') if link
 end
 end

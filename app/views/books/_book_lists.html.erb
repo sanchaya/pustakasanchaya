@@ -2,16 +2,29 @@
   <thead>
     <tr>
       <th>  <%= t :book %> </th>
+      <th>  <%= t :author %> </th>
+      <th>  <%= t :publisher %> </th>
+      <th>  <%= t :library %> </th>
+      <th> </th>
     </tr>
   </thead>
   <tbody>
     <% @books.each do |book| %>
     <tr>
       <td>
-        <%= book['book_title'] %>
+        <%= book[0] %>
       </td>
       <td>
-      <%= link_to(clean_link(book['link']), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
+        <%= book[1] %>
+      </td>
+      <td>
+        <%= book[2] %>
+      </td>
+      <td>
+        <%= book[3] %>
+      </td>
+      <td>
+        <%= link_to(clean_link(book[4]), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
       </td>
     </tr>
     <% end %>
