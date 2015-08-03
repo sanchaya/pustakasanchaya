@@ -23,6 +23,8 @@ kn:
   publishers: 'ಪ್ರಕಾಶಕರು'
   author: 'ಲೇಖಕ/ಕಿ'
   authors: 'ಲೇಖಕ/ಕಿಯರು'
+  library: 'ಲೈಬ್ರರಿ'
+  libraries: 'ಲೈಬ್ರರಿಗಳು'
   # Books
   author: 'ಲೇಖಕ'
   book_title: 'ಪುಸ್ತಕದ ಹೆಸರು'
