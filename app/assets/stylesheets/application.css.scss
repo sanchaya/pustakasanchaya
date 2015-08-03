@@ -17,7 +17,7 @@
  @import url(http://fonts.googleapis.com/earlyaccess/notosanskannada.css);
 
  body {
- 	background: url("/assets/bg-pattern.png") repeat scroll 0 0 transparent;
+ 	background: image-url("bg-pattern.png") repeat scroll 0 0 transparent;
  }
 
  body, p, ol, ul, td {
@@ -178,6 +178,11 @@
  	margin: auto;
  }
 
+.search-bottom-text {
+    text-align: center;
+	margin-top: 1%;
+}
+
  .copy-right {
  	margin: auto;
  	width: 90%;
@@ -196,21 +201,21 @@ We need to fix this later and remove below css
 
 /*font awesome overriding*/
 
- .fa-facebook:hover{
- 	color: #3B5998;
- }
+.fa-facebook:hover{
+	color: #3B5998;
+}
 
- .fa-twitter:hover{
- 	color: #55ACEE;
- }
- .fa-google-plus:hover{
- 	color: #DD4B39;
- }
- .fa-check:hover{
- 	color:	#4E8109;
- }
+.fa-twitter:hover{
+	color: #55ACEE;
+}
+.fa-google-plus:hover{
+	color: #DD4B39;
+}
+.fa-check:hover{
+	color:	#4E8109;
+}
 
- .social-nav-right {
- 	padding-top: 5px !important;
- 	padding-bottom: 5px !important;
- }
+.social-nav-right {
+	padding-top: 5px !important;
+	padding-bottom: 5px !important;
+}
