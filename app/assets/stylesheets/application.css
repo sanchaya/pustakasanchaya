@@ -16,9 +16,14 @@
 
  @import url(http://fonts.googleapis.com/earlyaccess/notosanskannada.css);
 
+ body {
+ 	background: url("/assets/bg-pattern.png") repeat scroll 0 0 transparent;
+ }
+
  body, p, ol, ul, td {
  	font-family: 'Noto Sans Kannada', serif !important;
  }
+
 
  /* pagination style css */
 
@@ -188,3 +193,24 @@ We need to fix this later and remove below css
 .imeselector,.imeselector-toggle {
 	display: none !important ;
 }
+
+/*font awesome overriding*/
+
+ .fa-facebook:hover{
+ 	color: #3B5998;
+ }
+
+ .fa-twitter:hover{
+ 	color: #55ACEE;
+ }
+ .fa-google-plus:hover{
+ 	color: #DD4B39;
+ }
+ .fa-check:hover{
+ 	color:	#4E8109;
+ }
+
+ .social-nav-right {
+ 	padding-top: 5px !important;
+ 	padding-bottom: 5px !important;
+ }
