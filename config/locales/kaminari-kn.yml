@@ -1,0 +1,8 @@
+kn:
+  views:
+    pagination:
+      first: "&laquo; ಮೊದಲನೆಯ"
+      last: "ಕೊನೆಯ &raquo;"
+      previous: "&lsaquo; ಹಿಂದಿನ"
+      next: "ಮುಂದಿನ &rsaquo;"
+      truncate: "&hellip;"
