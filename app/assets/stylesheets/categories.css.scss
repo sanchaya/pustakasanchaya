@@ -1,3 +1,29 @@
 // Place all the styles related to the categories controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+    .sticky {
+      float: left;
+      margin: 1%;
+    }
+    .note {
+      color: #333;
+      position: relative;
+      padding: 4px;
+      box-shadow: 0 10px 10px 2px rgba(0,0,0,0.3);
+    }
+
+    .note .author {
+      display: block;
+      margin: 40px 0 0 0;
+      text-align: right;
+    }
+
+    .yellow {
+      background: #eae672;
+      -webkit-transform: rotate(2deg);
+      -moz-transform: rotate(2deg);
+      -o-transform: rotate(2deg);
+      -ms-transform: rotate(2deg);
+      /*transform: rotate(2deg);*/
+    }

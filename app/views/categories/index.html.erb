@@ -1,4 +1,7 @@
-
-<% @categories.each do |category| %>
-<%= link_to category['kn'], "/categories/#{category['id']}" %> <br />
-<% end %>
+  <% @categories.each do |category| %>
+  <div class="sticky"> 
+    <p class="note yellow">
+      <%= link_to category['kn'], "/categories/#{category['id']}" %>
+    </p>
+  </div>
+  <% end %>
