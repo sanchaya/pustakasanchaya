@@ -9,11 +9,12 @@ class CategoriesController < ApplicationController
 end
 
 def show
-   begin
-    @category_books = JSON.parse(Book.category_books(params[:id]))
-  rescue
-    @category_books = {}
-  end
+ begin
+  books = JSON.parse(Book.category_books(params[:id]))
+  @books = Kaminari.paginate_array(books).page(params[:page]).per(8) 
+rescue
+  @books = {}
+end
 end
 
 end
