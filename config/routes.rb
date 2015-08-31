@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   get '/contact' => 'books#contact'
   get 'books/index'
   root 'books#index'
+
+  get '/categories' => 'categories#index'
+  get '/categories/:id' => 'categories#show'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
