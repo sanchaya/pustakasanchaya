@@ -7,7 +7,7 @@
   <hr />
   <div class="form-group main-search-field">
     <%= form_tag root_path, method: :get do %>
-    <%= search_field_tag "search" ,params[:search], autofocus: true , class: 'form-control kan-ime', placeholder: "#{t(:huduku)}" %>
+    <%= search_field_tag "search" ,params[:search], autofocus: params[:search] ? false : true , class: 'form-control kan-ime', placeholder: "#{t(:huduku)}" %>
     <% end %>
     <p class="search-bottom-text"> ಈ ಹುಡುಕು ಸೌಲಭ್ಯವನ್ನು ನಮ್ಮ <a href="http://samooha.sanchaya.net" target="_blank"> ಸಮೂಹ ಸಂಚಯ ಯೋಜನೆ </a> ಸಾಧ್ಯವಾಗಿಸಿದೆ.</p>
   </div>

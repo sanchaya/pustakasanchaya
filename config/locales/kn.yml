@@ -15,7 +15,8 @@ kn:
   pustaka: 'ಪುಸ್ತಕ'
   pustaka_sanchaya: 'ಪುಸ್ತಕ ಸಂಚಯ'
   huduku: 'ಹುಡುಕು'
-  category: 'ವಿಭಾಗ/ವಿಭಾಗಗಳು'#'ವರ್ಗ'
+  category: 'ವಿಭಾಗಗಳು'#'ವರ್ಗ'
+  year: 'ಇಸವಿ'
 
   # Home
   book: 'ಪುಸ್ತಕ'

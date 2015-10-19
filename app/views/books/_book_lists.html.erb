@@ -5,6 +5,7 @@
       <th>  <%= t :author %> </th>
       <th>  <%= t :publisher %> </th>
       <th>  <%= t :library %> </th>
+      <th>  <%= t :year %> </th>
       <th> </th>
     </tr>
   </thead>
@@ -23,6 +24,9 @@
       <td>
         <%= book[3] %>
       </td>
+       <td>
+        <%= book[4] %>
+      </td>
       <td>
         <%= link_to(clean_link(book[4]), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
       </td>
@@ -30,6 +34,8 @@
     <% end %>
   </tbody>
 </table>
+<% unless @books.empty? %>
 <div class="apple_pagination">
   <%= paginate @books  %>
 </div> 
+<% end %>
