@@ -2,11 +2,14 @@ class BooksController < ApplicationController
 
   def index
     begin
-		books = params && params[:search] && !params[:search].blank? ? JSON.parse(Book.search(params[:search])) : {}
-		@books = Kaminari.paginate_array(books).page(params[:page]).per(8) 
-    p @books
+      if params && params[:search] && !params[:search].blank?
+        books = JSON.parse(Book.search(params[:search]))
+        @books = Kaminari.paginate_array(books).page(params[:page]).per(8) 
+      else
+        @wiki_book = JSON.parse(Book.wiki_search)
+      end
     rescue
-		@books = {}
+      @books = {}
     end
-end
+  end
 end

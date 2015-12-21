@@ -12,6 +12,12 @@ class Book
     return response.body
   end
 
+  def self.wiki_search
+    wiki_book_url = 'wiki_books'
+    full_url = "#{BASE_URL}/#{wiki_book_url}"
+    return parse_url(full_url).body
+  end
+
   def self.categories
     full_url = "#{BASE_URL}/categories"
     parsed_url = URI.parse(URI.encode(full_url))
@@ -24,6 +30,11 @@ class Book
     parsed_url = URI.parse(URI.encode(full_url))
     response = HTTParty.get parsed_url
     return response.body
+  end
+
+
+  def self.parse_url(url)
+    HTTParty.get(URI.parse(URI.encode(url)))
   end
 
 end
