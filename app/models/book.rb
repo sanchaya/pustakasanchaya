@@ -1,8 +1,9 @@
 class Book
 
-  BASE_URL = Rails.env == "development" ? 'http://localhost:3001' : 'http://samooha.sanchaya.net'
-  BASE_SEARCH_URL = Rails.env == "development" ? 'http://localhost:3001/search.json?search=' : 'http://samooha.sanchaya.net/search.json?search='
-  # BASE_SEARCH_URL = 'http://samooha.sanchaya.net/search.json?search='
+  # BASE_URL = Rails.env == "development" ? 'http://localhost:3001' : 'http://samooha.sanchaya.net'
+  # BASE_SEARCH_URL = Rails.env == "development" ? 'http://localhost:3001/search.json?search=' : 'http://samooha.sanchaya.net/search.json?search='
+  BASE_SEARCH_URL = 'http://samooha.sanchaya.net/search.json?search='
+  BASE_URL = 'http://samooha.sanchaya.net'
 
   def self.search params
     search_items = params.squish
