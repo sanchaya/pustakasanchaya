@@ -20,6 +20,8 @@
   <%= render 'book_lists' %>
 </div>
 <% else %>
-<%= @wiki_book %>
-<%= render 'stats' %>
+  <% if @wiki_book and !@wiki_book.blank? %>
+    <%= render "wiki_book" %>
+  <% end %>
+  <%= render 'stats' %>
 <% end %>

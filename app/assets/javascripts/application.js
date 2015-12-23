@@ -18,6 +18,7 @@
 //= require jquery.ime.selector
 //= require jquery.ime.preferences
 //= require jquery.ime.inputmethods
+//= require zeroclipboard
 //= require_tree .
 
 $( document ).ready( function () {
