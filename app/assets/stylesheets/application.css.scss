@@ -232,3 +232,13 @@ We need to fix this later and remove below css
 .wiki-left-box {
 	   border-right: 3px solid #f2f1f0;
 }
+
+ .wiki-dull-logo img {
+   // background: none repeat scroll 0 0 #d8d8d8;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+ }
+
+ .wiki-book-intro, .wiki-user-intro {
+  text-align: center;
+ }

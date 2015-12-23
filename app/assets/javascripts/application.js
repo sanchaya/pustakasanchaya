@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
-//= require turbolinks
+// require turbolinks
 //= require jquery.ime
 //= require jquery.ime.selector
 //= require jquery.ime.preferences

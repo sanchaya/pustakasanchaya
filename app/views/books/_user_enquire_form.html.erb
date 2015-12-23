@@ -1,0 +1,55 @@
+ <div class="wiki-user-intro"> 
+  <h4> <b> Please follow the following instructions </b> </h4>
+  <hr />
+</div>
+
+<div>
+  Do you have an account in Wiki? <br >
+  <label><input id="wiki1" type="radio" name="wikiaccount" value="1" />Yes</label>
+  <label><input id="wiki2" type="radio" name="wikiaccount" value="2" />No</label>
+
+  <div id="blk-1" class="toHide" style="display:none">
+    <% if @wiki_book['is_present_in_wiki'] %>
+    Wikipedia has a article with this name.
+    <ul>
+      <li>Please visit this page </li>
+      <li>verify the article to be a book info page</li>
+      <li>verify whether the wiki article contains all info shown in left panel</li>
+    </ul>
+    <% else %>
+    create a new page <%= @wiki_book['book_name'] %>(ಪುಸ್ತಕ)
+    <ul>
+      <li>Click here to create <%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ)", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' %> on Wiki </li>
+      <li>Copy the left panel content and paste in wiki and save.</li>
+      <li>verify whether the wiki article contains all info shown in left panel</li>
+    </ul>
+    <% end %>
+    <div>
+      <label>Please enter your Wiki ID:</label> <input type="text" name="name" /> <br />
+
+      Copy the left panel content:
+      <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='Click me to copy to clipboard.'>
+        <i class="fa fa-files-o fa-1x"></i>
+      </button>
+    </div>
+  </div>
+
+
+  <div id="blk-2" class="toHide" style="display:none">
+    Please create your account in Wikipedia.<br />
+    <%= link_to "Create Account", "https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=1676&type=signup" , target: "_blank" %>
+  </div>
+
+</div>
+
+
+
+<script type="text/javascript">
+  $(function() {
+    $("[name=wikiaccount]").click(function(){
+      $('.toHide').hide();
+      $("#blk-"+$(this).val()).show('slow');
+    });
+  });
+
+</script>
