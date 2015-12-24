@@ -25,7 +25,12 @@
     </ul>
     <% end %>
     <div>
-      <label>Please enter your Wiki ID:</label> <input type="text" name="name" /> <br />
+    <%= form_tag '/books/wiki_user_info', method: :get do |f| %>
+      <label>Please enter your Wiki ID:</label> <br />
+      <%= text_field_tag :user_name, '' %>
+      <%= hidden_field_tag :book_name, @wiki_book['book_name'] %>
+      <%= submit_tag "Finish" %>
+      <% end %>
 
       Copy the left panel content:
       <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='Click me to copy to clipboard.'>
@@ -37,7 +42,7 @@
 
   <div id="blk-2" class="toHide" style="display:none">
     Please create your account in Wikipedia.<br />
-    <%= link_to "Create Account", "https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=1676&type=signup" , target: "_blank" %>
+    <%= link_to "Create Account", "https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=1676&type=signup", onclick: "submitWikiInfo('#{@wiki_book['book_name']}', 'false');"  , target: "_blank" %>
   </div>
 
 </div>
@@ -51,5 +56,14 @@
       $("#blk-"+$(this).val()).show('slow');
     });
   });
+
+
+  function submitWikiInfo(book,is_account){
+   $.ajax({
+    //Your ajax code here to submit from via AJAX. refer jquery site . I gave sample eg.
+    url: "/books/wiki_info",
+    data: "book=" + book + "&& is_account=" + is_account
+  });
+ }
 
 </script>

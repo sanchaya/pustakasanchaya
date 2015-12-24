@@ -1,9 +1,9 @@
 class Book
 
-  # BASE_URL = Rails.env == "development" ? 'http://localhost:3001' : 'http://samooha.sanchaya.net'
-  # BASE_SEARCH_URL = Rails.env == "development" ? 'http://localhost:3001/search.json?search=' : 'http://samooha.sanchaya.net/search.json?search='
-  BASE_SEARCH_URL = 'http://samooha.sanchaya.net/search.json?search='
-  BASE_URL = 'http://samooha.sanchaya.net'
+  BASE_URL = Rails.env == "development" ? 'http://localhost:3001' : 'http://samooha.sanchaya.net'
+  BASE_SEARCH_URL = Rails.env == "development" ? 'http://localhost:3001/search.json?search=' : 'http://samooha.sanchaya.net/search.json?search='
+  # BASE_SEARCH_URL = 'http://samooha.sanchaya.net/search.json?search='
+  # BASE_URL = 'http://samooha.sanchaya.net'
 
   def self.search params
     search_items = params.squish
@@ -37,5 +37,12 @@ class Book
   def self.parse_url(url)
     HTTParty.get(URI.parse(URI.encode(url)))
   end
+
+# Posting data
+def self.capture_wiki_user(book_name,is_account, user_name='')
+  wiki_user_url = 'wiki_user_info'
+  full_url = "#{BASE_URL}/#{wiki_user_url}?book_name=#{book_name}&&is_account=#{is_account}&&user_name=#{user_name}"
+  return parse_url(full_url).body
+end
 
 end

@@ -12,4 +12,19 @@ class BooksController < ApplicationController
       @books = {}
     end
   end
+
+  def wiki_info
+    book_name = params['book']
+    Book.capture_wiki_user(book_name,'false')
+    render nothing: true
+  end
+
+  def wiki_user_info
+    user_name = params[:user_name]
+    book_name = params[:book_name]
+    Book.capture_wiki_user(book_name,'true',user_name)
+    flash[:notice] = "Thanks for creating Wiki article"
+    redirect_to root_path
+  end
+
 end

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   get '/contact' => 'books#contact'
   get 'books/index'
   root 'books#index'
+  get 'books/wiki_info'
+  get 'books/wiki_user_info'
 
   get '/categories' => 'categories#index'
   get '/categories/:id' => 'categories#show'
