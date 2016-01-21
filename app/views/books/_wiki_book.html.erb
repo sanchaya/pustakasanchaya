@@ -1,9 +1,58 @@
-<div class="row wiki-book-box"> 
-  <div class="col-md-6 wiki-left-box">
-    <%= render 'wiki_copy_text' %>
-  </div>
-  <div class="col-md-4 wiki-right-box">
-    <%= render 'user_enquire_form' %>
+<div class="steps">
+  <div class="row">
+    <div class="col-md-4">
+      <h1> Step 1: </h1>
+    </div>
+    <div class="col-md-4">
+      <h1> Step 2: </h1>
+    </div>
+    <div class="col-md-4">
+      <h1> Step 3: </h1>
+    </div>
   </div>
 </div>
 
+<div class="steps-box" id='step1'>
+  <%= render 'user_enquire_form' %>
+</div>
+<div class="steps-box" style="display:none" id='step2'>
+  <div class="row wiki-book-box">
+    <div class="col-md-6 wiki-left-box">
+      <%= render 'wiki_copy_text' %>
+    </div>
+    <div class="col-md-4 wiki-right-box">
+      <%= render 'wiki_guide' %>
+    </div>
+  </div>
+</div>
+<div class="steps-box" style="display:none" id='step3'>
+  <div>
+    <%= form_tag '/books/wiki_user_info', method: :get do |f| %>
+    <label>Please enter your Wiki ID:</label> <br />
+    <%= text_field_tag :user_name, '' %>
+    <%= hidden_field_tag :book_name, @wiki_book['book_name'] %>
+    <%= submit_tag "Finish" %>
+    <% end %>
+  </div>
+</div>
+
+
+<style type="text/css">
+  .steps-box {
+    background-color: #f2f1f0;
+    border: 2px solid #f2f1f0;
+    margin: 1%;
+    min-height: 100px;
+    padding: 10px;
+    width: 100%;
+  }
+</style>
+
+<script type="text/javascript">
+ function showNextDiv(id) {
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+}
+</script>
