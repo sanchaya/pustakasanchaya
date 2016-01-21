@@ -1,4 +1,4 @@
-
+Please follow the below steps:
   <% if @wiki_book['is_present_in_wiki'] %>
   <ul>
     <li>Please visit this page </li>
@@ -12,4 +12,4 @@
     <li>verify whether the wiki article contains all info shown in left panel</li>
   </ul>
   <% end %>
-   <%= link_to "next", "javascript:void(null)",onclick: "showNextDiv('step3');" %>
+   <%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv('step3');" , class: "btn btn-success"%>
