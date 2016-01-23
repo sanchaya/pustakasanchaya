@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 // require turbolinks
+//= require jquery.validate
 //= require jquery.ime
 //= require jquery.ime.selector
 //= require jquery.ime.preferences
@@ -70,6 +71,24 @@ function submitWikiInfo(book,is_account){
 
 
 // Wiki styles ended
+
+
+// validatin added for wii user info form
+$(".wiki-user-info").validate({
+	rules:{
+
+		"user_name":
+		{
+			required: true
+		}
+	},
+	messages:{
+		"user_name":
+		{
+			required: "ದಯವಿಟ್ಟು ಪದವನ್ನು ಬೆರಳಚ್ಚು ಮಾಡಿ"
+		}
+	}
+});
 
 });
 
