@@ -1,15 +1,21 @@
 Please follow the below steps:
-  <% if @wiki_book['is_present_in_wiki'] %>
-  <ul>
-    <li>Please visit this page </li>
-    <li>verify the article to be a book info page</li>
-    <li>verify whether the wiki article contains all info shown in left panel</li>
-  </ul>
-  <% else %>
-  <ul>
-    <li>Click here to create <%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ)", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' %> on Wiki </li>
-    <li>Copy the left panel content and paste in wiki and save.</li>
-    <li>verify whether the wiki article contains all info shown in left panel</li>
-  </ul>
-  <% end %>
-   <%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv('step3');" , class: "btn btn-success"%>
+<% if @wiki_book['is_present_in_wiki'] %>
+<ol>
+  <li>Please visit this page </li>
+  <li>verify whether the wiki article contains all info shown in left panel</li>
+  <li>If not edit an article on Wiki </li>
+</ol>
+<% else %>
+<ol>
+  <li>Click here to create <%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ)", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' %> on Wiki </li>
+  <li>Copy the left panel content and paste in wiki and save.
+    <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='Click me to copy to clipboard.'>
+      <i class="fa fa-files-o fa-1x"></i>
+    </button>
+  </li>
+  <li>verify whether the wiki article contains all info shown in left panel</li>
+</ol>
+<% end %>
+<%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv(2);" , class: "btn btn-success"%>
+
+

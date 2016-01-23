@@ -45,5 +45,31 @@ $( document ).ready( function () {
 	});
 })(jQuery);
 
+// Wiki div hide and show
+
+
+var clip = new ZeroClipboard($(".d_clip_button"))
+
+
+
+$(function() {
+	$("[name=wikiaccount]").click(function(){
+		$('.toHide').hide();
+		$("#blk-"+$(this).val()).show('slow');
+	});
+});
+
+
+function submitWikiInfo(book,is_account){
+	$.ajax({
+    //Your ajax code here to submit from via AJAX. refer jquery site . I gave sample eg.
+    url: "/books/wiki_info",
+    data: "book=" + book + "&& is_account=" + is_account
+});
+}
+
+
+// Wiki styles ended
+
 });
 

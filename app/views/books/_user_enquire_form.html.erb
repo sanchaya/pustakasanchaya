@@ -19,7 +19,7 @@
     <% else %>
     create a new page <%= @wiki_book['book_name'] %>(ಪುಸ್ತಕ)
     <% end %>
-    <%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv('step2');" , class: "btn btn-success"%>
+    <%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv(1);" , class: "btn btn-success"%>
   </div>
 
 
@@ -32,68 +32,4 @@
 
 
 
-<script type="text/javascript">
-  $(function() {
-    $("[name=wikiaccount]").click(function(){
-      $('.toHide').hide();
-      $("#blk-"+$(this).val()).show('slow');
-    });
-  });
 
-
-  function submitWikiInfo(book,is_account){
-   $.ajax({
-    //Your ajax code here to submit from via AJAX. refer jquery site . I gave sample eg.
-    url: "/books/wiki_info",
-    data: "book=" + book + "&& is_account=" + is_account
-  });
- }
-
-</script>
-
-<style type="text/css">
-
-
-  input[type="radio"] {
-    display: none;
-  }
-
-  input[type="radio"] + label {
-    color: #292321;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-  }
-
-  input[type="radio"] + label span {
-    display: inline-block;
-    width: 19px;
-    height: 19px;
-    margin: -1px 4px 0 0;
-    vertical-align: middle;
-    cursor: pointer;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-  }
-
-  input[type="radio"] + label span {
-    background-color: #292321;
-  }
-
-  input[type="radio"]:checked + label span {
-    background-color: #5b9b00;
-  }
-
-  input[type="radio"] + label span,
-  input[type="radio"]:checked + label span {
-    -webkit-transition: background-color 0.4s linear;
-    -o-transition: background-color 0.4s linear;
-    -moz-transition: background-color 0.4s linear;
-    transition: background-color 0.4s linear;
-  }
-
-  .user-enquire {
-    text-align: center;
-    width: 100%;
-  }
-
-</style>

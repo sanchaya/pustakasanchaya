@@ -1,5 +1,5 @@
  <div class="wiki-book-intro"> 
-   <h4> <b> ಪುಸ್ತಕ ಪರಿಚಯ </b> <span class="<%= wiki_logo_class(@wiki_book['is_present_in_wiki']) %>"> (<%= image_tag('Wikipedia.png', width: 18, height: 18)%>) </span> </h4>
+   <h4> <b> Wiki Template </b> </h4>
    <hr />
  </div>
  <div id="fe_text_wiki">
@@ -49,16 +49,3 @@
 </p>
 
 </div>
-
-Copy the  content:
-<button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='Click me to copy to clipboard.'>
-  <i class="fa fa-files-o fa-1x"></i>
-</button>
-
-<script type='text/javascript'>
-
-  $(document).ready(function() {
-    var clip = new ZeroClipboard($(".d_clip_button"))
-  });
-
-</script>
