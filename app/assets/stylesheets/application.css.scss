@@ -342,8 +342,11 @@ We need to fix this later and remove below css
     padding: 10px;
     width: 100%;
   }
-  .steps-indicator, .submit-wiki-user {
+  .steps-indicator {
     text-align: center;
+    width: 100%;
+  }
+    .submit-wiki-user {
     width: 100%;
   }
 
