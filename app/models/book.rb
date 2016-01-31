@@ -39,9 +39,9 @@ class Book
   end
 
 # Posting data
-def self.capture_wiki_user(book_name,is_account, user_name='')
+def self.capture_wiki_user(book_name,is_account, user_name='', book_id=nil, library=nil)
   wiki_user_url = 'wiki_user_info'
-  full_url = "#{BASE_URL}/#{wiki_user_url}?book_name=#{book_name}&&is_account=#{is_account}&&user_name=#{user_name}"
+  full_url = "#{BASE_URL}/#{wiki_user_url}?book_name=#{book_name}&&is_account=#{is_account}&&user_name=#{user_name}&&book_id=#{book_id}&&library=#{library}"
   return parse_url(full_url).body
 end
 

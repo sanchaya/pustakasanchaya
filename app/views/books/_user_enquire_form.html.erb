@@ -15,13 +15,13 @@
     create a new page <%= @wiki_book['book_name'] %>(ಪುಸ್ತಕ)
     <% end %>
     <br />
-    <%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv(1);" , class: "btn btn-success"%>
+    <%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv(1);" , class: "btn btn-success wiki-btn"%>
   </div>
 
 
   <div id="blk-2" class="toHide" style="display:none">
     Please create your account in Wikipedia.<br />
-    <%= link_to "Create Account", "https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=1676&type=signup", onclick: "submitWikiInfo('#{@wiki_book['book_name']}', 'false');"  , target: "_blank" , class: "btn btn-success"%>
+    <%= link_to "Create Account", "https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=1676&type=signup", onclick: "submitWikiInfo('#{@wiki_book['book_name']}', 'false');"  , target: "_blank" , class: "btn btn-success wiki-btn"%>
   </div>
 
 </div>
@@ -29,3 +29,12 @@
 
 
 
+<script type="text/javascript">
+  function submitWikiInfo(book,is_account){
+    $.ajax({
+    //Your ajax code here to submit from via AJAX. refer jquery site . I gave sample eg.
+    url: "/books/wiki_info",
+    data: "book=" + book + "&& is_account=" + is_account
+  });
+  }
+</script>

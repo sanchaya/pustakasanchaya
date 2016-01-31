@@ -270,16 +270,16 @@ We need to fix this later and remove below css
         }
 
         .smpl-step > .smpl-step-step > .smpl-step-icon {
-          position: absolute;
-          width: 70px;
-          height: 70px;
-          display: block;
-          background: #5CB85C;
-          top: 45px;
-          left: 50%;
-          margin-top: -35px;
-          margin-left: -15px;
+          background: none repeat scroll 0 0 #5cb85c;
           border-radius: 50%;
+          display: block;
+          height: 50px;
+          left: 50%;
+          margin-left: -15px;
+          margin-top: -35px;
+          position: absolute;
+          top: 52px;
+          width: 50px;
         }
 
         .smpl-step > .smpl-step-step > .progress {
@@ -389,6 +389,11 @@ We need to fix this later and remove below css
   .user-enquire {
     text-align: center;
     width: 100%;
+  }
+
+  .wiki-btn {
+    font-size: 13px;
+    line-height: 1;
   }
 
   // wiki style ended
