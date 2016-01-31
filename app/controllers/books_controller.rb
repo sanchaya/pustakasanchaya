@@ -27,4 +27,8 @@ class BooksController < ApplicationController
     redirect_to root_path
   end
 
+  # Static info for wiki article creation
+  def wikimedia_yojane
+  end
+
 end

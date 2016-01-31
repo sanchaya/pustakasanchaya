@@ -30,9 +30,11 @@
 
 
 <div class="steps-box" id='step1'>
+  <%= render 'wiki_intro' %>
   <%= render 'user_enquire_form' %>
 </div>
 <div class="steps-box" style="display:none" id='step2'>
+  <%= render 'wiki_intro' %>
   <div class="row wiki-book-box">
     <div class="col-md-6 wiki-left-box">
       <%= render 'wiki_copy_text' %>
@@ -43,6 +45,7 @@
   </div>
 </div>
 <div class="steps-box" style="display:none" id='step3'>
+  <%= render 'wiki_intro' %>
   <div class='submit-wiki-user'>
     <%= form_tag '/books/wiki_user_info', class: 'wiki-user-info', method: :get do |f| %>
     <label>Please enter your Wiki ID:</label> <br />
