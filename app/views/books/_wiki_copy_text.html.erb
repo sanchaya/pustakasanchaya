@@ -41,7 +41,10 @@
 
 <p>
   <% @wiki_book['categories'].each do |category|   %>
-  [[ವರ್ಗ:<%= category %>]] <br>
+  <!-- Exclude category ಲಭ್ಯವಿಲ್ಲ -->
+    <% unless category == 'ಲಭ್ಯವಿಲ್ಲ' %> 
+      [[ವರ್ಗ:<%= category %>]] <br>
+    <% end %>
   <% end %>
   [[ವರ್ಗ:<%= @wiki_book['author'] %> ಅವರ ಪುಸ್ತಕಗಳು]] <br>
   [[ವರ್ಗ:ಪುಸ್ತಕಗಳು]] <br>
