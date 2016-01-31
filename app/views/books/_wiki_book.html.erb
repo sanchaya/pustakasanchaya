@@ -5,7 +5,7 @@
       <div class="progress">
         <div class="progress-bar"></div>
       </div>
-      <a class="smpl-step-icon"><i class="fa fa-user" style="font-size: 60px; padding-left: 12px; padding-top: 3px; color: black;"></i></a>
+      <a class="smpl-step-icon"><i class="fa fa-user" style="font-size: 40px; padding-left: 10px; padding-top: 3px; color: black;"></i></a>
       <div class="smpl-step-info text-center">Confirm user registration.</div>
     </div>
 
@@ -14,7 +14,7 @@
       <div class="progress">
         <div class="progress-bar"></div>
       </div>
-      <a class="smpl-step-icon"><i class="fa fa-pencil-square-o" style="font-size: 60px; padding-left: 8px; padding-top: 8px; color: black;"></i></a>
+      <a class="smpl-step-icon"><i class="fa fa-pencil-square-o" style="font-size: 40px; padding-left: 8px; padding-top: 8px; color: black;"></i></a>
       <div class="smpl-step-info text-center">Contribute to wiki.</div>
     </div>
     <div class="col-xs-4 smpl-step-step disabled step3">          
@@ -22,7 +22,7 @@
       <div class="progress">
         <div class="progress-bar"></div>
       </div>
-      <a class="smpl-step-icon"><i class="fa fa-repeat" style="font-size: 60px; padding-left: 7px; padding-top: 7px; color: black;"></i></a>
+      <a class="smpl-step-icon"><i class="fa fa-repeat" style="font-size: 40px; padding-left: 7px; padding-top: 7px; color: black;"></i></a>
       <div class="smpl-step-info text-center">Confirm user information.</div>
     </div>
   </div>
@@ -46,15 +46,7 @@
 </div>
 <div class="steps-box" style="display:none" id='step3'>
   <%= render 'wiki_intro' %>
-  <div class='submit-wiki-user'>
-    <%= form_tag '/books/wiki_user_info', class: 'wiki-user-info', method: :get do |f| %>
-    <label>Please enter your Wiki ID:</label> <br />
-    <%= text_field_tag :user_name, '' %>
-    <%= hidden_field_tag :book_name, @wiki_book['book_name'] %>
-    <br />
-    <%= submit_tag "Finish", class: "btn btn-success"%>
-    <% end %>
-  </div>
+  <%= render 'confirm_wiki_user' %>
 </div>
 
 <script type="text/javascript">

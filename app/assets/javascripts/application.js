@@ -26,6 +26,8 @@ $( document ).ready( function () {
 	// Kannada ime enabled for form 
 	$( '.kan-ime' ).ime();
 
+
+
 // Jquery for home page number count incremental display
 (function($) {
 	"use strict";
@@ -61,13 +63,7 @@ $(function() {
 });
 
 
-function submitWikiInfo(book,is_account){
-	$.ajax({
-    //Your ajax code here to submit from via AJAX. refer jquery site . I gave sample eg.
-    url: "/books/wiki_info",
-    data: "book=" + book + "&& is_account=" + is_account
-});
-}
+
 
 
 // Wiki styles ended

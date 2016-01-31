@@ -13,16 +13,20 @@ class BooksController < ApplicationController
     end
   end
 
+  # When users clicks on wiki signup, it captures only that user trying to signup, and on which article.
   def wiki_info
     book_name = params['book']
     Book.capture_wiki_user(book_name,'false')
     render nothing: true
   end
 
+  # Method which captures user's account and article info
   def wiki_user_info
     user_name = params[:user_name]
     book_name = params[:book_name]
-    Book.capture_wiki_user(book_name,'true',user_name)
+    book_id  = params[:book_id]
+    library = params[:library]
+    Book.capture_wiki_user(book_name,'true',user_name,book_id,library)
     flash[:notice] = "Thanks for creating Wiki article"
     redirect_to root_path
   end
