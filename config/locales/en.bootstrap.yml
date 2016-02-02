@@ -4,20 +4,20 @@
 en:
   breadcrumbs:
     application:
-      root: "Index"
+      root: "ಪರಿವಿಡಿ"
     pages:
-      pages: "Pages"
+      pages: "ಪುಟಗಳು"
   helpers:
     actions: "Actions"
     links:
-      back: "Back"
-      cancel: "Cancel"
-      confirm: "Are you sure?"
-      destroy: "Delete"
-      new: "New"
-      edit: "Edit"
+      back: "ಹಿಂದೆ"
+      cancel: "ರದ್ದುಮಾಡು"
+      confirm: "ಖಚಿತವೇ?"
+      destroy: "ಅಳಿಸು"
+      new: "ಹೊಸ"
+      edit: "ಸಂಪಾದಿಸು"
     titles:
-      edit: "Edit %{model}"
-      save: "Save %{model}"
-      new: "New %{model}"
-      delete: "Delete %{model}"
+      edit: "ಸಂಪಾದಿಸು %{model}"
+      save: "ಉಳಿಸು %{model}"
+      new: "ಹೊಸ %{model}"
+      delete: "ಅಳಿಸು %{model}"
