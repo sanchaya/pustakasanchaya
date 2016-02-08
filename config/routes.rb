@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get '/about' => 'books#about'
   get '/help' => 'books#help'
   get '/contact' => 'books#contact'
-  get '/wikimedia_yojane' => 'books#wikimedia_yojane'
+  get '/edit_wikipedia' => 'books#edit_wikipedia'
   get 'books/index'
   root 'books#index'
   get 'books/wiki_info'

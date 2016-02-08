@@ -32,7 +32,7 @@ class BooksController < ApplicationController
   end
 
   # Static info for wiki article creation
-  def wikimedia_yojane
+  def edit_wikipedia
   end
 
 end
