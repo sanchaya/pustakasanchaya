@@ -2,26 +2,26 @@
   Do you have an account in Wiki? <br >
   <div>
     <input type="radio" id="wiki1" name="wikiaccount" value="1" />
-    <label for="wiki1"><span></span>Yes</label>
+    <label for="wiki1"><span></span>ಹೌದು</label>
     <input type="radio" id="wiki2" name="wikiaccount" value="2" />
-    <label for="wiki2"><span></span>No</label>
+    <label for="wiki2"><span></span>ಇಲ್ಲ</label>
   </div>
 
 
   <div id="blk-1" class="toHide" style="display:none">
     <% if @wiki_book['is_present_in_wiki'] %>
-    Update a article <%= @wiki_book['book_name'] %> in Wiki.
+    ವಿಕಿಯಲ್ಲಿ  <%= @wiki_book['book_name'] %> ಲೇಖನವನ್ನು ಪರಿಷ್ಕರಿಸಿ.
     <% else %>
-    create a new page <%= @wiki_book['book_name'] %>(ಪುಸ್ತಕ)
+    ಹೊಸ ಪುಟ ಸೃಷ್ಟಿಸಿ <%= @wiki_book['book_name'] %>(ಪುಸ್ತಕ)
     <% end %>
     <br />
-    <%= link_to "Next", "javascript:void(null)",onclick: "showNextDiv(1);" , class: "btn btn-success wiki-btn"%>
+    <%= link_to "ಮುಂದೆ", "javascript:void(null)",onclick: "showNextDiv(1);" , class: "btn btn-success wiki-btn"%>
   </div>
 
 
   <div id="blk-2" class="toHide" style="display:none">
-    Please create your account in Wikipedia.<br />
-    <%= link_to "Create Account", "https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=1676&type=signup", onclick: "submitWikiInfo('#{@wiki_book['book_name']}', 'false');"  , target: "_blank" , class: "btn btn-success wiki-btn"%>
+    ನಿಮ್ಮ ವಿಕಿಪೀಡಿಯ ಖಾತೆಯನ್ನು ತೆರೆಯಿರಿ.<br />
+    <%= link_to "ಖಾತೆ ಸೃಷ್ಟಿಸಿ", "https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=1676&type=signup", onclick: "submitWikiInfo('#{@wiki_book['book_name']}', 'false');"  , target: "_blank" , class: "btn btn-success wiki-btn"%>
   </div>
 
 </div>
