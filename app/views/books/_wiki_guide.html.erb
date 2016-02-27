@@ -7,7 +7,7 @@
 </ol>
 <% else %>
 <ol>
-  <li><%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ) ಪುಟ ಸೃಷ್ಟಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ಕಿಸಿ", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' %> on Wiki </li>
+  <li>ವಿಕಿಯಲ್ಲಿ <%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ) ಪುಟ ಸೃಷ್ಟಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ಕಿಸಿ", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' %>  </li>
   <li>ಎಡಬದಿಯ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ಕಾಪಿ ಮಾಡಿ ವಿಕಿಯಲ್ಲಿ ಉಳಿಸಿ.
     <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='ಕ್ಲಿಪ್ ಬೋರ್ಡ್‌ಗೆ ಕಾಪಿ ಮಾಡಲು ನನ್ನನ್ನು ಕ್ಲಿಕ್ಕಿಸಿ.'>
       <i class="fa fa-files-o fa-1x"></i>
