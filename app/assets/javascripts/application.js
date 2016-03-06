@@ -81,7 +81,7 @@ $(".wiki-user-info").validate({
 	messages:{
 		"user_name":
 		{
-			required: "ದಯವಿಟ್ಟು ಪದವನ್ನು ಬೆರಳಚ್ಚು ಮಾಡಿ"
+			required: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಕಿ ಬಳಕೆದಾರ ಹೆಸರನ್ ಬೆರಳಚ್ಚು ಮಾಡಿ"
 		}
 	}
 });

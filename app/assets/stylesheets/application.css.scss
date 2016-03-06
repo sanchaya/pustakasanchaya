@@ -222,11 +222,16 @@ We need to fix this later and remove below css
 
 /* wiki book layout */
 .wiki-book-box {
-	border: 3px solid #f2f1f0;
+//	border: 3px solid #f2f1f0;
 }
 
 .wiki-left-box, .wiki-right-box {
 	margin: 1%;
+}
+
+.wiki-steps-box {
+ border: 2px solid #f2f1f0;
+  padding: 10px;
 }
 
 .wiki-left-box {

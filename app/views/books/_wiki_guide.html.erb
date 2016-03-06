@@ -2,18 +2,16 @@
 <% if @wiki_book['is_present_in_wiki'] %>
 <ol>
   <li>ಈ ಪುಟವನ್ನು ವೀಕ್ಷಿಸಿ.</li>
-  <li>ಎಡಬದಿಯ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿ ನೀಡಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ವಿಕಿ ಲೇಖನವು ಹೊಂದಿದೆಯೇ ಪರಿಶೀಲಿಸಿ.</li>
+  <li>ಕೆಳಗಿನ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿ ನೀಡಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ವಿಕಿ ಲೇಖನವು ಹೊಂದಿದೆಯೇ ಪರಿಶೀಲಿಸಿ.</li>
   <li>ಇಲ್ಲವಾದಲ್ಲಿ, ವಿಕಿ ಲೇಖನವನ್ನು ಸಂಪಾದಿಸಿ.</li>
 </ol>
 <% else %>
 <ol>
   <li>ವಿಕಿಯಲ್ಲಿ <%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ) ಪುಟ ಸೃಷ್ಟಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ಕಿಸಿ", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' %>  </li>
-  <li>ಎಡಬದಿಯ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ಕಾಪಿ ಮಾಡಿ ವಿಕಿಯಲ್ಲಿ ಉಳಿಸಿ.
-    <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='ಕ್ಲಿಪ್ ಬೋರ್ಡ್‌ಗೆ ಕಾಪಿ ಮಾಡಲು ನನ್ನನ್ನು ಕ್ಲಿಕ್ಕಿಸಿ.'>
-      <i class="fa fa-files-o fa-1x"></i>
-    </button>
+  <li>ಕೆಳಗಿನ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ಕಾಪಿ ಮಾಡಿ ವಿಕಿಯಲ್ಲಿ ಉಳಿಸಿ.
+    
   </li>
-  <li>ಎಡಬದಿಯ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿ ನೀಡಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ವಿಕಿ ಲೇಖನವು ಹೊಂದಿದೆಯೇ ಪರಿಶೀಲಿಸಿ.</li>
+  <li>ನಂತರ ಪುಟವನ್ನು ಉಳಿಸಿ.</li>
+  <li>ಕೆಳಗಿನ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿ ನೀಡಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ವಿಕಿ ಲೇಖನವು ಹೊಂದಿದೆಯೇ ಪರಿಶೀಲಿಸಿ.</li>
 </ol>
 <% end %>
-<%= link_to "ಮುಂದೆ", "javascript:void(null)",onclick: "showNextDiv(2);" , class: "btn btn-success wiki-btn"%>

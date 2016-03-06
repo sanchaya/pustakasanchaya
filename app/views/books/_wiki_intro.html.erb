@@ -2,7 +2,7 @@
   <h4> 
     <b> <%= @wiki_book['book_name'] %> </b> 
     <%= link_to(clean_link(@wiki_book['url'] ), target: '_blank') do %> <%= fa_icon "book" %> <% end %>
-    <span class="<%= wiki_logo_class(@wiki_book['is_present_in_wiki']) %>"> (<%= image_tag('Wikipedia.png', width: 18, height: 18)%>) </span>
+    <span class="<%= wiki_logo_class(@wiki_book['is_present_in_wiki']) %>"> <%= image_tag('Wikipedia.png', width: 18, height: 18, title: wiki_logo_title(@wiki_book['is_present_in_wiki']))%> </span>
   </h4>
   <p>
     ಈಗ ಪುಸ್ತಕ ಸಂಚಯದಲ್ಲಿ ಪುಸ್ತಕಗಳನ್ನು ಹುಡುಕುವುದರ ಜೊತೆಗೆ ಕನ್ನಡ ವಿಕಿಪೀಡಿಯದಲ್ಲಿ ಪುಸ್ತಕಗಳ ಮಾಹಿತಿ ಪುಟದ ಸಂಪಾದನೆಗೂ ತೊಡಗಿ, ಕನ್ನಡಕ್ಕೆ ಪುಟ್ಟ ಕೊಡುಗೆ ನೀಡಿ <small>(<a href="/edit_wikipedia" target="_blank">ಮತ್ತಷ್ಟು ತಿಳಿಯಿರಿ</a>) </small>.
