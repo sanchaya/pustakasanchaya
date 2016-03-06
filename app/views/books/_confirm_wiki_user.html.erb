@@ -11,8 +11,8 @@
   <label>ನಿಮ್ಮ ವಿಕಿ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ಟೈಪಿಸಿ:</label> <br />
   <%= text_field_tag :user_name, '' %>
   <%= hidden_field_tag :book_name, @wiki_book['book_name'] %>
-  <%= hidden_field_tag :book_name, @wiki_book['book_id'] %>
-  <%= hidden_field_tag :book_name, @wiki_book['library'] %>
+  <%= hidden_field_tag :book_id, @wiki_book['book_id'] %>
+  <%= hidden_field_tag :library, @wiki_book['library'] %>
   <br />
   <%= submit_tag "ಮುಗಿಯಿತು", class: "btn btn-success wiki-btn"%>
   <% end %>
