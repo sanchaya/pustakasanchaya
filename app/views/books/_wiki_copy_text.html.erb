@@ -4,10 +4,7 @@
        <i class="fa fa-files-o fa-1x"></i>
      </button> </h4>
    </div>
-   <div id="fe_text_wiki">
-    <p class="wiki-main-text wiki-steps-box">
-      '''<%= @wiki_book['book_name'] %>''' ಪುಸ್ತಕವನ್ನು '''<%= @wiki_book['author'] %>''' ಅವರು <%= @wiki_book['year'] %>ರಲ್ಲಿ ರಚಿಸಿದರು. ಇದನ್ನು '''<%= @wiki_book['publisher'] %>''' ಪ್ರಕಟಿಸಿದೆ '''&lt;ref name="<%= @wiki_book['library'] %> Source URL">{{cite web | url=<%= @wiki_book['url'] %> | title=<%= @wiki_book['book_name'] %> | publisher=<%= @wiki_book['library'] %>}}&lt;/ref>'''.  
-    </p>
+   <div id="fe_text_wiki"><p class="wiki-main-text wiki-steps-box"> '''<%= @wiki_book['book_name'] %>''' ಪುಸ್ತಕವನ್ನು '''<%= @wiki_book['author'] %>''' ಅವರು <%= @wiki_book['year'] %>ರಲ್ಲಿ ರಚಿಸಿದರು. ಇದನ್ನು '''<%= @wiki_book['publisher'] %>''' ಪ್ರಕಟಿಸಿದೆ '''&lt;ref name="<%= @wiki_book['library'] %> Source URL">{{cite web | url=<%= @wiki_book['url'] %> | title=<%= @wiki_book['book_name'] %> | publisher=<%= @wiki_book['library'] %>}}&lt;/ref>'''.</p>
 
     <p class="wiki-info-text wiki-steps-box">
       {{Infobox Book <br>
@@ -33,7 +30,6 @@
       | preceded_by   =  <br>
       | followed_by   =  <br>
     }}
-
   </p>
 
   <p class="wiki-reference-text wiki-steps-box">
@@ -52,7 +48,6 @@
     [[ವರ್ಗ:ಪುಸ್ತಕಗಳು]] <br>
     [[ವರ್ಗ:ಪುಸ್ತಕ ಸಂಚಯ - ಐಇಜಿ ಯೋಜನೆ]] <br>
   </p>
-
 </div>
 
 <%= link_to "ಮುಂದೆ", "javascript:void(null)",onclick: "showNextDiv(2);" , class: "btn btn-success wiki-btn"%>
