@@ -10,14 +10,12 @@
 
   <br />
   <div id="blk-1" class="toHide" style="display:none">
-    <ul>
-     <li> ದಯವಿಟ್ಟು ವಿಕಿಯಲ್ಲಿ ಲಾಗ್ ಇನ್ (login) ಮಾಡಿ. </li>
+     ದಯವಿಟ್ಟು ವಿಕಿಯಲ್ಲಿ <%= link_to "ಲಾಗ್ ಇನ್ (login)", 'https://kn.wikipedia.org/w/index.php?title=%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:UserLogin&returnto=%E0%B2%AE%E0%B3%81%E0%B2%96%E0%B3%8D%E0%B2%AF+%E0%B2%AA%E0%B3%81%E0%B2%9F', target: '_blank' %> ಮಾಡಿ. 
      <%# if @wiki_book['is_present_in_wiki'] %>
      <!-- <li> ವಿಕಿಯಲ್ಲಿ  <%= @wiki_book['book_name'] %> ಲೇಖನವನ್ನು ಪರಿಷ್ಕರಿಸಿ. </li> -->
      <%# else %>
      <!-- <li> ಹೊಸ ಪುಟ ಸೃಷ್ಟಿಸಿ <%= @wiki_book['book_name'] %>(ಪುಸ್ತಕ).  </li> -->
      <%# end %>
-   </ul>
    <br />
    <%= link_to "ಮುಂದೆ", "javascript:void(null)",onclick: "showNextDiv(1);" , class: "btn btn-success wiki-btn"%>
  </div>
