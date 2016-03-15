@@ -1,53 +1,52 @@
+<!-- Alligment should not be changed. As it is affecting copy template.
+FIx copy template and correct the alignment -->
    <hr />
    <div class="wiki-book-intro"> 
      <h4> <b> ವಿಕಿ ಟೆಂಪ್ಲೇಟು </b>  <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='ಕ್ಲಿಪ್ ಬೋರ್ಡ್‌ಗೆ ಕಾಪಿ ಮಾಡಲು ನನ್ನನ್ನು ಕ್ಲಿಕ್ಕಿಸಿ.'>
        <i class="fa fa-files-o fa-1x"></i>
      </button> </h4>
    </div>
-   <div id="fe_text_wiki"><p class="wiki-main-text wiki-steps-box"> '''<%= @wiki_book['book_name'] %>''' ಪುಸ್ತಕವನ್ನು '''<%= @wiki_book['author'] %>''' ಅವರು <%= @wiki_book['year'] %>ರಲ್ಲಿ ರಚಿಸಿದರು. ಇದನ್ನು '''<%= @wiki_book['publisher'] %>''' ಪ್ರಕಟಿಸಿದೆ '''&lt;ref name="<%= @wiki_book['library'] %> Source URL">{{cite web | url=<%= @wiki_book['url'] %> | title=<%= @wiki_book['book_name'] %> | publisher=<%= @wiki_book['library'] %>}}&lt;/ref>'''.</p>
+   <div id="fe_text_wiki"><p class="wiki-main-text wiki-steps-box">'''<%= @wiki_book['book_name'] %>''' ಪುಸ್ತಕವನ್ನು '''<%= @wiki_book['author'] %>''' ಅವರು <%= @wiki_book['year'] %>ರಲ್ಲಿ ರಚಿಸಿದರು. ಇದನ್ನು '''<%= @wiki_book['publisher'] %>''' ಪ್ರಕಟಿಸಿದೆ '''&lt;ref name="<%= @wiki_book['library'] %> Source URL">{{cite web | url=<%= @wiki_book['url'] %> | title=<%= @wiki_book['book_name'] %> | publisher=<%= @wiki_book['library'] %>}}&lt;/ref>'''.</p>
 
-    <p class="wiki-info-text wiki-steps-box">
-      {{Infobox Book <br>
-      | name          = <%= @wiki_book['book_name'] %> <br>
-      | title_orig    =  <br>
-      | translator    =  <br>
-      | image         =  <br>
-      | image_caption =  <br>
-      | author        = <%= @wiki_book['author'] %> <br>
-      | illustrator   =  <br>
-      | cover_artist  =  <br>
-      | country       = ಭಾರತ <br>
-      | language      = ಕನ್ನಡ  <br>
-      | series        =  <br>
-      | subject       =  <br>
-      | genre         =  <br>
-      | publisher     = <%= @wiki_book['publisher'] %> <br>
-      | pub_date      = <%= @wiki_book['year'] %> <br>
-      | english_pub_date =  <br>
-      | pages         =  <br>
-      | isbn          =  <br>
-      | oclc          =  <br>
-      | preceded_by   =  <br>
-      | followed_by   =  <br>
-    }}
-  </p>
+<p class="wiki-info-text wiki-steps-box">
+  {{Infobox Book <br>
+  | name          = <%= @wiki_book['book_name'] %> <br>
+  | title_orig    =  <br>
+  | translator    =  <br>
+  | image         =  <br>
+  | image_caption =  <br>
+  | author        = <%= @wiki_book['author'] %> <br>
+  | illustrator   =  <br>
+  | cover_artist  =  <br>
+  | country       = ಭಾರತ <br>
+  | language      = ಕನ್ನಡ  <br>
+  | series        =  <br>
+  | subject       =  <br>
+  | genre         =  <br>
+  | publisher     = <%= @wiki_book['publisher'] %> <br>
+  | pub_date      = <%= @wiki_book['year'] %> <br>
+  | english_pub_date =  <br>
+  | pages         =  <br>
+  | isbn          =  <br>
+  | oclc          =  <br>
+  | preceded_by   =  <br>
+  | followed_by   =  <br>
+}}</p>
+<p class="wiki-reference-text wiki-steps-box">==ಉಲ್ಲೇಖಗಳು== <br>
+  &lt;references />
+</p>
 
-  <p class="wiki-reference-text wiki-steps-box">
-    ==ಉಲ್ಲೇಖಗಳು== <br>
-    &lt;references />
-  </p>
+<p class="wiki-tag-text wiki-steps-box">
+  <% @wiki_book['categories'].each do |category|   %>
+  <!-- Exclude category ಲಭ್ಯವಿಲ್ಲ -->
+  <% unless category == 'ಲಭ್ಯವಿಲ್ಲ' %> 
+  [[ವರ್ಗ:<%= category %>]] <br>
+  <% end %>
+  <% end %>
+  [[ವರ್ಗ:<%= @wiki_book['author'] %> ಅವರ ಪುಸ್ತಕಗಳು]] <br>
+  [[ವರ್ಗ:ಪುಸ್ತಕಗಳು]] <br>
+  [[ವರ್ಗ:ಪುಸ್ತಕ ಸಂಚಯ - ಐಇಜಿ ಯೋಜನೆ]] <br>
+</p>
+  </div>
 
-  <p class="wiki-tag-text wiki-steps-box">
-    <% @wiki_book['categories'].each do |category|   %>
-    <!-- Exclude category ಲಭ್ಯವಿಲ್ಲ -->
-    <% unless category == 'ಲಭ್ಯವಿಲ್ಲ' %> 
-    [[ವರ್ಗ:<%= category %>]] <br>
-    <% end %>
-    <% end %>
-    [[ವರ್ಗ:<%= @wiki_book['author'] %> ಅವರ ಪುಸ್ತಕಗಳು]] <br>
-    [[ವರ್ಗ:ಪುಸ್ತಕಗಳು]] <br>
-    [[ವರ್ಗ:ಪುಸ್ತಕ ಸಂಚಯ - ಐಇಜಿ ಯೋಜನೆ]] <br>
-  </p>
-</div>
-
-<%= link_to "ಮುಂದೆ", "javascript:void(null)",onclick: "showNextDiv(2);" , class: "btn btn-success wiki-btn"%>
+  <%= link_to "ಮುಂದೆ", "javascript:void(null)",onclick: "showNextDiv(2);" , class: "btn btn-success wiki-btn"%>
