@@ -248,6 +248,16 @@ We need to fix this later and remove below css
   text-align: center;
  }
 
+ .wiki-guide-box {
+    margin: auto;
+    width: 47%;
+ }
+
+ .confirm-wiki-user-box {
+    margin: auto;
+    width: 40%;
+ }
+
 // wiki div styles
 
  .smpl-step {
@@ -353,6 +363,7 @@ We need to fix this later and remove below css
   }
     .submit-wiki-user {
     width: 100%;
+    text-align: center;
   }
 
 
