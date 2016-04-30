@@ -418,4 +418,29 @@ We need to fix this later and remove below css
  .wiki-not-present-link {
    color: #C72F2F;
  }
+
+ .wiki-preview hr {
+    margin-bottom: 10px;
+    margin-top: 0px;
+    color: #AAAAAA;
+ }
+ .infobox-intro {
+    font-style: italic;
+    font-weight: bold;
+    text-align: center;
+ }
+ .panel-body {
+    background: #f9f9f9 none repeat scroll 0 0;
+ }
+ .wiki-preview .table > tbody > tr > th,  .wiki-preview .table > tbody > tr > td {
+   border-top: 0px;
+    padding: 1px;
+ }
+
+ .wiki-preview {
+    font-family: sans-serif;
+    font-size: 12px;
+ }
+
+    
   // wiki style ended

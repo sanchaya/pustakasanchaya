@@ -17,6 +17,9 @@ kn:
   huduku: 'ಹುಡುಕು'
   category: 'ವಿಭಾಗಗಳು'#'ವರ್ಗ'
   year: 'ಇಸವಿ'
+  country: 'ದೇಶ'
+  language: 'ಭಾಷೆ'
+  published_date: 'ಪ್ರಕಟವಾದ ದಿನಾಂಕ'
 
   # Home
   book: 'ಪುಸ್ತಕ'

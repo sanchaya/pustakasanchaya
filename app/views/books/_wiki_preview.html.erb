@@ -1,0 +1,82 @@
+<div class="wiki-preview">
+  <div class="wiki-main-text wiki-steps-box"> 
+   <p> <b><%= @wiki_book['book_name'] %></b> ಪುಸ್ತಕವನ್ನು <b> <%= @wiki_book['author'] %></b> ಅವರು <%= @wiki_book['year'] %>ರಲ್ಲಿ ರಚಿಸಿದರು. ಇದನ್ನು <b> <%= @wiki_book['publisher'] %></b> ಪ್ರಕಟಿಸಿದೆ.
+   </p>
+   <div class="row"> 
+    <div class="col-md-6">
+      <b> ಉಲ್ಲೇಖಗಳು </b>
+      <hr />
+      <ol>
+        <li> <%= link_to "'#{@wiki_book['book_name']}'", clean_link(@wiki_book['url']) , target: "_blank" %>. <%= @wiki_book['library'] %>.</li>
+      </ol>
+    </div>
+    <div class="col-md-6">
+     <div class="infobox-intro">  
+       <%= @wiki_book['book_name'] %> 
+     </div>
+     <div class="panel panel-default">
+       <div class="panel-body">
+         <table class="table">
+           <tr>
+             <th>
+               <%= t('author') %>
+             </th>
+             <td>
+               <%= @wiki_book['author'] %> 
+             </td>
+           </tr>
+           <tr>
+             <th>
+               <%= t('country') %>
+             </th>
+             <td>
+               <a href="https://kn.wikipedia.org/wiki/%E0%B2%AD%E0%B2%BE%E0%B2%B0%E0%B2%A4" target="_blank"> ಭಾರತ </a>
+             </td>
+           </tr>
+           <tr>
+             <th>
+               <%= t('language') %>
+             </th>
+             <td>
+               <a href="https://kn.wikipedia.org/wiki/%E0%B2%95%E0%B2%A8%E0%B3%8D%E0%B2%A8%E0%B2%A1" target="_blank"> ಕನ್ನಡ </a>
+             </td>
+           </tr>
+           <tr>
+             <th>
+               <%= t('publisher') %>
+             </th>
+             <td>
+               <%= @wiki_book['publisher']  %> 
+             </td>
+           </tr>
+           <tr>
+             <th>
+               <%= t('published_date') %>
+             </th>
+             <td>
+               <%= @wiki_book['year']  %> 
+             </td>
+           </tr>
+         </table>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div class="cat-link">
+   <div class="panel panel-default">
+     <div class="panel-body">
+       <p> 
+         <a href="https://kn.wikipedia.org/wiki/%E0%B2%B5%E0%B2%BF%E0%B2%B6%E0%B3%87%E0%B2%B7:Categories" target="_blank"> ವರ್ಗಗಳು: </a> <% @wiki_book['categories'].each do |category|   %> 
+         <% unless category == 'ಲಭ್ಯವಿಲ್ಲ' or category == 'ಸಾಮಾನ್ಯ' %> 
+         <%= category %> |
+         <% end %>
+         <% end %>
+         <%= @wiki_book['author'] %> ಅವರ ಪುಸ್ತಕಗಳು |
+         ಪುಸ್ತಕಗಳು | 
+         ಪುಸ್ತಕ ಸಂಚಯ - ಐಇಜಿ ಯೋಜನೆ
+       </p>
+     </div>
+   </div>
+ </div>
+</div>
+</div>
