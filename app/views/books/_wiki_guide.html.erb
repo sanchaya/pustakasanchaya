@@ -8,7 +8,9 @@
   </ol>
   <% else %>
   <ol>
-    <li>ವಿಕಿಯಲ್ಲಿ <%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ) ಪುಟ ಸೃಷ್ಟಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ಕಿಸಿ", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' , class: 'wiki-not-present-link' %>  </li>
+    <li>
+      ವಿಕಿಯಲ್ಲಿ ಈ ಪುಸ್ತಕಕ್ಕಾಗಿ ಪುಟವನ್ನು ಸೃಷ್ಟಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ಕಿಸಿ: ‍<%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ)", "https://kn.wikipedia.org/w/index.php?title=#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' , class: 'wiki-not-present-link' %>
+    </li>
     <li>ಕೆಳಗಿನ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ಕಾಪಿ ಮಾಡಿ ವಿಕಿಯಲ್ಲಿ ಉಳಿಸಿ.
 
     </li>

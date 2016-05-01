@@ -1,16 +1,16 @@
 
-  <hr />
-  <div class="wiki-book-intro"> 
-   <h4> <b> ವಿಕಿ ಟೆಂಪ್ಲೇಟು </b>  <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='ಕ್ಲಿಪ್ ಬೋರ್ಡ್‌ಗೆ ಕಾಪಿ ಮಾಡಲು ನನ್ನನ್ನು ಕ್ಲಿಕ್ಕಿಸಿ.'>
-     <i class="fa fa-files-o fa-1x"></i>
-   </button> </h4>
+<hr />
+<div class="wiki-book-intro"> 
+ <h4> <b> ವಿಕಿ ಟೆಂಪ್ಲೇಟು </b>  <button class='btn d_clip_button' data-clipboard-target='fe_text_wiki' data-clipboard-text='Default clipboard text from attribute' id='d_clip_button' title='ಕ್ಲಿಪ್ ಬೋರ್ಡ್‌ಗೆ ಕಾಪಿ ಮಾಡಲು ನನ್ನನ್ನು ಕ್ಲಿಕ್ಕಿಸಿ.'>
+   <i class="fa fa-files-o fa-1x"></i>
+ </button> </h4>
+</div>
+<div class="row">
+ <div class="col-md-6">
+   <%= render 'wiki_syntax' %>
  </div>
- <div class="row">
-   <div class="col-md-6">
-     <%= render 'wiki_syntax' %>
-   </div>
-   <div class="col-md-6"> 
-    <%= render 'wiki_preview' %>
-  </div>
+ <div class="col-md-6"> 
+   <%= render 'wiki_preview' %>
+ </div>
 </div>
 <%= link_to "ಮುಂದೆ", "javascript:void(null)",onclick: "showNextDiv(2);" , class: "btn btn-success wiki-btn"%>
