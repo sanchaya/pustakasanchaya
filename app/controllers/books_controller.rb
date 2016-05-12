@@ -22,7 +22,7 @@ class BooksController < ApplicationController
 
   # Method which captures user's account and article info
   def wiki_user_info
-    user_name = params[:user_name]
+    user_name = session[:wiki_user_id]
     book_name = params[:book_name]
     book_id  = params[:book_id]
     library = params[:library]

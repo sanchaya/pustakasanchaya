@@ -1,19 +1,15 @@
-<div class="confirm-wiki-user-box">
-  <div>
-    ದಯವಿಟ್ಟು ಧೃಡೀಕರಿಸಿ:
-    <ol>
-      <li>ನೀವು ವಿಕಿ ಲೇಖನವನ್ನು ಸೃಷ್ಟಿಸಿದ್ದೀರಿ.</li>
-      <li>ನಂತರ ಪುಟವನ್ನು ಪ್ರಯೋಗಾಲಯದಿಂದ ಮುಖ್ಯ ನೇಮ್‌ಸ್ಪೇಸ್‌ಗೆ ಸರಿಸಿದ್ದೀರಿ.</li>
-    </ol>
+<div>
+  <p> ನೀವು  ಈ ಪುಸ್ತಕಕ್ಕೆ ವಿಕಿ ಲೇಖನವನ್ನು ಸೃಷ್ಟಿಸಿದ್ದೀರಿ. ಧನ್ಯವಾದಗಳು. </p>
+  <p> ನೀವೀಗ ಈ ಸಂಪಾದನೆಯ ಕೊನೆಯ ಹಂತದಲ್ಲಿದ್ದೀರಿ.  
+    ಈ ಪುಟಕ್ಕೆ ಮತ್ತಷ್ಟು ಮಾಹಿತಿ ಸೇರಿಸಿದ ನಂತರ ಪ್ರಯೋಗಾಲಯದಿಂದ ಇದನ್ನು ಸುಲಭವಾಗಿ ವಿಕಿಯ ಮುಖ್ಯ ನೇಮ್‌‌ಸ್ಪೇಸ್‌ಗೆ ಸರಿಸಬಹುದು. ಮುಖ್ಯ ನೇಮ್‌ಸ್ಪೇಸ್‌ಗೆ ಸರಿಸಲು ಬೇಕಿರುವ ಸಹಾಯವನ್ನು ಕೆಳಗೆ ನೀಡಲಾಗಿದೆ. </p>
   </div>
-
-  <div class='submit-wiki-user'>
-    <%= form_tag '/books/wiki_user_info', class: 'wiki-user-info', method: :get do |f| %>
-    <%= hidden_field_tag :user_name, session[:wiki_user_id] %>
-    <%= hidden_field_tag :book_name, @wiki_book['book_name'] %>
-    <%= hidden_field_tag :book_id, @wiki_book['book_id'] %>
-    <%= hidden_field_tag :library, @wiki_book['library'] %>
-    <%= submit_tag "ಮುಗಿಯಿತು", class: "btn btn-success wiki-btn"%>
-    <% end %>
+  <div class="confirm-wiki-user-box">
+    <div class='submit-wiki-user'>
+      <%= form_tag '/books/wiki_user_info', class: 'wiki-user-info', method: :get do |f| %>
+      <%= hidden_field_tag :book_name, @wiki_book['book_name'] %>
+      <%= hidden_field_tag :book_id, @wiki_book['book_id'] %>
+      <%= hidden_field_tag :library, @wiki_book['library'] %>
+      <%= submit_tag "ಮುಗಿಯಿತು", class: "btn btn-success wiki-btn"%>
+      <% end %>
+    </div>
   </div>
-</div>
