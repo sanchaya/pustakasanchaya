@@ -69,17 +69,17 @@ $(function() {
 // Wiki styles ended
 
 
-// validatin added for wii user info form
-$(".wiki-user-info").validate({
+// validatin added for wiki user info form
+$("#capture-wiki-id").validate({
 	rules:{
 
-		"user_name":
+		'user_name':
 		{
 			required: true
 		}
 	},
 	messages:{
-		"user_name":
+		'user_name':
 		{
 			required: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಕಿ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ಬೆರಳಚ್ಚು ಮಾಡಿ"
 		}

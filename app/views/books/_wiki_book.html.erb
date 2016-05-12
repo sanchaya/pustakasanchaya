@@ -72,4 +72,10 @@
   }
 
 }
+// make sure form is valid, then execute next page function.
+function captureWikiUser(id) {
+  if ($("#capture-wiki-id").valid()) {
+    showNextDiv(id);
+  }
+}
 </script>

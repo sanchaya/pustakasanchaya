@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   root 'books#index'
   get 'books/wiki_info'
   get 'books/wiki_user_info'
+  get 'books/capture_user_name' 
 
   get '/categories' => 'categories#index'
   get '/categories/:id' => 'categories#show'

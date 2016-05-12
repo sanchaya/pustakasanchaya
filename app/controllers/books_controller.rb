@@ -31,6 +31,11 @@ class BooksController < ApplicationController
     redirect_to root_path
   end
 
+  def capture_user_name
+    session[:wiki_user_id] = params['user_name']
+    render nothing: true
+  end
+
   # Static info for wiki article creation
   def edit_wikipedia
   end
