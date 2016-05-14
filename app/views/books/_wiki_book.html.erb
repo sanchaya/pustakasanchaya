@@ -76,6 +76,9 @@
 function captureWikiUser(id) {
   if ($("#capture-wiki-id").valid()) {
     showNextDiv(id);
+    var wiki_user_id = document.getElementById('wiki-user-id').value;
+    var wiki_book_link = "https://kn.wikipedia.org/w/index.php?title=ಸದಸ್ಯ:" + wiki_user_id + "/sandbox/" + '<%= @wiki_book['book_name'] %>' + "(ಪುಸ್ತಕ)&action=edit";
+    document.getElementById("wiki-book-link").href = wiki_book_link;
   }
 }
 </script>

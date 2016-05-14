@@ -14,7 +14,7 @@
    <div class='submit-wiki-user'>
     <%= form_tag '/books/capture_user_name', class: 'wiki-user-info',id: 'capture-wiki-id',remote: true, method: :get do |f| %>
     <label>ನಿಮ್ಮ ವಿಕಿ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ಟೈಪಿಸಿ:</label> <br />
-    <%= text_field_tag :user_name, session[:wiki_user_id] %>
+    <%= text_field_tag :user_name, session[:wiki_user_id], id: "wiki-user-id" %>
     <br />
     <%= submit_tag "ಮುಂದೆ", onclick: "captureWikiUser(1)", class: "btn btn-success wiki-btn"%>
     <% end %>

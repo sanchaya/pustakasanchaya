@@ -9,7 +9,7 @@
   <% else %>
   <ol>
     <li>
-      ವಿಕಿಯಲ್ಲಿ ಈ ಪುಸ್ತಕಕ್ಕಾಗಿ ಪುಟವನ್ನು ಸೃಷ್ಟಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ಕಿಸಿ: ‍<%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ)", "https://kn.wikipedia.org/w/index.php?title=ಸದಸ್ಯ:#{session[:wiki_user_id]}/sandbox/#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' , class: 'wiki-not-present-link' %>
+      ವಿಕಿಯಲ್ಲಿ ಈ ಪುಸ್ತಕಕ್ಕಾಗಿ ಪುಟವನ್ನು ಸೃಷ್ಟಿಸಲು ಇಲ್ಲಿ ಕ್ಲಿಕ್ಕಿಸಿ: ‍<%=link_to "#{@wiki_book['book_name']}(ಪುಸ್ತಕ)", "https://kn.wikipedia.org/w/index.php?title=ಸದಸ್ಯ:#{session[:wiki_user_id]}/sandbox/#{@wiki_book['book_name']}(ಪುಸ್ತಕ)&action=edit", target: '_blank' , class: 'wiki-not-present-link', id: 'wiki-book-link' %>
     </li>
     
     <li>ಕೆಳಗಿನ ಪ್ಯಾನೆಲ್‌ನಲ್ಲಿರುವ ಎಲ್ಲ ಮಾಹಿತಿಯನ್ನು ಕಾಪಿ ಮಾಡಿ ವಿಕಿಯಲ್ಲಿ ಉಳಿಸಿ.
