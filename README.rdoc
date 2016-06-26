@@ -1,4 +1,14 @@
 Pustaka Sanchaya:
+Client side open source application which calls multiple API's to show the list of free available books online.
+
+Using pustaka users can search free available online books. Also users can search based on categories they like.
+On search pustake shows available books and its information including link to download/read online.
+
+
+Pustaka for Wiki:
+Pustaka is helping users to update these non-copyrighted, free online available book information on Wiki if its not already available.
+Tool gives step by step tutorial for normal users to create/update wiki article on these books.
+
 
 You should have received a copy of the GNU General Public License along with this program. If not, see <www.gnu.org/licenses/>.
 
@@ -7,3 +17,7 @@ Technologies Used
 Ruby 2.1.5 
 Rails 4.1.6
 Mysql
+
+API SOURCE:
+Samooha Sanchaya
+Wikipedia
