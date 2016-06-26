@@ -1,5 +1,6 @@
 Pustaka Sanchaya:
-Client side open source application which calls multiple API's to show the list of free available books online.
+
+Client side open source application which calls multiple API's to show the list of free available books online and make search available for users.
 
 Using pustaka users can search free available online books. Also users can search based on categories they like.
 On search pustake shows available books and its information including link to download/read online.
