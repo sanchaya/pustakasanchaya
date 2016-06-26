@@ -13,19 +13,19 @@
     <% @books.each do |book| %>
     <tr>
       <td>
-        <%= book[0] %>
+        <%= book['book'] %>
       </td>
       <td>
-        <%= book[1] %>
+        <%= book['author'] %>
       </td>
       <td>
-        <%= book[2] %>
+        <%= book['publisher'] %>
       </td>
       <td>
-        <%= book[3] %>
+        <%= book['library'] %>
       </td>
        <td>
-        <%= book[4] %>
+        <%= book['year'] %>
       </td>
       <td>
         <%= link_to(clean_link(book[5]), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>

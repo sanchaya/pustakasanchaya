@@ -49,29 +49,6 @@
 </div>
 
 <script type="text/javascript">
- function showNextDiv(id) {
-  var prev_id = id - 1
-  var next_id = id + 1
-  var next_div_id = 'step' + next_id
-  var prev_div_id = 'step' + prev_id
-  var cur_div_id = 'step' + id
-  document.getElementById('step1').style.display = 'none';
-  document.getElementById('step2').style.display = 'none';
-  document.getElementById('step3').style.display = 'none';
-  document.getElementById(next_div_id).style.display = 'block';
-
-  var removclassname = document.getElementsByClassName(cur_div_id);
-  for(var i=0;i<removclassname.length;i++){
-    removclassname[i].classList.remove("active");
-    removclassname[i].className += ' complete';
-  }
-  var removclassname = document.getElementsByClassName(next_div_id);
-  for(var i=0;i<removclassname.length;i++){
-    removclassname[i].classList.remove("disabled");
-    removclassname[i].className += ' active';
-  }
-
-}
 // make sure form is valid, then execute next page function.
 function captureWikiUser(id) {
   if ($("#capture-wiki-id").valid()) {
