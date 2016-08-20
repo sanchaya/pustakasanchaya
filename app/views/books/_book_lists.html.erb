@@ -29,6 +29,10 @@
       </td>
       <td>
         <%= link_to(clean_link(book[5]), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
+        <% if book[6] and book[6]['archive_url'] %>
+        <!-- Temp fix  -->
+         <%= link_to book[6].split('archive_url:').last, class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
+        <% end %>
       </td>
     </tr>
     <% end %>

@@ -4,7 +4,7 @@ class BooksController < ApplicationController
     begin
       if params && params[:search] && !params[:search].blank?
         books = JSON.parse(Book.search(params[:search]))
-        @books = Kaminari.paginate_array(books).page(params[:page]).per(8) 
+        @books = Kaminari.paginate_array(books).page(params[:page]).per(8)
       else
         @wiki_book = JSON.parse(Book.wiki_search)
       end
