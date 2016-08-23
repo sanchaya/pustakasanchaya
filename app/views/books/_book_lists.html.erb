@@ -13,25 +13,29 @@
     <% @books.each do |book| %>
     <tr>
       <td>
-        <%= book[0] %>
+        <%= book['name'] %>
       </td>
       <td>
-        <%= book[1] %>
+        <%= book['author'] %>
       </td>
       <td>
-        <%= book[2] %>
+        <%= book['publisher'] %>
       </td>
       <td>
-        <%= book[3] %>
+        <%= book['library'] %>
       </td>
        <td>
-        <%= book[4] %>
+        <%= book['year'] %>
       </td>
       <td>
-        <%= link_to(clean_link(book[5]), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
-        <% if book[6] and book[6]['archive_url'] %>
+        <%= link_to(clean_link(book['link']), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
+        <% if book['metadata'] && archive_url(book['metadata']) %>
         <!-- Temp fix  -->
-         <%= link_to book[6].split('archive_url:').last, class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
+         <%= link_to book['metadata'].split('archive_url:').last, class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
+        <% end %>
+        <% if book['metadata'] && wikimedia_url(book['metadata']) %>
+        <!-- Temp fix  -->
+         <%= link_to book['metadata'].split('wikimedia_url:').last, class: 'archive-url', target: '_blank'  do %> <%= image_tag('commonswiki.png') %> <% end %>
         <% end %>
       </td>
     </tr>
