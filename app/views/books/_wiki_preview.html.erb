@@ -66,6 +66,33 @@
          </table>
        </div>
      </div>
+     <% if @wiki_book['other_metadata'] %>
+     <% if @wiki_book['other_metadata']['wikimedia_url'] %>
+     <div class="panel panel-default">
+       <div class="panel-body">
+         <div class="source-url-image">
+           <img class="noviewer" width="30" height="40" data-file-height="1376" data-file-width="1024" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/45px-Commons-logo.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/59px-Commons-logo.svg.png 2x" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/30px-Commons-logo.svg.png" alt="">
+         </div>
+         <div>
+           ವಿಕಿಮೀಡಿಯ ಕಣಜದಲ್ಲಿ <%= link_to get_commons_filename(@wiki_book['other_metadata']['wikimedia_url']),@wiki_book['other_metadata']['wikimedia_url'], target: "_blank" %> ವಿಷಯಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಮಾಧ್ಯಮಗಳಿವೆ .
+         </div>
+       </div>
+     </div>
+     <% end %>
+     <% if @wiki_book['other_metadata']['wikisource_url'] %>
+     <div class="panel panel-default">
+       <div class="panel-body">
+         <div class="source-url-image">
+           <img width="50" height="52" data-file-height="430" data-file-width="410" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Wikisource-logo.svg/75px-Wikisource-logo.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Wikisource-logo.svg/100px-Wikisource-logo.svg.png 2x" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Wikisource-logo.svg/50px-Wikisource-logo.svg.png" alt="Wikisource-logo.svg">
+         </div>
+         <div>
+          <a href="https://kn.wikisource.org/wiki/%E0%B2%AE%E0%B3%81%E0%B2%96%E0%B3%8D%E0%B2%AF_%E0%B2%AA%E0%B3%81%E0%B2%9F" target="_blank"> ವಿಕಿಸೋರ್ಸ್ </a> ತಾಣದಲ್ಲಿ ಈ ವಿಷಯಕ್ಕೆ ಸಂಬಂಧಪಟ್ಟ ಮೂಲಕೃತಿಗಳು ಇವೆ:
+           <%= link_to get_wikisource_filename(@wiki_book['other_metadata']['wikisource_url']),@wiki_book['other_metadata']['wikisource_url'], target: "_blank" %> 
+         </div>
+       </div>
+     </div>
+     <% end %>
+     <% end %>
    </div>
  </div>
  <div class="cat-link">

@@ -30,6 +30,16 @@
   &lt;references />
 </p>
 
+<% if @wiki_book['other_metadata'] %>
+<% if @wiki_book['other_metadata']['wikimedia_url'] %>
+{{commons|File:<%= get_commons_filename(@wiki_book['other_metadata']['wikimedia_url']) %>.djvu|<%= get_commons_filename(@wiki_book['other_metadata']['wikimedia_url']) %>}}
+<% end %>
+<% if @wiki_book['other_metadata']['wikisource_url'] %>
+<br />
+{{Wikisource|Index:<%= get_wikisource_filename(@wiki_book['other_metadata']['wikisource_url']) %>.djvu|<%= get_wikisource_filename(@wiki_book['other_metadata']['wikisource_url']) %>}}
+<% end %>
+<% end %>
+
 <p class="wiki-tag-text wiki-steps-box">
   <% @wiki_book['categories'].each do |category|   %>
   <!-- Exclude category ಲಭ್ಯವಿಲ್ಲ -->

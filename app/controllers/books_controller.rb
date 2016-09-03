@@ -7,6 +7,8 @@ class BooksController < ApplicationController
         @books = Kaminari.paginate_array(books).page(params[:page]).per(8)
       else
         @wiki_book = JSON.parse(Book.wiki_search)
+        puts @wiki_book['other_metadata'].inspect
+        puts @wiki_book['other_metadata']['wikimedia_url'].inspect
       end
     rescue
       @books = {}
