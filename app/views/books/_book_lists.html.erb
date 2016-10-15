@@ -29,13 +29,11 @@
       </td>
       <td>
         <%= link_to(clean_link(book['link']), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
-        <% if book['metadata'] && archive_url(book['metadata']) %>
+        <% if book['metadata'] %>
         <!-- Temp fix  -->
-         <%= link_to book['metadata'].split('archive_url:').last, class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
-        <% end %>
-        <% if book['metadata'] && wikimedia_url(book['metadata']) %>
+         <%= link_to wikimedia_url(book['metadata']), class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
         <!-- Temp fix  -->
-         <%= link_to book['metadata'].split('wikimedia_url:').last, class: 'archive-url', target: '_blank'  do %> <%= image_tag('commonswiki.png') %> <% end %>
+         <%= link_to wikisource_url(book['metadata']), class: 'archive-url', target: '_blank'  do %> <%= image_tag('commonswiki.png') %> <% end %>
         <% end %>
       </td>
     </tr>
