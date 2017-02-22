@@ -19,12 +19,12 @@ module BooksHelper
 
   # very hard and worst way of fetching the link, should think of changing it
   def wikisource_url(metadata)
-     links = metadata.split('.djvu')
-     links.each do |link|
-      if link.include?('wikisource')
-        return clean_file_name(link.split('wikisource_url:').last)
-      end
-     end
+     # links = metadata.split('.djvu')
+     # links.each do |link|
+      # if link.include?('wikisource')
+      #   return clean_file_name(link.split('wikisource_url:').last)
+      # end
+     # end
   end
 
   def clean_file_name(file_name)
