@@ -185,12 +185,21 @@
 
  .copy-right {
  	margin: auto;
+  padding-top: 1%;
  	width: 90%;
  }
 
  .main-search hr {
  	width: 60%;
  }
+
+.footer {
+     bottom: 0;
+     width: 100%;
+     height: 60px;
+     margin-top: 2%;
+     background-color: #f8f8f8;
+}
 
  /* Blocking ime selector pop up as we have bug with current version and botstrap 3
 We need to fix this later and remove below css

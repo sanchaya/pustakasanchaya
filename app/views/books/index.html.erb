@@ -1,7 +1,11 @@
 <div class="main-search">
   <div class="intoduction-text">
     <p align="center">
-      <a href="http://oudl.osmania.ac.in/" target="_blank">ಓಸ್ಮಾನಿಯ ವಿಶ್ವವಿದ್ಯಾಲಯದ ಡಿಜಿಟಲ್ ಲೈಬ್ರರಿ </a> ಮತ್ತು <a href="http://dli.gov.in/" target="_blank"> ಡಿಜಿಟಲ್ ಲೈಬ್ರರಿ ಆಫ್ ಇಂಡಿಯಗಳಲ್ಲಿರುವ </a> ಮುಕ್ತ ಕನ್ನಡ ಪುಸ್ತಕಗಳನ್ನು, ಅವುಗಳ ಲೇಖಕರು ಹಾಗೂ ಪ್ರಕಾಶಕರನ್ನು ಸುಲಭವಾಗಿ ಹುಡುಕಿ.
+      ಅಂತರಜಾಲದಲ್ಲಿರುವ ಡಿಜಿಟಲ್ ಲೈಬ್ರರಿಗಳಲ್ಲಿನ ಕನ್ನಡ ಪುಸ್ತಕಗಳನ್ನು ಹುಡುಕುವುದನ್ನು ಸುಲಭವಾಗಿಸುವುದು ಪುಸ್ತಕ ಸಂಚಯದ ಮುಖ್ಯ ಗುರಿ. 
+      <br />
+      <a href="http://dli.gov.in/" target="_blank"> ಡಿಜಿಟಲ್ ಲೈಬ್ರರಿ ಆಫ್ ಇಂಡಿಯ </a>,   <a href="http://oudl.osmania.ac.in/" target="_blank"> ಓಸ್ಮಾನಿಯ ವಿಶ್ವವಿದ್ಯಾಲಯದ ಡಿಜಿಟಲ್ ಲೈಬ್ರರಿ </a>, ಹಾಗೂ  <a href="http://dli.ernet.in/kanaja/handle/2015/554042" target="_blank">ಕಣಜ‍ ‍‌‌ 
+      ಡಿಜಿಟಲ್ ಲೈಬ್ರರಿಗಳಲ್ಲಿರುವ </a>  ಪುಸ್ತಕಗಳನ್ನು ಈಗ ನೀವಿಲ್ಲಿ ಹುಡುಕಬಹುದು. 
+
     </p>
   </div>
   <hr />
@@ -9,7 +13,8 @@
     <%= form_tag root_path, method: :get do %>
     <%= search_field_tag "search" ,params[:search], autofocus: params[:search] ? false : true , class: 'form-control kan-ime', placeholder: "#{t(:huduku)}" %>
     <% end %>
-    <p class="search-bottom-text"> ಈ ಹುಡುಕು ಸೌಲಭ್ಯವನ್ನು ನಮ್ಮ <a href="http://samooha.sanchaya.net" target="_blank"> ಸಮೂಹ ಸಂಚಯ ಯೋಜನೆ </a> ಸಾಧ್ಯವಾಗಿಸಿದೆ.</p>
+    <p class="search-bottom-text">   ಪುಸ್ತಕ ಸಂಚಯಕ್ಕೆ ಅವಶ್ಯವಿರುವ ಮಾನವ ಸಂಪನ್ಮೂಲವನ್ನು <a href="http://samooha.sanchaya.net" target="_blank"> ಸಮೂಹ ಸಂಚಯದ </a> ಕ್ರೌಡ್‌ಸೋರ್ಸಿಂಗ್ ಮೂಲಕ ಪಡೆದುಕೊಳ್ಳಲಾಗಿದೆ. ನಮ್ಮ ಯೋಜನೆಗಳಲ್ಲಿ ಭಾಗವಹಿಸಲು ಇಚ್ಛಿಸುವವರು ‍‍ಸಂಚಯ ಸಂಪರ್ಕಿಸಬಹುದು.
+    </p>
   </div>
   <hr />
 </div>
@@ -20,8 +25,8 @@
   <%= render 'book_lists' %>
 </div>
 <% else %>
-  <% if @wiki_book and !@wiki_book.blank? %>
-    <%= render "wiki_book" %>
-  <% end %>
-  <%= render 'stats' %>
+<% if @wiki_book and !@wiki_book.blank? %>
+<%= render "wiki_book" %>
+<% end %>
+<%= render 'stats' %>
 <% end %>
