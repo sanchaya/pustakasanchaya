@@ -37,7 +37,6 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
-  # gem 'debugger'
 end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
