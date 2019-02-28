@@ -20,6 +20,7 @@ kn:
   country: 'ದೇಶ'
   language: 'ಭಾಷೆ'
   published_date: 'ಪ್ರಕಟವಾದ ದಿನಾಂಕ'
+  book_link: ಪುಸ್ತಕದ ಕೊಂಡಿ
 
   # Home
   book: 'ಪುಸ್ತಕ'
@@ -37,4 +38,3 @@ kn:
   publisher: 'ಪ್ರಕಾಶಕ'
   kannada: 'ಕನ್ನಡ'
   english: 'ಇಂಗ್ಲೀಷ್'
-  
