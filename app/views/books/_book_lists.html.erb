@@ -6,7 +6,7 @@
       <th>  <%= t :publisher %> </th>
       <th>  <%= t :library %> </th>
       <th>  <%= t :year %> </th>
-      <th> </th>
+      <th>  <%= t :book_link %> </th>
     </tr>
   </thead>
   <tbody>
@@ -28,7 +28,7 @@
         <%= book['year'] %>
       </td>
       <td>
-        <%= link_to(clean_link(book['link']), target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
+        <%= link_to(book['book_link'], target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
         <% if book['metadata'] %>
          <% if wikimedia_url(book['metadata']) &&  !wikimedia_url(book['metadata']).blank? %>
           <!-- Temp fix  -->

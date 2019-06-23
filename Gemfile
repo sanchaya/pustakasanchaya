@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-ruby '2.1.5'
+ruby '2.4.6'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.6'
+gem 'rails', '4.2.11.1'
 # Use mysql as the database for Active Record
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
@@ -37,6 +37,7 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
+  gem 'byebug'
 end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
@@ -47,7 +48,7 @@ gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) support
 gem "twitter-bootstrap-rails"
 gem 'will_paginate'
 gem "font-awesome-rails"
-gem 'ransack'
+# gem 'ransack'
 gem 'httparty'
 gem 'google-analytics-rails'
 gem 'newrelic_rpm'
