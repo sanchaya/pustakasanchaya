@@ -28,7 +28,11 @@
         <%= book['year'] %>
       </td>
       <td>
-        <%= link_to(book['book_link'], target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
+        <!-- <%= link_to(book['book_link'], target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %> -->
+         <% if book['archive_url'] &&  !book['archive_url'].blank? %>
+          <!-- Temp fix  -->
+          <%= link_to book['archive_url'], class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
+    	<% end %>
         <% if book['metadata'] %>
          <% if wikimedia_url(book['metadata']) &&  !wikimedia_url(book['metadata']).blank? %>
           <!-- Temp fix  -->
