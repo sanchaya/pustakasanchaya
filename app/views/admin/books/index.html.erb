@@ -133,7 +133,12 @@
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
 
     fetch('<%= admin_edit_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', sourceId))
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-edit"></i> Edit';
@@ -150,7 +155,7 @@
       .catch(error => {
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-edit"></i> Edit';
-        alert('Error loading book: ' + error);
+        alert('Error loading book: ' + error.message);
       });
   }
 

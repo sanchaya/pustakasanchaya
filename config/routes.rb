@@ -45,6 +45,26 @@ Rails.application.routes.draw do
     
     get '/corrections' => 'corrections#index', as: :corrections
     get '/audit-log' => 'corrections#audit_log', as: :audit_log
+    
+    get '/authors' => 'metadata#authors', as: :authors
+    get '/authors/find-similar' => 'metadata#find_similar_authors', as: :find_similar_authors
+    post '/authors/rename' => 'metadata#rename_author', as: :rename_author
+    post '/authors/merge' => 'metadata#merge_authors', as: :merge_authors
+    
+    get '/publishers' => 'metadata#publishers', as: :publishers
+    get '/publishers/find-similar' => 'metadata#find_similar_publishers', as: :find_similar_publishers
+    post '/publishers/rename' => 'metadata#rename_publisher', as: :rename_publisher
+    post '/publishers/merge' => 'metadata#merge_publishers', as: :merge_publishers
+    
+    get '/categories' => 'metadata#categories', as: :categories
+    get '/categories/find-similar' => 'metadata#find_similar_categories', as: :find_similar_categories
+    post '/categories/rename' => 'metadata#rename_category', as: :rename_category
+    post '/categories/merge' => 'metadata#merge_categories', as: :merge_categories
+    
+    get '/libraries' => 'metadata#libraries', as: :libraries
+    get '/libraries/find-similar' => 'metadata#find_similar_libraries', as: :find_similar_libraries
+    post '/libraries/rename' => 'metadata#rename_library', as: :rename_library
+    post '/libraries/merge' => 'metadata#merge_libraries', as: :merge_libraries
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
