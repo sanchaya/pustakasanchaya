@@ -8,18 +8,21 @@ class Admin::DashboardController < ApplicationController
     # Load statistics
     stats_file = Rails.root.join('db', 'stats.json')
     @stats = JSON.parse(File.read(stats_file)) if File.exist?(stats_file)
+    @stats ||= {
+      'total_books' => 0,
+      'total_authors' => 0,
+      'total_publishers' => 0,
+      'libraries' => {}
+    }
 
     # Load corrections count
     corrections_file = Rails.root.join('db', 'corrections.json')
     @corrections = JSON.parse(File.read(corrections_file)) if File.exist?(corrections_file)
-    @corrections_count = @corrections ? @corrections['edits'].length : 0
+    @corrections ||= { 'edits' => [], 'merges' => [] }
+    @corrections_count = @corrections['edits'].length
 
     # Get recent edits
-    @recent_edits = if @corrections
-                      @corrections['edits'].reverse.first(10)
-                    else
-                      []
-                    end
+    @recent_edits = @corrections['edits'].reverse.first(10)
   end
 
   def editors
