@@ -1,0 +1,212 @@
+<% content_for :page_title do %>
+  Books Management
+<% end %>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <form method="GET" action="<%= admin_books_path %>" class="mb-0">
+          <div class="input-group">
+            <input 
+              type="text" 
+              class="form-control" 
+              name="q"
+              placeholder="Search books by title, author, or publisher..."
+              value="<%= @query %>"
+              autofocus>
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-search"></i> Search
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @books.any? %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #5F3792;">
+            <i class="fas fa-book"></i> 
+            Search Results 
+            <span class="badge bg-secondary"><%= @books.total_count %></span>
+          </h5>
+
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead style="background: #f5f5f5;">
+                <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Publisher</th>
+                  <th>Year</th>
+                  <th>Source</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @books.each do |book| %>
+                  <tr>
+                    <td>
+                      <strong><%= truncate(book['name'], length: 40) %></strong>
+                    </td>
+                    <td>
+                      <small><%= truncate(book['author'], length: 30) %></small>
+                    </td>
+                    <td>
+                      <small><%= truncate(book['publisher'], length: 25) %></small>
+                    </td>
+                    <td>
+                      <small><%= book['year'] || 'N/A' %></small>
+                    </td>
+                    <td>
+                      <small>
+                        <span class="badge bg-secondary"><%= book['library'] %></span>
+                      </small>
+                    </td>
+                    <td>
+                      <button 
+                        class="btn btn-sm btn-outline-primary"
+                        onclick="editBook('<%= book['source_identifier'] %>', this)"
+                        title="Edit metadata">
+                        <i class="fas fa-edit"></i> Edit
+                      </button>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <nav class="mt-4">
+            <%= paginate @books %>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #5F3792; color: white;">
+          <h5 class="modal-title">Edit Book Metadata</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="editModalBody">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="saveBookEdit()">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% elsif @query.present? %>
+  <div class="alert alert-info">
+    <i class="fas fa-search"></i> No books found matching "<strong><%= @query %></strong>". Try a different search.
+  </div>
+<% else %>
+  <div class="alert alert-info">
+    <i class="fas fa-info-circle"></i> Enter a search query to find books to edit.
+  </div>
+<% end %>
+
+<script>
+  function editBook(sourceId, button) {
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+    fetch('<%= admin_edit_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', sourceId))
+      .then(response => response.json())
+      .then(data => {
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-edit"></i> Edit';
+
+        if (data.error) {
+          alert('Error: ' + data.error);
+          return;
+        }
+
+        renderEditForm(data);
+        const modal = new bootstrap.Modal(document.getElementById('editModal'));
+        modal.show();
+      })
+      .catch(error => {
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-edit"></i> Edit';
+        alert('Error loading book: ' + error);
+      });
+  }
+
+  function renderEditForm(data) {
+    const book = data.book;
+    const html = `
+      <form id="editForm">
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" data-field="name" value="${book.name || ''}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Author</label>
+          <input type="text" class="form-control" data-field="author" value="${book.author || ''}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Publisher</label>
+          <input type="text" class="form-control" data-field="publisher" value="${book.publisher || ''}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Year</label>
+          <input type="number" class="form-control" data-field="year" value="${book.year || ''}">
+        </div>
+        <div class="alert alert-info">
+          <small><strong>Source:</strong> ${data.source_identifier}</small>
+        </div>
+      </form>
+    `;
+    document.getElementById('editModalBody').innerHTML = html;
+    document.getElementById('editForm').dataset.sourceId = data.source_identifier;
+  }
+
+  function saveBookEdit() {
+    const form = document.getElementById('editForm');
+    const sourceId = form.dataset.sourceId;
+    const inputs = form.querySelectorAll('input');
+
+    inputs.forEach(input => {
+      const field = input.dataset.field;
+      const value = input.value;
+
+      fetch('<%= admin_update_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', sourceId), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+          field: field,
+          value: value
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Book updated successfully!');
+          location.reload();
+        } else {
+          alert('Error: ' + (data.error || 'Unknown error'));
+        }
+      });
+    });
+  }
+</script>

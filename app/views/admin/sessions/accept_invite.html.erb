@@ -1,0 +1,114 @@
+<% content_for :page_title do %>
+  Accept Invite
+<% end %>
+
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #5F3792 0%, #933586 100%);">
+  <div class="card" style="width: 100%; max-width: 500px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+    <div class="card-body" style="padding: 40px;">
+      <h2 style="text-align: center; color: #5F3792; margin-bottom: 10px;">
+        <i class="fas fa-user-plus"></i> Create Your Account
+      </h2>
+      <p style="text-align: center; color: #666; margin-bottom: 30px;">
+        You've been invited to join the admin panel
+      </p>
+      
+      <% if flash[:alert].present? %>
+        <div class="alert alert-danger" role="alert">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+      
+      <form method="POST" action="<%= admin_accept_invite_path(token: params[:token]) %>">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            value="<%= @invite['email'] %>"
+            disabled
+            style="background: #f5f5f5;">
+        </div>
+        
+        <div class="mb-3">
+          <label for="name" class="form-label">Full Name</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="name" 
+            name="name" 
+            placeholder="Your name"
+            required
+            autofocus>
+        </div>
+        
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="password" 
+            name="password" 
+            placeholder="Create a strong password"
+            required
+            minlength="8">
+          <small class="text-muted d-block mt-2">
+            <i class="fas fa-info-circle"></i> Minimum 8 characters
+          </small>
+        </div>
+        
+        <div class="mb-3">
+          <label for="password_confirm" class="form-label">Confirm Password</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="password_confirm" 
+            name="password_confirm" 
+            placeholder="Confirm password"
+            required
+            minlength="8"
+            onchange="validatePassword()">
+        </div>
+        
+        <div class="mb-3">
+          <label for="role" class="form-label">Role</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="role" 
+            value="<%= @invite['role'].humanize %>"
+            disabled
+            style="background: #f5f5f5;">
+        </div>
+        
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-check"></i> Create Account
+          </button>
+        </div>
+      </form>
+      
+      <p style="text-align: center; color: #666; margin-top: 20px; margin-bottom: 0;">
+        Already have an account? 
+        <a href="<%= admin_login_path %>" style="color: #5F3792; text-decoration: none;">
+          Login here
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function validatePassword() {
+    const pwd = document.getElementById('password').value;
+    const confirm = document.getElementById('password_confirm').value;
+    
+    if (pwd !== confirm) {
+      document.getElementById('password_confirm').classList.add('is-invalid');
+      return false;
+    } else {
+      document.getElementById('password_confirm').classList.remove('is-invalid');
+      return true;
+    }
+  }
+</script>

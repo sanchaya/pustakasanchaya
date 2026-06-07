@@ -1,0 +1,158 @@
+<% content_for :page_title do %>
+  Dashboard
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-chart-bar"></i> Portal Statistics
+        </h5>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="text-center p-3">
+              <div style="font-size: 32px; color: #5F3792; font-weight: bold;">
+                <%= number_with_delimiter(@stats['total_books']) %>
+              </div>
+              <small class="text-muted">Total Books</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3">
+              <div style="font-size: 32px; color: #933586; font-weight: bold;">
+                <%= number_with_delimiter(@stats['total_authors']) %>
+              </div>
+              <small class="text-muted">Authors</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3">
+              <div style="font-size: 32px; color: #9E3281; font-weight: bold;">
+                <%= number_with_delimiter(@stats['total_publishers']) %>
+              </div>
+              <small class="text-muted">Publishers</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center p-3">
+              <div style="font-size: 32px; color: #5F3792; font-weight: bold;">
+                <%= @stats['libraries'].length %>
+              </div>
+              <small class="text-muted">Sources</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-tools"></i> Editing Stats
+        </h5>
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Total Corrections</span>
+            <strong><%= @corrections_count %></strong>
+          </div>
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Book Edits</span>
+            <strong><%= @corrections_count > 0 ? @corrections['edits'].select { |e| e['type'] == 'book_edit' }.length : 0 %></strong>
+          </div>
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Duplicates Merged</span>
+            <strong><%= @corrections_count > 0 ? @corrections['merges'].length : 0 %></strong>
+          </div>
+        </div>
+        <div style="margin-top: 15px;">
+          <a href="<%= admin_corrections_path %>" class="btn btn-sm btn-outline-primary">
+            View All Corrections
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-user"></i> My Profile
+        </h5>
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Name</span>
+            <strong><%= @admin.name %></strong>
+          </div>
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Email</span>
+            <strong><%= @admin.email %></strong>
+          </div>
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Role</span>
+            <strong><span class="badge bg-primary"><%= @admin.role.humanize %></span></strong>
+          </div>
+          <div class="list-group-item d-flex justify-content-between">
+            <span>Joined</span>
+            <strong><%= Time.parse(@admin.created_at).strftime('%b %d, %Y') %></strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @recent_edits.any? %>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #5F3792;">
+            <i class="fas fa-history"></i> Recent Activity
+          </h5>
+          <div class="table-responsive">
+            <table class="table table-sm table-hover">
+              <thead style="background: #f5f5f5;">
+                <tr>
+                  <th>Date</th>
+                  <th>Editor</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @recent_edits.each do |edit| %>
+                  <tr>
+                    <td>
+                      <small><%= Time.parse(edit['timestamp']).strftime('%b %d, %H:%M') %></small>
+                    </td>
+                    <td>
+                      <small><%= edit['editor'] %></small>
+                    </td>
+                    <td>
+                      <small>
+                        <% if edit['type'] == 'book_edit' %>
+                          <span class="badge bg-info">Book Edit</span>
+                        <% elsif edit['type'] == 'merge' %>
+                          <span class="badge bg-warning">Merge</span>
+                        <% end %>
+                      </small>
+                    </td>
+                    <td>
+                      <small style="color: #666;"><%= truncate(edit['description'], length: 50) %></small>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

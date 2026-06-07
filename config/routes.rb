@@ -12,6 +12,35 @@ Rails.application.routes.draw do
 
   get '/categories' => 'categories#index'
   get '/categories/:id' => 'categories#show'
+
+  # Admin routes
+  namespace :admin do
+    get '/login' => 'sessions#login', as: :login
+    post '/login' => 'sessions#login'
+    get '/logout' => 'sessions#logout', as: :logout
+    post '/logout' => 'sessions#logout'
+    
+    get '/invite' => 'sessions#invite', as: :invite
+    post '/invite' => 'sessions#invite'
+    get '/invite/accept/:token' => 'sessions#accept_invite', as: :accept_invite
+    post '/invite/accept/:token' => 'sessions#accept_invite'
+    
+    get '/' => 'dashboard#index', as: :dashboard
+    get '/dashboard' => 'dashboard#index'
+    get '/editors' => 'dashboard#editors', as: :editors
+    
+    get '/books' => 'books#index', as: :books
+    get '/books/search' => 'books#search', as: :books_search
+    post '/books/:id/edit' => 'books#update', as: :update_book
+    get '/books/:id/edit' => 'books#edit', as: :edit_book
+    
+    get '/duplicates' => 'duplicates#index', as: :duplicates
+    post '/duplicates/find' => 'duplicates#find', as: :find_duplicates
+    post '/duplicates/merge' => 'duplicates#merge', as: :merge_duplicates
+    
+    get '/corrections' => 'corrections#index', as: :corrections
+    get '/audit-log' => 'corrections#audit_log', as: :audit_log
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -1,0 +1,91 @@
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #5F3792 0%, #933586 100%);">
+  <div class="card" style="width: 100%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+    <div class="card-body" style="padding: 40px;">
+      <h2 style="text-align: center; color: #5F3792; margin-bottom: 30px;">
+        <i class="fas fa-lock"></i> Admin Login
+      </h2>
+      
+      <% if alert.present? %>
+        <div class="alert alert-danger" role="alert">
+          <%= alert %>
+        </div>
+      <% end %>
+      
+      <form method="POST" action="<%= admin_login_path %>">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            placeholder="admin@example.com"
+            required
+            autofocus>
+        </div>
+        
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            id="password" 
+            name="password" 
+            placeholder="••••••••"
+            required>
+        </div>
+        
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+        </div>
+      </form>
+      
+      <hr style="margin: 30px 0;">
+      
+      <p style="text-align: center; color: #666; margin: 0;">
+        No account? 
+        <a href="#" data-bs-toggle="modal" data-bs-target="#inviteModal" style="color: #5F3792; text-decoration: none;">
+          Request an invite
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Invite Modal -->
+<div class="modal fade" id="inviteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #5F3792; color: white;">
+        <h5 class="modal-title">Request Admin Access</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>If you have an invite token, please paste it below to create your account.</p>
+        <div class="form-group">
+          <label for="token">Invite Token:</label>
+          <input type="text" class="form-control" id="token" placeholder="Paste your invite token...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="goToInvite()">
+          <i class="fas fa-arrow-right"></i> Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goToInvite() {
+    const token = document.getElementById('token').value.trim();
+    if (!token) {
+      alert('Please paste your invite token');
+      return;
+    }
+    window.location.href = '<%= admin_accept_invite_path(token: "TOKEN") %>'.replace('TOKEN', token);
+  }
+</script>

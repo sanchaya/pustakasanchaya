@@ -21,5 +21,16 @@ class ApplicationController < ActionController::Base
       session[:page_requests] = 0
       render plain: 'ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ', status: 429
     end
-end
+  end
+
+  # Admin authentication helpers
+  def current_admin
+    @current_admin ||= Admin.find(session[:admin_id]) if session[:admin_id]
+  end
+
+  def admin_logged_in?
+    session[:admin_id].present? && current_admin.present?
+  end
+
+  helper_method :current_admin, :admin_logged_in?
 end

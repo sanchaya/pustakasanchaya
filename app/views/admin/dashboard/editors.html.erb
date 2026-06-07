@@ -1,0 +1,193 @@
+<% content_for :page_title do %>
+  Manage Editors
+<% end %>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-users"></i> Active Editors
+        </h5>
+
+        <% if @admins.any? %>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead style="background: #f5f5f5;">
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Joined</th>
+                  <th>Last Login</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @admins.each do |admin| %>
+                  <tr>
+                    <td><strong><%= admin.name %></strong></td>
+                    <td><small><%= admin.email %></small></td>
+                    <td>
+                      <span class="badge bg-primary"><%= admin.role.humanize %></span>
+                    </td>
+                    <td><small><%= Time.parse(admin.created_at).strftime('%b %d, %Y') %></small></td>
+                    <td>
+                      <% if admin.last_login %>
+                        <small><%= Time.parse(admin.last_login).strftime('%b %d, %H:%M') %></small>
+                      <% else %>
+                        <small class="text-muted">Never</small>
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if admin.active %>
+                        <span class="badge bg-success">Active</span>
+                      <% else %>
+                        <span class="badge bg-danger">Inactive</span>
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if admin.id != current_admin.id && !admin.super_admin? %>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deactivateEditor('<%= admin.id %>')">
+                          <i class="fas fa-ban"></i> Deactivate
+                        </button>
+                      <% else %>
+                        <span class="text-muted small">—</span>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No editors yet.
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-envelope"></i> Pending Invites
+        </h5>
+
+        <% if @pending_invites.any? %>
+          <div class="list-group">
+            <% @pending_invites.each do |invite| %>
+              <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div class="mb-2">
+                    <strong><%= invite['email'] %></strong>
+                    <br>
+                    <small class="text-muted">
+                      Invited <%= Time.parse(invite['created_at']).strftime('%b %d') %>
+                    </small>
+                    <br>
+                    <small class="badge bg-secondary"><%= invite['role'].humanize %></small>
+                  </div>
+                  <button class="btn btn-sm btn-outline-danger" 
+                          onclick="revokeInvite('<%= invite['token'] %>', this)">
+                    <i class="fas fa-trash"></i> Revoke
+                  </button>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="alert alert-info mb-0">
+            <i class="fas fa-info-circle"></i> No pending invites.
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-user-plus"></i> Send New Invite
+        </h5>
+        <form onsubmit="sendInvite(event)">
+          <div class="mb-3">
+            <label for="inviteEmail" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="inviteEmail" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="inviteRole" class="form-label">Role</label>
+            <select class="form-select" id="inviteRole" name="role">
+              <option value="editor">Editor</option>
+              <option value="moderator">Moderator</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="fas fa-paper-plane"></i> Send Invite
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function sendInvite(event) {
+    event.preventDefault();
+    const email = document.getElementById('inviteEmail').value;
+    const role = document.getElementById('inviteRole').value;
+
+    fetch('<%= admin_invite_path %>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ email: email, role: role })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Invite sent! Share this link:\n\n' + data.invite_url);
+        location.reload();
+      } else {
+        alert('Error: ' + (data.error || 'Unknown error'));
+      }
+    });
+  }
+
+  function revokeInvite(token, button) {
+    if (!confirm('Revoke this invite?')) return;
+
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Revoking...';
+
+    fetch('<%= admin_invite_path %>', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({ token: token })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        location.reload();
+      } else {
+        alert('Error: ' + (data.error || 'Unknown error'));
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-trash"></i> Revoke';
+      }
+    });
+  }
+
+  function deactivateEditor(adminId) {
+    if (!confirm('Deactivate this editor? They will no longer be able to login.')) return;
+
+    // Implementation: call deactivate endpoint
+    alert('Feature coming soon');
+  }
+</script>
