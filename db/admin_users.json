@@ -3,13 +3,32 @@
     {
       "id": "admin_1",
       "email": "admin@pustaka.local",
-      "password_hash": "$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/R1i",
+      "password_hash": "$2a$12$weTJcWp3UGJXWKGCzWWmw.eFTjf3bZJBDgR7ydHlI662bB3nxyKiW",
       "name": "Admin User",
       "role": "super_admin",
       "created_at": "2026-06-07T00:00:00Z",
-      "last_login": null,
+      "last_login": "2026-06-07T23:37:29+05:30",
+      "active": true
+    },
+    {
+      "id": "admin_1780855649_e7c48449",
+      "email": "editor@pustaka.local",
+      "password_hash": "$2a$12$okO4922GDVJAGOKmkApRIuIs9sp/aAunpZLyhvf8e8H.zE30Gxnby",
+      "name": "Editor User",
+      "role": "editor",
+      "created_at": "2026-06-07T23:37:29+05:30",
+      "last_login": "2026-06-07T23:37:29+05:30",
       "active": true
     }
   ],
-  "invites": []
+  "invites": [
+    {
+      "token": "0c163f1a3ca31d879cf75d0602919228925b5fa3c5bd5bdf99c96109911ad05c",
+      "email": "editor@pustaka.local",
+      "role": "editor",
+      "created_at": "2026-06-07T23:37:29+05:30",
+      "used": true,
+      "used_at": "2026-06-07T23:37:29+05:30"
+    }
+  ]
 }

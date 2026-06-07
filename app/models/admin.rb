@@ -163,7 +163,7 @@ class Admin
 
   # Update last login
   def update_last_login
-    load_admin_data
+    self.class.load_admin_data
     admin_data = @@admins_cache.find { |a| a['id'] == self.id }
     return false unless admin_data
 

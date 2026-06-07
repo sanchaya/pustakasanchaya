@@ -1,4 +1,18 @@
 {
-  "edits": [],
-  "merges": []
+  "edits": [
+    {
+      "id": "edit_1780855649_f60a67e3",
+      "type": "book_edit",
+      "timestamp": "2026-06-07T23:37:29+05:30",
+      "editor": "admin@pustaka.local",
+      "source_identifier": "test_book_123",
+      "field": "author",
+      "old_value": "Old Author",
+      "new_value": "New Author",
+      "description": "Fixed author name"
+    }
+  ],
+  "merges": [
+
+  ]
 }
