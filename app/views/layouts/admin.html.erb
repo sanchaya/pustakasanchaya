@@ -152,6 +152,12 @@
                 </a>
               </li>
               <li>
+                <a href="<%= admin_profile_path %>" 
+                   class="<%= 'active' if current_page?(admin_profile_path) %>">
+                  <i class="fas fa-user"></i> My Profile
+                </a>
+              </li>
+              <li>
                 <a href="<%= admin_books_path %>" 
                    class="<%= 'active' if current_page?(admin_books_path) %>">
                   <i class="fas fa-book"></i> Books
@@ -193,7 +199,9 @@
             <div class="admin-header">
               <h1><%= yield :page_title %></h1>
               <div class="admin-user">
-                <span><%= current_admin.name %></span>
+                <a href="<%= admin_profile_path %>" style="color: #5F3792; text-decoration: none; margin-right: 15px;">
+                  <i class="fas fa-user-circle"></i> <%= current_admin.name %>
+                </a>
                 <span class="badge"><%= current_admin.role.humanize %></span>
               </div>
             </div>

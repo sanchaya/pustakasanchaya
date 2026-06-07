@@ -70,6 +70,112 @@ class Admin::BooksController < ApplicationController
     }
   end
 
+  def bulk_edit
+    # Show bulk edit interface
+  end
+
+  def bulk_update
+    field = params[:field]
+    find_value = params[:find_value]
+    replace_value = params[:replace_value]
+    scope = params[:scope] || 'all'  # all, author, publisher, library
+
+    all_books = load_all_books
+    affected_books = []
+
+    all_books.each do |book|
+      next unless book[field]
+      
+      should_update = false
+      old_value = book[field].to_s
+
+      case scope
+      when 'exact'
+        should_update = old_value == find_value
+      when 'contains'
+        should_update = old_value.include?(find_value)
+      when 'starts_with'
+        should_update = old_value.start_with?(find_value)
+      when 'ends_with'
+        should_update = old_value.end_with?(find_value)
+      else
+        should_update = true
+      end
+
+      if should_update
+        # Record the edit
+        edit = Correction.record_edit(
+          book['source_identifier'],
+          field,
+          old_value,
+          replace_value,
+          current_admin.email,
+          "Bulk #{field} update: '#{find_value}' → '#{replace_value}' (#{scope})"
+        )
+        
+        affected_books << {
+          source_identifier: book['source_identifier'],
+          title: book['name'],
+          old_value: old_value,
+          new_value: replace_value,
+          edit_id: edit['id']
+        }
+      end
+    end
+
+    render json: {
+      success: true,
+      affected_count: affected_books.length,
+      affected_books: affected_books,
+      message: "Updated #{affected_books.length} book(s)"
+    }
+  end
+
+  def bulk_preview
+    field = params[:field]
+    find_value = params[:find_value]
+    replace_value = params[:replace_value]
+    scope = params[:scope] || 'contains'
+
+    all_books = load_all_books
+    preview_books = []
+
+    all_books.each do |book|
+      next unless book[field]
+      
+      should_update = false
+      old_value = book[field].to_s
+
+      case scope
+      when 'exact'
+        should_update = old_value == find_value
+      when 'contains'
+        should_update = old_value.include?(find_value)
+      when 'starts_with'
+        should_update = old_value.start_with?(find_value)
+      when 'ends_with'
+        should_update = old_value.end_with?(find_value)
+      end
+
+      if should_update
+        preview_books << {
+          source_identifier: book['source_identifier'],
+          title: book['name'],
+          library: book['library'],
+          old_value: old_value,
+          new_value: replace_value
+        }
+      end
+    end
+
+    render json: {
+      success: true,
+      preview_count: preview_books.length,
+      preview_books: preview_books.first(50),  # Show first 50 in preview
+      has_more: preview_books.length > 50
+    }
+  end
+
   private
 
   def authorize_admin!
@@ -111,5 +217,18 @@ class Admin::BooksController < ApplicationController
       library: book['library'],
       thumbnail: book['thumbnail']
     }
+  end
+
+  def load_all_books
+    @all_books ||= (
+      Book.load_jai_gyan_cache +
+      Book.load_servants_cache +
+      Book.load_ankita_cache +
+      Book.load_ruthumana_cache +
+      Book.load_harivu_cache +
+      Book.load_kbh_cache +
+      Book.load_nkp_cache +
+      Book.load_google_books_cache
+    )
   end
 end

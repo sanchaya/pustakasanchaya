@@ -1,0 +1,251 @@
+<% content_for :page_title do %>
+  Bulk Edit Books
+<% end %>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-search-plus"></i> Find & Replace
+        </h5>
+
+        <form id="bulkEditForm">
+          <div class="mb-3">
+            <label for="field" class="form-label">Field to Edit</label>
+            <select class="form-select" id="field" name="field" required>
+              <option value="">-- Select Field --</option>
+              <option value="name">Book Title</option>
+              <option value="author">Author</option>
+              <option value="publisher">Publisher</option>
+              <option value="year">Year</option>
+              <option value="library">Library</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="findValue" class="form-label">Find Value</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="findValue" 
+              name="find_value"
+              placeholder="Value to find"
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="replaceValue" class="form-label">Replace With</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="replaceValue" 
+              name="replace_value"
+              placeholder="Replacement value"
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="scope" class="form-label">Match Type</label>
+            <select class="form-select" id="scope" name="scope">
+              <option value="contains">Contains (Partial Match)</option>
+              <option value="exact">Exact Match</option>
+              <option value="starts_with">Starts With</option>
+              <option value="ends_with">Ends With</option>
+            </select>
+            <small class="text-muted">
+              <br><i class="fas fa-info-circle"></i> 
+              <strong>Contains:</strong> "Smith" matches "John Smith"<br>
+              <strong>Exact:</strong> Must match entire value<br>
+              <strong>Starts With:</strong> "The" matches "The Great Gatsby"<br>
+              <strong>Ends With:</strong> "Inc." matches "Penguin Inc."
+            </small>
+          </div>
+
+          <button type="button" class="btn btn-info w-100 mb-2" onclick="previewChanges()">
+            <i class="fas fa-eye"></i> Preview Changes
+          </button>
+          <button type="button" class="btn btn-warning w-100" onclick="showWarning()">
+            <i class="fas fa-exclamation-triangle"></i> Apply Changes
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #5F3792;">
+          <i class="fas fa-list"></i> Preview Results
+        </h5>
+        
+        <div id="previewContainer" style="min-height: 400px;">
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> Click "Preview Changes" to see which books will be affected
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function previewChanges() {
+    const field = document.getElementById('field').value;
+    const findValue = document.getElementById('findValue').value;
+    const replaceValue = document.getElementById('replaceValue').value;
+    const scope = document.getElementById('scope').value;
+
+    if (!field || !findValue || !replaceValue) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    const container = document.getElementById('previewContainer');
+    container.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+    fetch('<%= admin_bulk_preview_books_path %>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        field: field,
+        find_value: findValue,
+        replace_value: replaceValue,
+        scope: scope
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.success) {
+        container.innerHTML = '<div class="alert alert-danger">Error: ' + (data.error || 'Unknown error') + '</div>';
+        return;
+      }
+
+      if (data.preview_count === 0) {
+        container.innerHTML = '<div class="alert alert-warning"><i class="fas fa-search"></i> No matches found</div>';
+        return;
+      }
+
+      let html = `<div class="alert alert-success">
+        <strong>Found ${data.preview_count} matching book(s)</strong>
+        ${data.has_more ? '<br><small>(Showing first 50)</small>' : ''}
+      </div>`;
+
+      html += '<div class="table-responsive"><table class="table table-sm table-hover">';
+      html += '<thead style="background: #f5f5f5;"><tr>';
+      html += '<th>Title</th><th>Library</th><th>Old Value</th><th>New Value</th>';
+      html += '</tr></thead><tbody>';
+
+      data.preview_books.forEach(book => {
+        html += `<tr>
+          <td><small><strong>${book.title}</strong></small></td>
+          <td><small><span class="badge bg-secondary">${book.library}</span></small></td>
+          <td><small><code style="background: #ffebee; padding: 2px 4px;">${escapeHtml(book.old_value)}</code></small></td>
+          <td><small><code style="background: #e8f5e9; padding: 2px 4px;">${escapeHtml(book.new_value)}</code></small></td>
+        </tr>`;
+      });
+
+      html += '</tbody></table></div>';
+
+      if (data.has_more) {
+        html += '<small class="text-muted">... and more</small>';
+      }
+
+      container.innerHTML = html;
+    })
+    .catch(error => {
+      container.innerHTML = '<div class="alert alert-danger">Error: ' + error + '</div>';
+    });
+  }
+
+  function showWarning() {
+    const field = document.getElementById('field').value;
+    const findValue = document.getElementById('findValue').value;
+    const replaceValue = document.getElementById('replaceValue').value;
+
+    if (!field || !findValue || !replaceValue) {
+      alert('Please fill in all fields and preview first');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to update all matching books?\n\nField: ${field}\nFind: "${findValue}"\nReplace with: "${replaceValue}"\n\nThis action cannot be easily undone!`)) {
+      return;
+    }
+
+    applyChanges();
+  }
+
+  function applyChanges() {
+    const field = document.getElementById('field').value;
+    const findValue = document.getElementById('findValue').value;
+    const replaceValue = document.getElementById('replaceValue').value;
+    const scope = document.getElementById('scope').value;
+
+    const container = document.getElementById('previewContainer');
+    container.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Applying changes...</span></div></div>';
+
+    fetch('<%= admin_bulk_update_books_path %>', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      },
+      body: JSON.stringify({
+        field: field,
+        find_value: findValue,
+        replace_value: replaceValue,
+        scope: scope
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (!data.success) {
+        container.innerHTML = '<div class="alert alert-danger">Error: ' + (data.error || 'Unknown error') + '</div>';
+        return;
+      }
+
+      let html = `<div class="alert alert-success">
+        <strong><i class="fas fa-check-circle"></i> Successfully updated ${data.affected_count} book(s)!</strong>
+      </div>`;
+
+      html += '<div class="table-responsive"><table class="table table-sm">';
+      html += '<thead style="background: #f5f5f5;"><tr>';
+      html += '<th>Title</th><th>Old Value</th><th>New Value</th>';
+      html += '</tr></thead><tbody>';
+
+      data.affected_books.forEach(book => {
+        html += `<tr>
+          <td><small><strong>${book.title}</strong></small></td>
+          <td><small><code style="background: #ffebee; padding: 2px 4px;">${escapeHtml(book.old_value)}</code></small></td>
+          <td><small><code style="background: #e8f5e9; padding: 2px 4px;">${escapeHtml(book.new_value)}</code></small></td>
+        </tr>`;
+      });
+
+      html += '</tbody></table></div>';
+      html += '<div style="margin-top: 15px;"><a href="<%= admin_books_path %>" class="btn btn-sm btn-primary">Back to Books</a></div>';
+
+      container.innerHTML = html;
+
+      // Clear form
+      document.getElementById('bulkEditForm').reset();
+    })
+    .catch(error => {
+      container.innerHTML = '<div class="alert alert-danger">Error: ' + error + '</div>';
+    });
+  }
+
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+</script>

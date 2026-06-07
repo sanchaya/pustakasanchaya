@@ -2,12 +2,12 @@
   "admins": [
     {
       "id": "admin_1",
-      "email": "admin@pustaka.local",
+      "email": "omshivaprakash@gmail.com",
       "password_hash": "$2a$12$weTJcWp3UGJXWKGCzWWmw.eFTjf3bZJBDgR7ydHlI662bB3nxyKiW",
-      "name": "Admin User",
+      "name": "Omshivaprakash",
       "role": "super_admin",
       "created_at": "2026-06-07T00:00:00Z",
-      "last_login": "2026-06-07T23:45:57+05:30",
+      "last_login": "2026-06-07T23:49:16+05:30",
       "active": true
     },
     {

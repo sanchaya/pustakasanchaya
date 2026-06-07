@@ -27,10 +27,15 @@ Rails.application.routes.draw do
     
     get '/' => 'dashboard#index', as: :dashboard
     get '/dashboard' => 'dashboard#index'
+    get '/profile' => 'dashboard#profile', as: :profile
+    post '/profile' => 'dashboard#update_profile', as: :update_profile
     get '/editors' => 'dashboard#editors', as: :editors
     
     get '/books' => 'books#index', as: :books
     get '/books/search' => 'books#search', as: :books_search
+    get '/books/bulk' => 'books#bulk_edit', as: :bulk_edit_books
+    post '/books/bulk-preview' => 'books#bulk_preview', as: :bulk_preview_books
+    post '/books/bulk-update' => 'books#bulk_update', as: :bulk_update_books
     post '/books/:id/edit' => 'books#update', as: :update_book
     get '/books/:id/edit' => 'books#edit', as: :edit_book
     

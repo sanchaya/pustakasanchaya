@@ -102,6 +102,11 @@
             <strong><%= Time.parse(@admin.created_at).strftime('%b %d, %Y') %></strong>
           </div>
         </div>
+        <div style="margin-top: 15px;">
+          <a href="<%= admin_profile_path %>" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-edit"></i> Edit Profile
+          </a>
+        </div>
       </div>
     </div>
   </div>

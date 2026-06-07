@@ -226,4 +226,46 @@ class Admin
     self.class.save_admin_data
     true
   end
+
+  # Update profile information
+  def update_profile(name, email = nil)
+    self.class.load_admin_data
+    admin_data = @@admins_cache.find { |a| a['id'] == self.id }
+    return false unless admin_data
+
+    admin_data['name'] = name
+    admin_data['email'] = email if email && email != self.email
+    self.name = name
+    self.email = email if email
+    self.class.save_admin_data
+    true
+  end
+
+  # Check if email is already taken
+  def self.email_taken?(email, exclude_id = nil)
+    load_admin_data
+    taken = @@admins_cache.any? { |a| a['email'] == email }
+    if exclude_id
+      # Allow same admin to keep their email
+      taken && !@@admins_cache.any? { |a| a['id'] == exclude_id && a['email'] == email }
+    else
+      taken
+    end
+  end
+
+  # Get all admins for display
+  def self.list_all
+    load_admin_data
+    @@admins_cache.map do |admin_data|
+      {
+        'id' => admin_data['id'],
+        'name' => admin_data['name'],
+        'email' => admin_data['email'],
+        'role' => admin_data['role'],
+        'active' => admin_data['active'],
+        'created_at' => admin_data['created_at'],
+        'last_login' => admin_data['last_login']
+      }
+    end
+  end
 end

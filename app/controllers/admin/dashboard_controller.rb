@@ -31,6 +31,58 @@ class Admin::DashboardController < ApplicationController
     @pending_invites = Admin.pending_invites
   end
 
+  def profile
+    @admin = current_admin
+  end
+
+  def update_profile
+    @admin = current_admin
+    
+    if params[:current_password].blank? && params[:new_password].blank?
+      # Just update profile info
+      if @admin.update_profile(params[:name], params[:email])
+        redirect_to admin_dashboard_path, notice: 'Profile updated successfully'
+      else
+        redirect_to admin_profile_path, alert: 'Error updating profile'
+      end
+    else
+      # Update password
+      if params[:current_password].blank?
+        redirect_to admin_profile_path, alert: 'Current password is required to change password'
+        return
+      end
+
+      if params[:new_password].blank? || params[:new_password_confirm].blank?
+        redirect_to admin_profile_path, alert: 'New password cannot be blank'
+        return
+      end
+
+      if params[:new_password] != params[:new_password_confirm]
+        redirect_to admin_profile_path, alert: 'Passwords do not match'
+        return
+      end
+
+      if params[:new_password].length < 8
+        redirect_to admin_profile_path, alert: 'Password must be at least 8 characters'
+        return
+      end
+
+      # Verify current password
+      authenticated = Admin.authenticate(@admin.email, params[:current_password])
+      unless authenticated
+        redirect_to admin_profile_path, alert: 'Current password is incorrect'
+        return
+      end
+
+      # Update password
+      if @admin.update_password(params[:new_password])
+        redirect_to admin_dashboard_path, notice: 'Password changed successfully'
+      else
+        redirect_to admin_profile_path, alert: 'Error changing password'
+      end
+    end
+  end
+
   private
 
   def authorize_admin!
