@@ -7,7 +7,8 @@ Rails.application.routes.draw do
   root 'books#index'
   get 'books/wiki_info'
   get 'books/wiki_user_info'
-  get 'books/capture_user_name' 
+  get 'books/capture_user_name'
+  get '/wiki' => 'books#wiki'
 
   get '/categories' => 'categories#index'
   get '/categories/:id' => 'categories#show'

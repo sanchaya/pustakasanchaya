@@ -6,7 +6,7 @@
 		name: 'ಲಿಪ್ಯಂತರಣ',
 		description: 'Kannada transliteration',
 		date: '2012-10-14',
-		URL: 'http://github.com/wikimedia/jquery.ime',
+		URL: 'https://github.com/wikimedia/jquery.ime',
 		author: 'M G Harish, HP Nadig ',
 		license: 'GPLv3',
 		version: '1.0',

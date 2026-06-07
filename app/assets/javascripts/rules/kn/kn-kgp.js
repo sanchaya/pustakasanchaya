@@ -6,7 +6,7 @@
 		name: 'ಕಗಪ/ನುಡಿ',
 		description: 'Kannada kgp/nudi/KP Rao layout',
 		date: '2012-11-09',
-		URL: 'http://github.com/wikimedia/jquery.ime',
+		URL: 'https://github.com/wikimedia/jquery.ime',
 		author: 'Aravinda VK<mail@aravindavk.in>',
 		license: 'GPLv3,MIT',
 		version: '1.0',

@@ -1,0 +1,15 @@
+<div class="wiki-page">
+  <div class="wiki-header" style="text-align: center;">
+    <%= image_tag('Wikipedia.png', width: 32, height: 32, style: 'vertical-align: middle; margin-right: 8px;') %>
+    <span style="font-size: 22px; font-weight: bold; vertical-align: middle;">ಕನ್ನಡ ವಿಕಿಪೀಡಿಯ ಸಂಪಾದನೆ</span>
+  </div>
+  <hr />
+
+  <% if @wiki_book && !@wiki_book.blank? %>
+    <%= render 'wiki_book' %>
+  <% else %>
+    <p class="text-center" style="color: #999; padding: 40px 0;">
+      ವಿಕಿ ಸೇವೆ ಪ್ರಸ್ತುತ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ.
+    </p>
+  <% end %>
+</div>

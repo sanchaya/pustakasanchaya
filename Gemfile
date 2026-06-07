@@ -51,6 +51,5 @@ gem "font-awesome-rails"
 # gem 'ransack'
 gem 'httparty'
 gem 'google-analytics-rails'
-gem 'newrelic_rpm'
 gem 'kaminari'
 gem 'zeroclipboard-rails'

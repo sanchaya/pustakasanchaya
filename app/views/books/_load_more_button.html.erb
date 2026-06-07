@@ -1,0 +1,5 @@
+<% if load_more_books && load_more_books.next_page %>
+<div class="load-more-wrap">
+  <%= link_to 'ಮುಂದಿನ ಫಲಿತಾಂಶಗಳು', url_for(page: load_more_books.next_page, search: params[:search]), remote: true, class: 'btn btn-default load-more-btn' %>
+</div>
+<% end %>

@@ -566,7 +566,7 @@
 		 	.append( $( '<a>' ).text( 'Help' )
 		 		.addClass( 'selectable-row-item' )
 		 		.attr( {
-		 			'href': 'http://github.com/wikimedia/jquery.ime',
+		 			'href': 'https://github.com/wikimedia/jquery.ime',
 		 			'target': '_blank',
 		 			'data-i18n': 'jquery-ime-help'
 		 		} )

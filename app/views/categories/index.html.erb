@@ -1,7 +1,34 @@
+<div class="category-search-wrap">
+  <input type="text" id="category-search" class="form-control" placeholder="<%= t(:huduku) %> ವಿಭಾಗಗಳು...">
+</div>
+
+<div class="categories-grid" id="categories-grid">
   <% @categories.each do |category| %>
-  <div class="sticky"> 
-    <p class="note yellow">
-      <%= link_to category['kn'], "/categories/#{category['id']}" %>
-    </p>
-  </div>
+    <%= link_to "/categories/#{category['id']}", class: 'category-card', data: { name: category['kn'] } do %>
+      <div class="category-card-inner">
+        <div class="category-icon">
+          <i class="fa fa-book"></i>
+        </div>
+        <span class="category-name"><%= category['kn'] %></span>
+      </div>
+    <% end %>
   <% end %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var input = document.getElementById('category-search');
+  if (!input) return;
+  input.addEventListener('keyup', function() {
+    var filter = this.value.trim().toLowerCase();
+    var grid = document.getElementById('categories-grid');
+    var cards = grid.getElementsByClassName('category-card');
+    for (var i = 0; i < cards.length; i++) {
+      var name = cards[i].getAttribute('data-name');
+      if (name) {
+        cards[i].style.display = name.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+      }
+    }
+  });
+});
+</script>

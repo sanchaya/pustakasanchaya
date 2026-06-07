@@ -1,0 +1,1202 @@
+[
+  {
+    "year": 275,
+    "books": 1,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1000,
+    "books": 1,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1012,
+    "books": 1,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1275,
+    "books": 4,
+    "authors": 2,
+    "publishers": 0
+  },
+  {
+    "year": 1500,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1530,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1600,
+    "books": 6,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1675,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1683,
+    "books": 1,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1700,
+    "books": 19,
+    "authors": 7,
+    "publishers": 0
+  },
+  {
+    "year": 1750,
+    "books": 1,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1800,
+    "books": 1,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1824,
+    "books": 2,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1832,
+    "books": 2,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1836,
+    "books": 1,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1837,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1838,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1840,
+    "books": 1,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1841,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1842,
+    "books": 3,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1843,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1844,
+    "books": 2,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1845,
+    "books": 3,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1846,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1847,
+    "books": 2,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1848,
+    "books": 4,
+    "authors": 4,
+    "publishers": 0
+  },
+  {
+    "year": 1849,
+    "books": 7,
+    "authors": 7,
+    "publishers": 2
+  },
+  {
+    "year": 1850,
+    "books": 5,
+    "authors": 5,
+    "publishers": 0
+  },
+  {
+    "year": 1851,
+    "books": 3,
+    "authors": 3,
+    "publishers": 0
+  },
+  {
+    "year": 1852,
+    "books": 2,
+    "authors": 2,
+    "publishers": 0
+  },
+  {
+    "year": 1853,
+    "books": 2,
+    "authors": 2,
+    "publishers": 2
+  },
+  {
+    "year": 1854,
+    "books": 2,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1855,
+    "books": 1,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1857,
+    "books": 6,
+    "authors": 5,
+    "publishers": 3
+  },
+  {
+    "year": 1858,
+    "books": 5,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1859,
+    "books": 5,
+    "authors": 3,
+    "publishers": 1
+  },
+  {
+    "year": 1860,
+    "books": 4,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1861,
+    "books": 4,
+    "authors": 3,
+    "publishers": 1
+  },
+  {
+    "year": 1862,
+    "books": 1,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1863,
+    "books": 8,
+    "authors": 6,
+    "publishers": 1
+  },
+  {
+    "year": 1864,
+    "books": 5,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1865,
+    "books": 4,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1866,
+    "books": 2,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1867,
+    "books": 11,
+    "authors": 5,
+    "publishers": 2
+  },
+  {
+    "year": 1868,
+    "books": 11,
+    "authors": 3,
+    "publishers": 2
+  },
+  {
+    "year": 1869,
+    "books": 12,
+    "authors": 7,
+    "publishers": 3
+  },
+  {
+    "year": 1870,
+    "books": 15,
+    "authors": 5,
+    "publishers": 2
+  },
+  {
+    "year": 1871,
+    "books": 2,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1872,
+    "books": 4,
+    "authors": 2,
+    "publishers": 2
+  },
+  {
+    "year": 1873,
+    "books": 3,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1874,
+    "books": 2,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1875,
+    "books": 5,
+    "authors": 5,
+    "publishers": 2
+  },
+  {
+    "year": 1876,
+    "books": 2,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1877,
+    "books": 3,
+    "authors": 1,
+    "publishers": 0
+  },
+  {
+    "year": 1878,
+    "books": 1,
+    "authors": 0,
+    "publishers": 1
+  },
+  {
+    "year": 1879,
+    "books": 1,
+    "authors": 1,
+    "publishers": 1
+  },
+  {
+    "year": 1880,
+    "books": 4,
+    "authors": 3,
+    "publishers": 3
+  },
+  {
+    "year": 1881,
+    "books": 1,
+    "authors": 0,
+    "publishers": 1
+  },
+  {
+    "year": 1882,
+    "books": 3,
+    "authors": 3,
+    "publishers": 1
+  },
+  {
+    "year": 1884,
+    "books": 5,
+    "authors": 3,
+    "publishers": 3
+  },
+  {
+    "year": 1886,
+    "books": 1,
+    "authors": 0,
+    "publishers": 0
+  },
+  {
+    "year": 1887,
+    "books": 3,
+    "authors": 1,
+    "publishers": 3
+  },
+  {
+    "year": 1888,
+    "books": 2,
+    "authors": 2,
+    "publishers": 1
+  },
+  {
+    "year": 1889,
+    "books": 4,
+    "authors": 4,
+    "publishers": 3
+  },
+  {
+    "year": 1890,
+    "books": 4,
+    "authors": 3,
+    "publishers": 3
+  },
+  {
+    "year": 1891,
+    "books": 3,
+    "authors": 3,
+    "publishers": 1
+  },
+  {
+    "year": 1892,
+    "books": 3,
+    "authors": 2,
+    "publishers": 3
+  },
+  {
+    "year": 1893,
+    "books": 6,
+    "authors": 5,
+    "publishers": 3
+  },
+  {
+    "year": 1894,
+    "books": 13,
+    "authors": 9,
+    "publishers": 5
+  },
+  {
+    "year": 1895,
+    "books": 9,
+    "authors": 7,
+    "publishers": 7
+  },
+  {
+    "year": 1896,
+    "books": 9,
+    "authors": 7,
+    "publishers": 6
+  },
+  {
+    "year": 1897,
+    "books": 4,
+    "authors": 4,
+    "publishers": 4
+  },
+  {
+    "year": 1898,
+    "books": 7,
+    "authors": 6,
+    "publishers": 6
+  },
+  {
+    "year": 1899,
+    "books": 8,
+    "authors": 7,
+    "publishers": 5
+  },
+  {
+    "year": 1900,
+    "books": 53,
+    "authors": 49,
+    "publishers": 42
+  },
+  {
+    "year": 1901,
+    "books": 6,
+    "authors": 5,
+    "publishers": 3
+  },
+  {
+    "year": 1902,
+    "books": 8,
+    "authors": 8,
+    "publishers": 7
+  },
+  {
+    "year": 1903,
+    "books": 9,
+    "authors": 9,
+    "publishers": 9
+  },
+  {
+    "year": 1904,
+    "books": 4,
+    "authors": 4,
+    "publishers": 4
+  },
+  {
+    "year": 1905,
+    "books": 7,
+    "authors": 4,
+    "publishers": 5
+  },
+  {
+    "year": 1906,
+    "books": 10,
+    "authors": 8,
+    "publishers": 8
+  },
+  {
+    "year": 1907,
+    "books": 3,
+    "authors": 2,
+    "publishers": 3
+  },
+  {
+    "year": 1908,
+    "books": 14,
+    "authors": 13,
+    "publishers": 11
+  },
+  {
+    "year": 1909,
+    "books": 17,
+    "authors": 15,
+    "publishers": 12
+  },
+  {
+    "year": 1910,
+    "books": 13,
+    "authors": 12,
+    "publishers": 11
+  },
+  {
+    "year": 1911,
+    "books": 17,
+    "authors": 15,
+    "publishers": 14
+  },
+  {
+    "year": 1912,
+    "books": 21,
+    "authors": 20,
+    "publishers": 15
+  },
+  {
+    "year": 1913,
+    "books": 36,
+    "authors": 34,
+    "publishers": 32
+  },
+  {
+    "year": 1914,
+    "books": 15,
+    "authors": 15,
+    "publishers": 13
+  },
+  {
+    "year": 1915,
+    "books": 41,
+    "authors": 38,
+    "publishers": 35
+  },
+  {
+    "year": 1916,
+    "books": 22,
+    "authors": 19,
+    "publishers": 14
+  },
+  {
+    "year": 1917,
+    "books": 23,
+    "authors": 21,
+    "publishers": 19
+  },
+  {
+    "year": 1918,
+    "books": 37,
+    "authors": 31,
+    "publishers": 24
+  },
+  {
+    "year": 1919,
+    "books": 59,
+    "authors": 52,
+    "publishers": 43
+  },
+  {
+    "year": 1920,
+    "books": 38,
+    "authors": 27,
+    "publishers": 31
+  },
+  {
+    "year": 1921,
+    "books": 44,
+    "authors": 37,
+    "publishers": 32
+  },
+  {
+    "year": 1922,
+    "books": 43,
+    "authors": 38,
+    "publishers": 31
+  },
+  {
+    "year": 1923,
+    "books": 55,
+    "authors": 49,
+    "publishers": 33
+  },
+  {
+    "year": 1924,
+    "books": 85,
+    "authors": 72,
+    "publishers": 64
+  },
+  {
+    "year": 1925,
+    "books": 50,
+    "authors": 41,
+    "publishers": 32
+  },
+  {
+    "year": 1926,
+    "books": 47,
+    "authors": 41,
+    "publishers": 37
+  },
+  {
+    "year": 1927,
+    "books": 81,
+    "authors": 62,
+    "publishers": 60
+  },
+  {
+    "year": 1928,
+    "books": 111,
+    "authors": 93,
+    "publishers": 81
+  },
+  {
+    "year": 1929,
+    "books": 144,
+    "authors": 114,
+    "publishers": 93
+  },
+  {
+    "year": 1930,
+    "books": 154,
+    "authors": 129,
+    "publishers": 108
+  },
+  {
+    "year": 1931,
+    "books": 156,
+    "authors": 126,
+    "publishers": 107
+  },
+  {
+    "year": 1932,
+    "books": 120,
+    "authors": 84,
+    "publishers": 81
+  },
+  {
+    "year": 1933,
+    "books": 145,
+    "authors": 110,
+    "publishers": 96
+  },
+  {
+    "year": 1934,
+    "books": 142,
+    "authors": 113,
+    "publishers": 101
+  },
+  {
+    "year": 1935,
+    "books": 109,
+    "authors": 85,
+    "publishers": 78
+  },
+  {
+    "year": 1936,
+    "books": 131,
+    "authors": 110,
+    "publishers": 87
+  },
+  {
+    "year": 1937,
+    "books": 116,
+    "authors": 86,
+    "publishers": 88
+  },
+  {
+    "year": 1938,
+    "books": 104,
+    "authors": 81,
+    "publishers": 76
+  },
+  {
+    "year": 1939,
+    "books": 119,
+    "authors": 104,
+    "publishers": 83
+  },
+  {
+    "year": 1940,
+    "books": 163,
+    "authors": 140,
+    "publishers": 107
+  },
+  {
+    "year": 1941,
+    "books": 139,
+    "authors": 110,
+    "publishers": 91
+  },
+  {
+    "year": 1942,
+    "books": 150,
+    "authors": 124,
+    "publishers": 84
+  },
+  {
+    "year": 1943,
+    "books": 98,
+    "authors": 84,
+    "publishers": 71
+  },
+  {
+    "year": 1944,
+    "books": 122,
+    "authors": 90,
+    "publishers": 86
+  },
+  {
+    "year": 1945,
+    "books": 195,
+    "authors": 137,
+    "publishers": 124
+  },
+  {
+    "year": 1946,
+    "books": 272,
+    "authors": 176,
+    "publishers": 150
+  },
+  {
+    "year": 1947,
+    "books": 300,
+    "authors": 191,
+    "publishers": 159
+  },
+  {
+    "year": 1948,
+    "books": 238,
+    "authors": 145,
+    "publishers": 124
+  },
+  {
+    "year": 1949,
+    "books": 259,
+    "authors": 162,
+    "publishers": 149
+  },
+  {
+    "year": 1950,
+    "books": 398,
+    "authors": 291,
+    "publishers": 267
+  },
+  {
+    "year": 1951,
+    "books": 265,
+    "authors": 210,
+    "publishers": 171
+  },
+  {
+    "year": 1952,
+    "books": 303,
+    "authors": 220,
+    "publishers": 205
+  },
+  {
+    "year": 1953,
+    "books": 324,
+    "authors": 222,
+    "publishers": 193
+  },
+  {
+    "year": 1954,
+    "books": 326,
+    "authors": 237,
+    "publishers": 189
+  },
+  {
+    "year": 1955,
+    "books": 513,
+    "authors": 397,
+    "publishers": 271
+  },
+  {
+    "year": 1956,
+    "books": 159,
+    "authors": 133,
+    "publishers": 90
+  },
+  {
+    "year": 1957,
+    "books": 147,
+    "authors": 99,
+    "publishers": 72
+  },
+  {
+    "year": 1958,
+    "books": 196,
+    "authors": 116,
+    "publishers": 78
+  },
+  {
+    "year": 1959,
+    "books": 151,
+    "authors": 117,
+    "publishers": 79
+  },
+  {
+    "year": 1960,
+    "books": 85,
+    "authors": 58,
+    "publishers": 29
+  },
+  {
+    "year": 1961,
+    "books": 66,
+    "authors": 39,
+    "publishers": 30
+  },
+  {
+    "year": 1962,
+    "books": 64,
+    "authors": 27,
+    "publishers": 23
+  },
+  {
+    "year": 1963,
+    "books": 29,
+    "authors": 14,
+    "publishers": 14
+  },
+  {
+    "year": 1964,
+    "books": 34,
+    "authors": 19,
+    "publishers": 19
+  },
+  {
+    "year": 1965,
+    "books": 54,
+    "authors": 38,
+    "publishers": 37
+  },
+  {
+    "year": 1966,
+    "books": 48,
+    "authors": 28,
+    "publishers": 29
+  },
+  {
+    "year": 1967,
+    "books": 64,
+    "authors": 35,
+    "publishers": 30
+  },
+  {
+    "year": 1968,
+    "books": 83,
+    "authors": 56,
+    "publishers": 38
+  },
+  {
+    "year": 1969,
+    "books": 91,
+    "authors": 64,
+    "publishers": 54
+  },
+  {
+    "year": 1970,
+    "books": 85,
+    "authors": 58,
+    "publishers": 44
+  },
+  {
+    "year": 1971,
+    "books": 124,
+    "authors": 85,
+    "publishers": 56
+  },
+  {
+    "year": 1972,
+    "books": 126,
+    "authors": 79,
+    "publishers": 59
+  },
+  {
+    "year": 1973,
+    "books": 117,
+    "authors": 72,
+    "publishers": 58
+  },
+  {
+    "year": 1974,
+    "books": 126,
+    "authors": 68,
+    "publishers": 56
+  },
+  {
+    "year": 1975,
+    "books": 143,
+    "authors": 87,
+    "publishers": 60
+  },
+  {
+    "year": 1976,
+    "books": 149,
+    "authors": 78,
+    "publishers": 59
+  },
+  {
+    "year": 1977,
+    "books": 161,
+    "authors": 84,
+    "publishers": 66
+  },
+  {
+    "year": 1978,
+    "books": 144,
+    "authors": 71,
+    "publishers": 50
+  },
+  {
+    "year": 1979,
+    "books": 189,
+    "authors": 69,
+    "publishers": 51
+  },
+  {
+    "year": 1980,
+    "books": 219,
+    "authors": 79,
+    "publishers": 61
+  },
+  {
+    "year": 1981,
+    "books": 233,
+    "authors": 82,
+    "publishers": 67
+  },
+  {
+    "year": 1982,
+    "books": 328,
+    "authors": 94,
+    "publishers": 79
+  },
+  {
+    "year": 1983,
+    "books": 291,
+    "authors": 110,
+    "publishers": 88
+  },
+  {
+    "year": 1984,
+    "books": 320,
+    "authors": 104,
+    "publishers": 91
+  },
+  {
+    "year": 1985,
+    "books": 183,
+    "authors": 87,
+    "publishers": 70
+  },
+  {
+    "year": 1986,
+    "books": 240,
+    "authors": 84,
+    "publishers": 76
+  },
+  {
+    "year": 1987,
+    "books": 274,
+    "authors": 94,
+    "publishers": 80
+  },
+  {
+    "year": 1988,
+    "books": 217,
+    "authors": 82,
+    "publishers": 75
+  },
+  {
+    "year": 1989,
+    "books": 222,
+    "authors": 71,
+    "publishers": 65
+  },
+  {
+    "year": 1990,
+    "books": 238,
+    "authors": 69,
+    "publishers": 72
+  },
+  {
+    "year": 1991,
+    "books": 169,
+    "authors": 79,
+    "publishers": 75
+  },
+  {
+    "year": 1992,
+    "books": 246,
+    "authors": 82,
+    "publishers": 74
+  },
+  {
+    "year": 1993,
+    "books": 275,
+    "authors": 100,
+    "publishers": 83
+  },
+  {
+    "year": 1994,
+    "books": 299,
+    "authors": 188,
+    "publishers": 97
+  },
+  {
+    "year": 1995,
+    "books": 277,
+    "authors": 110,
+    "publishers": 81
+  },
+  {
+    "year": 1996,
+    "books": 166,
+    "authors": 88,
+    "publishers": 79
+  },
+  {
+    "year": 1997,
+    "books": 243,
+    "authors": 111,
+    "publishers": 91
+  },
+  {
+    "year": 1998,
+    "books": 229,
+    "authors": 90,
+    "publishers": 76
+  },
+  {
+    "year": 1999,
+    "books": 294,
+    "authors": 113,
+    "publishers": 89
+  },
+  {
+    "year": 2000,
+    "books": 251,
+    "authors": 104,
+    "publishers": 86
+  },
+  {
+    "year": 2001,
+    "books": 233,
+    "authors": 104,
+    "publishers": 81
+  },
+  {
+    "year": 2002,
+    "books": 267,
+    "authors": 134,
+    "publishers": 64
+  },
+  {
+    "year": 2003,
+    "books": 270,
+    "authors": 117,
+    "publishers": 70
+  },
+  {
+    "year": 2004,
+    "books": 273,
+    "authors": 136,
+    "publishers": 69
+  },
+  {
+    "year": 2005,
+    "books": 231,
+    "authors": 89,
+    "publishers": 72
+  },
+  {
+    "year": 2006,
+    "books": 283,
+    "authors": 147,
+    "publishers": 72
+  },
+  {
+    "year": 2007,
+    "books": 549,
+    "authors": 350,
+    "publishers": 98
+  },
+  {
+    "year": 2008,
+    "books": 537,
+    "authors": 338,
+    "publishers": 102
+  },
+  {
+    "year": 2009,
+    "books": 551,
+    "authors": 325,
+    "publishers": 94
+  },
+  {
+    "year": 2010,
+    "books": 375,
+    "authors": 215,
+    "publishers": 85
+  },
+  {
+    "year": 2011,
+    "books": 412,
+    "authors": 189,
+    "publishers": 80
+  },
+  {
+    "year": 2012,
+    "books": 428,
+    "authors": 219,
+    "publishers": 88
+  },
+  {
+    "year": 2013,
+    "books": 299,
+    "authors": 173,
+    "publishers": 75
+  },
+  {
+    "year": 2014,
+    "books": 307,
+    "authors": 186,
+    "publishers": 67
+  },
+  {
+    "year": 2015,
+    "books": 316,
+    "authors": 171,
+    "publishers": 68
+  },
+  {
+    "year": 2016,
+    "books": 339,
+    "authors": 187,
+    "publishers": 77
+  },
+  {
+    "year": 2017,
+    "books": 405,
+    "authors": 227,
+    "publishers": 73
+  },
+  {
+    "year": 2018,
+    "books": 354,
+    "authors": 217,
+    "publishers": 72
+  },
+  {
+    "year": 2019,
+    "books": 331,
+    "authors": 189,
+    "publishers": 64
+  },
+  {
+    "year": 2020,
+    "books": 225,
+    "authors": 117,
+    "publishers": 43
+  },
+  {
+    "year": 2021,
+    "books": 315,
+    "authors": 171,
+    "publishers": 52
+  },
+  {
+    "year": 2022,
+    "books": 215,
+    "authors": 81,
+    "publishers": 46
+  },
+  {
+    "year": 2023,
+    "books": 209,
+    "authors": 110,
+    "publishers": 18
+  },
+  {
+    "year": 2024,
+    "books": 168,
+    "authors": 70,
+    "publishers": 27
+  },
+  {
+    "year": 2025,
+    "books": 69,
+    "authors": 11,
+    "publishers": 9
+  }
+]

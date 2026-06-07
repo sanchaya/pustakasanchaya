@@ -1,0 +1,226 @@
+<% decades = decade_groups %>
+<div class="year-chart">
+  <h3 class="chart-title">
+    <i class="fa fa-line-chart" style="margin-right: 8px; color: #5F3792;"></i>
+    ಇಸವಿ ವಾರು ಪುಸ್ತಕಗಳು
+  </h3>
+  <% if decades.any? %>
+    <% shown = decades.select { |d, _| d >= 1900 } %>
+    <% labels = shown.map { |d, _| "#{d}ರ" } %>
+    <% counts = shown.map { |_, c| c } %>
+    <% max_decade = shown.max_by { |_, c| c } %>
+    <% total_known = year_distribution.sum { |e| e['count'] } %>
+    <% avg_per_year = (total_known.to_f / [year_distribution.select { |e| e['year'] >= 1900 && e['year'] <= 2025 }.size, 1].max).round(1) %>
+    <% s = stats %>
+    
+    <div class="chart-info">
+      <span class="info-item">
+        <i class="fa fa-calendar" style="margin-right: 6px; color: #5F3792;"></i>
+        <strong><%= number_with_delimiter(total_known) %></strong> ಪುಸ್ತಕಗಳ ಇಸವಿ ಲಭ್ಯ
+      </span>
+      <span class="info-item">
+        <i class="fa fa-arrow-up" style="margin-right: 6px; color: #5F3792;"></i>
+        ಗರಿಷ್ಠ: <strong><%= max_decade[0] %>ರ</strong> (<%= number_with_delimiter(max_decade[1]) %> ಪುಸ್ತಕಗಳು)
+      </span>
+      <span class="info-item">
+        <i class="fa fa-bar-chart" style="margin-right: 6px; color: #5F3792;"></i>
+        ಸರಾಸರಿ: <strong><%= avg_per_year %></strong> ಪುಸ್ತಕ/ವರ್ಷ
+      </span>
+      <span class="info-item">
+        <i class="fa fa-user" style="margin-right: 6px; color: #5F3792;"></i>
+        <strong><%= number_with_delimiter(s['total_authors'] || 0) %></strong> ಲೇಖಕರು
+      </span>
+      <span class="info-item">
+        <i class="fa fa-tags" style="margin-right: 6px; color: #5F3792;"></i>
+        <strong><%= number_with_delimiter(s['total_publishers'] || 0) %></strong> ಪ್ರಕಾಶಕರು
+      </span>
+    </div>
+    <div class="chart-canvas-wrapper">
+      <canvas id="yearChart"></canvas>
+    </div>
+  <% else %>
+    <div style="padding: 40px 20px; text-align: center; color: #999;">
+      <i class="fa fa-clock-o" style="font-size: 32px; margin-bottom: 12px; display: block; opacity: 0.5;"></i>
+      <p>ಇಸವಿ ಡೇಟಾ ಲೋಡ್ ಆಗುತ್ತಿದೆ...</p>
+    </div>
+  <% end %>
+</div>
+
+<% if decades.any? %>
+  <% decade_data = decade_groups_with_authors_publishers %>
+  <% labels = decade_data.map { |d, _, _, _| "#{d}ರ" } %>
+  <% books_counts = decade_data.map { |_, b, _, _| b } %>
+  <% authors_counts = decade_data.map { |_, _, a, _| a } %>
+  <% publishers_counts = decade_data.map { |_, _, _, p| p } %>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var ctx = document.getElementById('yearChart');
+  if (!ctx) return;
+  
+  var booksData = <%= raw books_counts.to_json %>;
+  var authorsData = <%= raw authors_counts.to_json %>;
+  var publishersData = <%= raw publishers_counts.to_json %>;
+  
+  var maxBooks = Math.max.apply(null, booksData);
+  var maxAuthors = Math.max.apply(null, authorsData);
+  var maxPublishers = Math.max.apply(null, publishersData);
+  
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: <%= raw labels.to_json %>,
+      datasets: [
+        {
+          label: 'ಪುಸ್ತಕಗಳು (Books)',
+          data: booksData,
+          borderColor: '#5F3792',
+          backgroundColor: 'rgba(95, 55, 146, 0.08)',
+          borderWidth: 3,
+          pointRadius: 4,
+          pointBackgroundColor: '#5F3792',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#933586',
+          fill: true,
+          tension: 0.4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'ಲೇಖಕರು (Authors)',
+          data: authorsData,
+          borderColor: '#E8A500',
+          backgroundColor: 'rgba(232, 165, 0, 0.08)',
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: '#E8A500',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#D18A00',
+          fill: false,
+          tension: 0.4,
+          borderDash: [5, 5],
+          yAxisID: 'y1'
+        },
+        {
+          label: 'ಪ್ರಕಾಶಕರು (Publishers)',
+          data: publishersData,
+          borderColor: '#27AE60',
+          backgroundColor: 'rgba(39, 174, 96, 0.08)',
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: '#27AE60',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#1E8449',
+          fill: false,
+          tension: 0.4,
+          borderDash: [10, 5],
+          yAxisID: 'y2'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { 
+          display: true,
+          position: 'top',
+          labels: {
+            font: { size: 12, weight: '500' },
+            padding: 15,
+            usePointStyle: true
+          }
+        },
+        filler: {
+          propagate: true
+        }
+      },
+      interaction: {
+        mode: 'nearest',
+        intersect: false
+      },
+      scales: {
+        x: {
+          grid: {
+            drawBorder: true,
+            color: 'rgba(0, 0, 0, 0.05)'
+          },
+          ticks: { 
+            font: { size: 10, weight: '500' },
+            padding: 8
+          }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          beginAtZero: true,
+          max: maxBooks * 1.1,
+          title: {
+            display: true,
+            text: 'ಪುಸ್ತಕಗಳು (Books)',
+            font: { size: 11, weight: '600' },
+            color: '#5F3792'
+          },
+          ticks: { 
+            font: { size: 10 },
+            padding: 8,
+            color: '#5F3792'
+          },
+          grid: {
+            drawBorder: true,
+            color: 'rgba(95, 55, 146, 0.1)'
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'center',
+          beginAtZero: true,
+          max: maxAuthors * 1.2,
+          title: {
+            display: true,
+            text: 'ಲೇಖಕರು (Authors)',
+            font: { size: 11, weight: '600' },
+            color: '#E8A500'
+          },
+          ticks: { 
+            font: { size: 10 },
+            padding: 8,
+            color: '#E8A500'
+          },
+          grid: {
+            display: false
+          }
+        },
+        y2: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          beginAtZero: true,
+          max: maxPublishers * 1.2,
+          title: {
+            display: true,
+            text: 'ಪ್ರಕಾಶಕರು (Publishers)',
+            font: { size: 11, weight: '600' },
+            color: '#27AE60'
+          },
+          ticks: { 
+            font: { size: 10 },
+            padding: 8,
+            color: '#27AE60'
+          },
+          grid: {
+            display: false
+          }
+        }
+      }
+    }
+  });
+});
+</script>
+<% end %>

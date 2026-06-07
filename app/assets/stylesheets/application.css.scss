@@ -14,7 +14,7 @@
  *= require_self
  */
 
- @import url(http://fonts.googleapis.com/earlyaccess/notosanskannada.css);
+ @import url(https://fonts.googleapis.com/earlyaccess/notosanskannada.css);
 
  body {
  	background: image-url("bg-pattern.png") repeat scroll 0 0 transparent;
@@ -69,86 +69,57 @@
  /*Style afor apple style pagintaion from slamies ended*/
 
 
- /*Style for footer */
+  /*Footer ended*/
 
- #footer {
- 	background: none repeat scroll 0 0 #333;
- 	color: #666;
- 	padding-bottom: 15px;
- 	padding-top: 15px;
- }
+/*header style */
+.navbar {
+  margin-bottom: 0;
+  border-bottom: 2px solid #5F3792;
+}
+.navbar-default {
+  background: #fff;
+}
+.navbar .nav > li {
+  margin-left: 1px;
+}
+.navbar .nav > li > a {
+  color: #666;
+  font-size: 14px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+.navbar .nav > li > a:hover {
+  background: none repeat scroll 0 0 transparent;
+  box-shadow: none;
+  color: #5F3792;
+}
+.navbar .nav > li.active > a, .navbar .nav > li.active > a:hover {
+  background: none repeat scroll 0 0 transparent;
+  box-shadow: none;
+  color: #5F3792;
+}
 
- #footer a {
- 	color: #666;
- }
- #footer a:hover {
- 	color: #2dcc70;
- }
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+}
 
- #footer #gototop {
- 	background: none repeat scroll 0 0 #1d1d1d;
- 	color: #fff;
- 	display: inline-block;
- 	font-size: 24px;
- 	height: 40px;
- 	line-height: 40px;
- 	text-align: center;
- 	width: 40px;
- }
+.header-logo-img {
+  height: 32px;
+  width: auto;
+  margin-right: 8px;
+}
 
- #footer #gototop:hover {
- 	background: none repeat scroll 0 0 #2b2b2b;
- 	text-decoration: none;
- }
+.header-logo-text {
+  font-size: 18px;
+  color: #333;
+  vertical-align: middle;
+}
 
- /*Footer ended*/
-
- /*header style */
- header.navbar .navbar-inner {
- 	background: none repeat scroll 0 0 #ffffff !important;
- 	border: 0 none;
- 	box-shadow: none;
- }
- header .logo {
- 	margin-top: 1%;
- 	width: 20%
- }
-
-
- header.navbar {
- 	margin-bottom: 0;
- }
- header.navbar .nav {
- 	margin-top: 20px;
- }
- header.navbar .nav > li {
- 	margin-left: 1px;
- }
- header.navbar .nav > li > a {
- 	color: #666;
- 	font-family: "Fjalla One";
- 	font-size: 14px;
- 	padding-bottom: 10px;
- 	padding-top: 10px;
- 	text-shadow: none;
- 	text-transform: uppercase;
- }
- header.navbar .nav > li > a:hover {
- 	background: none repeat scroll 0 0 transparent;
- 	box-shadow: none;
- 	color: #2dcc70;
- }
- header.navbar .nav > li.active > a, header.navbar .nav > li.active > a:hover {
- 	background: none repeat scroll 0 0 transparent;
- 	box-shadow: none;
- 	color: #2dcc70;
- }
-
- header.navbar .nav > li.login > a {
- 	border-left: 1px solid #e5e5e5;
- }
-
- /*Header ended*/
+/*Header ended*/
 
  /*Page header search */
 
@@ -164,10 +135,18 @@
 
  /*Introduction to samooha on landing page text*/
  .intoduction-text {
- 	margin: auto;
- 	text-align: center;
- 	width: 90%;
- }
+  	margin: auto;
+  	text-align: center;
+  	width: 90%;
+  	padding: 20px 0;
+  }
+
+  .intoduction-text p {
+  	font-size: 15px;
+  	color: #555;
+  	line-height: 1.6;
+  	margin: 0;
+  }
 
  .into-header {
  	font-weight: bold;
@@ -176,6 +155,32 @@
  .main-search-field {
  	width: 50%; 
  	margin: auto;
+ }
+
+ .search-input-wrap {
+   display: flex;
+   gap: 0;
+ }
+
+ .search-input-wrap .form-control {
+   border-radius: 4px 0 0 4px;
+   border-right: none;
+ }
+
+ .search-btn {
+   background: #5F3792;
+   color: #fff;
+   border: 1px solid #5F3792;
+   border-radius: 0 4px 4px 0;
+   padding: 6px 18px;
+   font-size: 14px;
+   cursor: pointer;
+   white-space: nowrap;
+ }
+
+ .search-btn:hover {
+   background: #4a2a75;
+   border-color: #4a2a75;
  }
 
 .search-bottom-text {
@@ -189,17 +194,44 @@
  	width: 90%;
  }
 
- .main-search hr {
- 	width: 60%;
+ .main-search {
+  	background: linear-gradient(135deg, rgba(95, 55, 146, 0.04) 0%, rgba(147, 53, 134, 0.04) 100%);
+  	padding: 30px 0;
+  	border-bottom: 2px solid #f0f0f0;
+  }
+
+  .main-search hr {
+  	width: 60%;
+  	border: none;
+  	border-top: 2px solid rgba(95, 55, 146, 0.15);
+  	margin: 20px auto;
+  }
+
+ .footer {
+     width: 100%;
+     margin-top: 40px;
+     padding: 16px 0;
+     text-align: center;
  }
 
-.footer {
-     bottom: 0;
-     width: 100%;
-     height: 60px;
-     margin-top: 2%;
-     background-color: #f8f8f8;
-}
+ .footer .copy-right {
+   color: #888;
+   font-size: 12px;
+ }
+
+ .footer a {
+   color: #5F3792;
+ }
+
+ .footer a:hover {
+   color: #333;
+   text-decoration: underline;
+ }
+
+ .main-content {
+   min-height: 500px;
+   padding-top: 35px;
+ }
 
  /* Blocking ime selector pop up as we have bug with current version and botstrap 3
 We need to fix this later and remove below css
@@ -459,8 +491,8 @@ We need to fix this later and remove below css
   // wiki style ended
 
 .archive-url img {
-  width:40px; 
-  height: 40px
+  width: 32px;
+  height: 32px;
 }
 
 .archive-url:hover {
@@ -472,3 +504,234 @@ We need to fix this later and remove below css
   float: left;
   margin-right: 2%;
 }
+
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+.word-lists .table {
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.word-lists .table thead th {
+  background: #f5f5f5;
+  border-bottom: 2px solid #5F3792;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #555;
+}
+
+.word-lists .table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.book-thumbnail {
+  width: 48px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  display: block;
+}
+
+.book-thumbnail.fallback {
+  object-fit: contain;
+  padding: 4px;
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.thumbnail-cell {
+  width: 56px;
+  vertical-align: middle !important;
+}
+
+.load-more-wrap {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.load-more-btn {
+  padding: 10px 32px;
+  font-size: 14px;
+  border-radius: 6px;
+  background: #5F3792;
+  color: #fff;
+  border: none;
+  transition: background 0.2s ease;
+}
+
+.load-more-btn:hover {
+  background: #4a2a75;
+  color: #fff;
+}
+
+.buy-link {
+   color: #e67e22;
+   font-size: 14px;
+ }
+ 
+ .buy-link:hover {
+   color: #d35400;
+ }
+
+/* Stats section styling */
+.stat-simple {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 40px;
+   margin: 40px 0;
+   padding: 30px 0;
+   flex-wrap: wrap;
+ }
+
+ .stat-item {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   min-width: 120px;
+   text-align: center;
+ }
+
+ .stat-num {
+   font-size: 32px;
+   font-weight: bold;
+   color: #5F3792;
+   line-height: 1.2;
+   margin-bottom: 8px;
+ }
+
+ .stat-label {
+   font-size: 13px;
+   color: #666;
+   text-transform: uppercase;
+   letter-spacing: 0.5px;
+   font-weight: 500;
+ }
+
+ /* Year chart styling */
+ .year-chart {
+   margin: 40px auto;
+   padding: 30px 20px;
+   background: #f9f9f9;
+   border-radius: 6px;
+   max-width: 900px;
+ }
+
+ .chart-title {
+   text-align: center;
+   font-size: 22px;
+   color: #333;
+   margin-bottom: 20px;
+   font-weight: 600;
+ }
+
+ .chart-info {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 20px;
+   margin-bottom: 25px;
+   flex-wrap: wrap;
+   padding: 15px;
+   background: #fff;
+   border-radius: 4px;
+   border-left: 4px solid #5F3792;
+   row-gap: 12px;
+ }
+
+ .info-item {
+   font-size: 13px;
+   color: #555;
+   white-space: nowrap;
+   display: flex;
+   align-items: center;
+   min-width: fit-content;
+ }
+
+ .info-item strong {
+   color: #5F3792;
+   font-weight: 600;
+   font-size: 14px;
+ }
+
+ .chart-canvas-wrapper {
+   position: relative;
+   height: 300px;
+   width: 100%;
+   margin-top: 20px;
+ }
+
+ .chart-canvas-wrapper canvas {
+   max-width: 100%;
+   max-height: 300px;
+ }
+
+ #yearChart {
+   max-width: 100%;
+ }
+
+ /* Mobile responsive stats */
+ @media (max-width: 768px) {
+   .stat-simple {
+     gap: 20px;
+     margin: 30px 0;
+     padding: 20px 0;
+   }
+
+   .stat-num {
+     font-size: 24px;
+   }
+
+   .stat-label {
+     font-size: 12px;
+   }
+
+   .chart-info {
+     flex-direction: column;
+     gap: 12px;
+     padding: 12px;
+   }
+
+   .year-chart {
+     padding: 20px 12px;
+     margin: 30px auto;
+   }
+
+   .chart-title {
+     font-size: 18px;
+     margin-bottom: 15px;
+   }
+
+   .info-item {
+     font-size: 12px;
+   }
+
+   .chart-canvas-wrapper {
+     height: 250px;
+   }
+ }
+
+ @media (max-width: 480px) {
+   .stat-simple {
+     gap: 15px;
+   }
+
+   .stat-num {
+     font-size: 20px;
+   }
+
+   .info-item {
+     font-size: 11px;
+     white-space: normal;
+   }
+
+   .chart-canvas-wrapper {
+     height: 200px;
+   }
+ }

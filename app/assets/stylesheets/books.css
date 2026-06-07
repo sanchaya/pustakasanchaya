@@ -1,21 +1,57 @@
-.stat {
-	/*margin:150px auto;*/
-	text-align:center;
+.stat-simple {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 24px 0;
+  flex-wrap: wrap;
 }
-.highlight {
-	color:#111;
-	padding:20px 0;
-	font-weight:bold;
-	display:block;
-	overflow:hidden;
-	margin-bottom:0;
-	font-size:48px;
+
+.stat-item {
+  text-align: center;
+  min-width: 100px;
 }
-.stat i {
-	color:#f7c221;
+
+.stat-num {
+  display: block;
+  font-size: 36px;
+  font-weight: bold;
+  color: #5F3792;
+  line-height: 1.1;
 }
-.milestone-details {
-	font-weight:bold;
-	font-size:18px;
-	color:#999;
+
+.stat-label {
+  display: block;
+  font-size: 13px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.year-chart {
+  max-width: 600px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+.chart-title {
+  text-align: center;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.chart-info {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #666;
+}
+
+.chart-info .info-item strong {
+  color: #5F3792;
 }

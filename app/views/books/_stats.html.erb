@@ -1,33 +1,24 @@
-<!-- Count numbers are static make it dynamic -->
+<% s = stats %>
 
-<div class="stat">
-  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-    <div class="milestone-counter">
-      <i class="fa fa-university fa-3x"></i>
-      <span class="stat-count highlight">3</span>
-      <div class="milestone-details"><%=t :libraries %></div>
-    </div>
+<div class="stat-simple">
+  <div class="stat-item">
+    <i class="fa fa-book" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
+    <span class="stat-num"><%= number_with_delimiter(s['total_books'] || 0) %></span>
+    <span class="stat-label"><%=t :books %></span>
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-    <div class="milestone-counter">
-      <i class="fa fa-user fa-3x"></i>
-      <span class="stat-count highlight">3150</span>
-      <div class="milestone-details"><%=t :authors %></div>
-    </div>
+  <div class="stat-item">
+    <i class="fa fa-building" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
+    <span class="stat-num"><%= number_with_delimiter(s['total_libraries'] || 0) %></span>
+    <span class="stat-label"><%=t :libraries %></span>
   </div>
-  
-  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-    <div class="milestone-counter">
-      <i class="fa fa-print fa-3x"></i>
-      <span class="stat-count highlight">2587</span>
-      <div class="milestone-details"><%=t :publishers %></div>
-    </div>
+  <div class="stat-item">
+    <i class="fa fa-user" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
+    <span class="stat-num"><%= number_with_delimiter(s['total_authors'] || 0) %></span>
+    <span class="stat-label"><%=t :authors %></span>
   </div>
-  <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-    <div class="milestone-counter">
-      <i class="fa fa-book fa-3x"></i>
-      <span class="stat-count highlight">6294</span>
-      <div class="milestone-details"><%=t :books %></div>
-    </div>
+  <div class="stat-item">
+    <i class="fa fa-tags" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
+    <span class="stat-num"><%= number_with_delimiter(s['total_publishers'] || 0) %></span>
+    <span class="stat-label"><%=t :publishers %></span>
   </div>
-</div><!-- stat -->
+</div>

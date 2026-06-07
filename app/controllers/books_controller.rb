@@ -3,15 +3,29 @@ class BooksController < ApplicationController
   def index
     begin
       if params && params[:search] && !params[:search].blank?
-        books = JSON.parse(Book.search(params[:search]))
-        @books = Kaminari.paginate_array(books).page(params[:page]).per(8)
-      else
-        @wiki_book = JSON.parse(Book.wiki_search)
-        puts @wiki_book['other_metadata'].inspect
-        puts @wiki_book['other_metadata']['wikimedia_url'].inspect
+        # Search remote API
+        remote_books = begin
+          JSON.parse(Book.search(params[:search]))
+        rescue StandardError
+          []
+        end
+        # Search local caches (IA imports + Ankita Pustaka)
+        local_books = begin
+          Book.search_all_cached(params[:search])
+        rescue StandardError
+          []
+        end
+        # Merge and deduplicate
+        all_books = (remote_books + local_books).uniq { |b| b['source_identifier'] || b['name'] }
+        @books = Kaminari.paginate_array(all_books).page(params[:page]).per(8)
       end
-    rescue
-      @books = {}
+    rescue StandardError
+      @books = Kaminari.paginate_array([]).page(params[:page]).per(8)
+      flash.now[:alert] = 'Search service is temporarily unavailable. Please try again later.' if params[:search].present?
+    end
+    respond_to do |format|
+      format.html
+      format.js { render 'books/load_more' }
     end
   end
 
@@ -36,6 +50,15 @@ class BooksController < ApplicationController
   def capture_user_name
     session[:wiki_user_id] = params['user_name']
     render nothing: true
+  end
+
+  def wiki
+    begin
+      @wiki_book = JSON.parse(Book.wiki_search)
+    rescue StandardError
+      @wiki_book = nil
+      flash.now[:alert] = 'Wiki service is temporarily unavailable.'
+    end
   end
 
   # Static info for wiki article creation
