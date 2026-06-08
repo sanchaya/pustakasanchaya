@@ -169,25 +169,49 @@
                   <i class="fas fa-clone"></i> Duplicates
                 </a>
               </li>
-              <li>
-                <a href="<%= admin_corrections_path %>" 
-                   class="<%= 'active' if current_page?(admin_corrections_path) %>">
-                  <i class="fas fa-history"></i> Corrections
-                </a>
-              </li>
-              <% if current_admin.super_admin? %>
-                <li>
-                  <a href="<%= admin_editors_path %>" 
-                     class="<%= 'active' if current_page?(admin_editors_path) %>">
-                    <i class="fas fa-users"></i> Editors
-                  </a>
-                </li>
-              <% end %>
-              <li style="border-top: 1px solid rgba(255,255,255,0.2); margin-top: 20px; padding-top: 20px;">
-                <a href="<%= admin_logout_path %>" data-method="post">
-                  <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-              </li>
+               <li>
+                 <a href="<%= admin_corrections_path %>" 
+                    class="<%= 'active' if current_page?(admin_corrections_path) %>">
+                   <i class="fas fa-history"></i> Corrections
+                 </a>
+               </li>
+               <li style="border-top: 1px solid rgba(255,255,255,0.2); margin-top: 15px; padding-top: 15px;">
+                 <a href="<%= admin_authors_path %>" 
+                    class="<%= 'active' if current_page?(admin_authors_path) %>">
+                   <i class="fas fa-feather"></i> Authors
+                 </a>
+               </li>
+               <li>
+                 <a href="<%= admin_publishers_path %>" 
+                    class="<%= 'active' if current_page?(admin_publishers_path) %>">
+                   <i class="fas fa-building"></i> Publishers
+                 </a>
+               </li>
+               <li>
+                 <a href="<%= admin_libraries_path %>" 
+                    class="<%= 'active' if current_page?(admin_libraries_path) %>">
+                   <i class="fas fa-archive"></i> Libraries
+                 </a>
+               </li>
+               <li>
+                 <a href="<%= admin_categories_path %>" 
+                    class="<%= 'active' if current_page?(admin_categories_path) %>">
+                   <i class="fas fa-tag"></i> Categories
+                 </a>
+               </li>
+               <% if current_admin.super_admin? %>
+                 <li style="border-top: 1px solid rgba(255,255,255,0.2); margin-top: 15px; padding-top: 15px;">
+                   <a href="<%= admin_editors_path %>" 
+                      class="<%= 'active' if current_page?(admin_editors_path) %>">
+                     <i class="fas fa-users"></i> Editors
+                   </a>
+                 </li>
+               <% end %>
+               <li style="border-top: 1px solid rgba(255,255,255,0.2); margin-top: 15px; padding-top: 15px;">
+                 <a href="<%= admin_logout_path %>" data-method="post">
+                   <i class="fas fa-sign-out-alt"></i> Logout
+                 </a>
+               </li>
             </ul>
           <% end %>
         </div>
