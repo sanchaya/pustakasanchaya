@@ -37,9 +37,13 @@ module BooksHelper
   end
 
   def stats
-    file_path = Rails.root.join('db', 'stats.json')
-    return {} unless File.exist?(file_path)
-    JSON.parse(File.read(file_path))
+    {
+      'total_books' => Book.count,
+      'total_authors' => Book.where.not(author: [nil, '']).distinct.count(:author),
+      'total_publishers' => Book.where.not(publisher: [nil, '']).distinct.count(:publisher),
+      'total_libraries' => Book.where.not(library: [nil, '']).distinct.count(:library),
+      'libraries' => Book.where.not(library: [nil, '']).group(:library).count
+    }
   end
 
   def broken_link?(url)
@@ -73,15 +77,24 @@ module BooksHelper
   end
 
   def year_distribution
-    file_path = Rails.root.join('db', 'years_distribution.json')
-    return [] unless File.exist?(file_path)
-    JSON.parse(File.read(file_path))
+    Book.where.not(year: [nil, '', '0'])
+        .group(:year)
+        .count
+        .map { |year, count| { 'year' => year.to_i, 'count' => count } }
+        .reject { |e| e['year'] < 1000 || e['year'] > 2030 }
+        .sort_by { |e| e['year'] }
   end
 
   def year_wise_stats
-    file_path = Rails.root.join('db', 'year_wise_stats.json')
-    return [] unless File.exist?(file_path)
-    JSON.parse(File.read(file_path))
+    rows = Book.connection.select_all(
+      "SELECT year, COUNT(*) AS books, COUNT(DISTINCT author) AS authors, COUNT(DISTINCT publisher) AS publishers
+       FROM books
+       WHERE year IS NOT NULL AND year != '' AND year != '0'
+       GROUP BY year"
+    )
+    rows.map { |r| { 'year' => r['year'].to_i, 'books' => r['books'].to_i, 'authors' => r['authors'].to_i, 'publishers' => r['publishers'].to_i } }
+        .reject { |e| e['year'] < 1000 || e['year'] > 2030 }
+        .sort_by { |e| e['year'] }
   end
 
   def decade_groups
