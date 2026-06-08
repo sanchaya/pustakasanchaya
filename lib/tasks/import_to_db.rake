@@ -15,7 +15,8 @@ namespace :db do
       'sahitya_books.json'              => 'Sahitya',
       'totalkannada_books.json'         => 'TotalKannada',
       'veeraloka_books.json'            => 'Veeraloka',
-      'granthamala_books.json'          => 'Granthamala'
+      'granthamala_books.json'          => 'Granthamala',
+      'sawanna_books.json'              => 'Sawanna'
     }
 
     total = 0
