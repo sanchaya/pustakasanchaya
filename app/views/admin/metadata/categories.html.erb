@@ -198,7 +198,10 @@ function findSimilarCategories() {
     return;
   }
   
-  fetch('<%= admin_find_similar_categories_path %>', {
+  const url = new URL('<%= admin_find_similar_categories_path %>', window.location.origin);
+  url.searchParams.append('category', categoryName);
+  
+  fetch(url.toString(), {
     method: 'GET',
     headers: {
       'X-CSRF-Token': '<%= form_authenticity_token %>'

@@ -198,7 +198,10 @@ function findSimilarPublishers() {
     return;
   }
   
-  fetch('<%= admin_find_similar_publishers_path %>', {
+  const url = new URL('<%= admin_find_similar_publishers_path %>', window.location.origin);
+  url.searchParams.append('publisher', publisherName);
+  
+  fetch(url.toString(), {
     method: 'GET',
     headers: {
       'X-CSRF-Token': '<%= form_authenticity_token %>'

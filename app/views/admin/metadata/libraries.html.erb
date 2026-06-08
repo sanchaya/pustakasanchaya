@@ -198,7 +198,10 @@ function findSimilarLibraries() {
     return;
   }
   
-  fetch('<%= admin_find_similar_libraries_path %>', {
+  const url = new URL('<%= admin_find_similar_libraries_path %>', window.location.origin);
+  url.searchParams.append('library', libraryName);
+  
+  fetch(url.toString(), {
     method: 'GET',
     headers: {
       'X-CSRF-Token': '<%= form_authenticity_token %>'

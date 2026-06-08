@@ -198,7 +198,10 @@ function findSimilarAuthors() {
     return;
   }
   
-  fetch('<%= admin_find_similar_authors_path %>', {
+  const url = new URL('<%= admin_find_similar_authors_path %>', window.location.origin);
+  url.searchParams.append('author', authorName);
+  
+  fetch(url.toString(), {
     method: 'GET',
     headers: {
       'X-CSRF-Token': '<%= form_authenticity_token %>'
