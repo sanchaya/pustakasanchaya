@@ -14,7 +14,8 @@ namespace :db do
       'beetle_bookshop_books.json'      => 'BeetleBookshop',
       'sahitya_books.json'              => 'Sahitya',
       'totalkannada_books.json'         => 'TotalKannada',
-      'veeraloka_books.json'            => 'Veeraloka'
+      'veeraloka_books.json'            => 'Veeraloka',
+      'granthamala_books.json'          => 'Granthamala'
     }
 
     total = 0
