@@ -3,7 +3,7 @@ class Admin::CorrectionsController < ApplicationController
   before_action :authorize_admin!
 
   def index
-    @edits = Correction.edits.order(timestamp: :desc).page(params[:page]).per(20)
+    @edits = Correction.edits.order(timestamp: :desc).page(params[:page])
   end
 
   def audit_log
