@@ -3,6 +3,8 @@ class Admin::DashboardController < ApplicationController
   before_action :authorize_admin!
 
   def index
+    expires_now
+
     @admin = current_admin
 
     @stats = {
