@@ -38,16 +38,16 @@
           <% @authors.each do |author| %>
             <tr>
               <td>
-                <strong><%= author.name %></strong>
+                <strong><%= author[:name] %></strong>
               </td>
               <td class="text-end">
-                <span class="badge bg-light text-dark"><%= author.count %></span>
+                <span class="badge bg-light text-dark"><%= author[:count] %></span>
               </td>
               <td class="text-end">
-                <button class="btn btn-sm btn-outline-primary" onclick="openRenameModal('<%= author.name %>')">
+                <button class="btn btn-sm btn-outline-primary" onclick="openRenameModal('<%= author[:name] %>')">
                   Rename
                 </button>
-                <button class="btn btn-sm btn-outline-success" onclick="openMergeModal('<%= author.name %>')">
+                <button class="btn btn-sm btn-outline-success" onclick="openMergeModal('<%= author[:name] %>')">
                   Merge
                 </button>
               </td>

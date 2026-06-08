@@ -12,19 +12,24 @@
         <p class="text-muted">The system will automatically detect and suggest potential duplicates.</p>
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <button class="btn btn-primary w-100 mb-3" onclick="findDuplicates('author')">
               <i class="fas fa-user"></i> Find Duplicate Authors
             </button>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <button class="btn btn-primary w-100 mb-3" onclick="findDuplicates('publisher')">
               <i class="fas fa-building"></i> Find Duplicate Publishers
             </button>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <button class="btn btn-primary w-100 mb-3" onclick="findDuplicates('name')">
               <i class="fas fa-book"></i> Find Duplicate Titles
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary w-100 mb-3" onclick="findDuplicates('category')">
+              <i class="fas fa-tag"></i> Find Duplicate Categories
             </button>
           </div>
         </div>
@@ -81,6 +86,7 @@
                     <th>Title</th>
                     <th>Author</th>
                     <th>Publisher</th>
+                    <th>Category</th>
                     <th>Source</th>
                   </tr>
                 </thead>
@@ -92,6 +98,7 @@
             <td><small>${book.name || 'N/A'}</small></td>
             <td><small>${book.author || 'N/A'}</small></td>
             <td><small>${book.publisher || 'N/A'}</small></td>
+            <td><small>${book.category || 'N/A'}</small></td>
             <td><small><span class="badge bg-secondary">${book.library}</span></small></td>
           </tr>`;
         });

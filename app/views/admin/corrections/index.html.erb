@@ -33,34 +33,34 @@
                 <% @edits.each do |edit| %>
                   <tr>
                     <td>
-                      <small><%= Time.parse(edit['timestamp']).strftime('%b %d, %Y %H:%M') %></small>
+                      <small><%= edit.timestamp.strftime('%b %d, %Y %H:%M') %></small>
                     </td>
                     <td>
-                      <small><%= edit['editor'] %></small>
+                      <small><%= edit.editor %></small>
                     </td>
                     <td>
                       <small style="font-family: monospace;">
-                        <%= truncate(edit['source_identifier'], length: 20) %>
+                        <%= truncate(edit.source_identifier, length: 20) %>
                       </small>
                     </td>
                     <td>
                       <small>
-                        <span class="badge bg-info"><%= edit['field'] %></span>
+                        <span class="badge bg-info"><%= edit.field %></span>
                       </small>
                     </td>
                     <td>
                       <small style="color: #999;">
-                        <%= truncate(edit['old_value'], length: 30) %>
+                        <%= truncate(edit.old_value, length: 30) %>
                       </small>
                     </td>
                     <td>
                       <small style="color: #333; font-weight: 500;">
-                        <%= truncate(edit['new_value'], length: 30) %>
+                        <%= truncate(edit.new_value, length: 30) %>
                       </small>
                     </td>
                     <td>
                       <button class="btn btn-sm btn-outline-danger" 
-                              onclick="undoEdit('<%= edit['id'] %>', this)"
+                              onclick="undoEdit('<%= edit.id %>', this)"
                               title="Undo this edit">
                         <i class="fas fa-undo"></i> Undo
                       </button>

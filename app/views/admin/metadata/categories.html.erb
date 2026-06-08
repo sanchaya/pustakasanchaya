@@ -38,16 +38,16 @@
           <% @categories.each do |category| %>
             <tr>
               <td>
-                <strong><%= category.name %></strong>
+                <strong><%= category[:name] %></strong>
               </td>
               <td class="text-end">
-                <span class="badge bg-light text-dark"><%= category.count %></span>
+                <span class="badge bg-light text-dark"><%= category[:count] %></span>
               </td>
               <td class="text-end">
-                <button class="btn btn-sm btn-outline-primary" onclick="openRenameModal('<%= category.name.gsub("'", "\\'") %>')">
+                <button class="btn btn-sm btn-outline-primary" onclick="openRenameModal('<%= category[:name].gsub("'", "\\'") %>')">
                   Rename
                 </button>
-                <button class="btn btn-sm btn-outline-success" onclick="openMergeModal('<%= category.name.gsub("'", "\\'") %>')">
+                <button class="btn btn-sm btn-outline-success" onclick="openMergeModal('<%= category[:name].gsub("'", "\\'") %>')">
                   Merge
                 </button>
               </td>

@@ -1,19 +1,13 @@
-class Book
-
+class Book < ActiveRecord::Base
   BASE_URL = Rails.env == "development" ? 'http://localhost:3001' : 'https://samooha.sanchaya.net'
   BASE_SEARCH_URL = "#{BASE_URL}/search.json?search="
   IA_SEARCH_URL = 'https://archive.org/advancedsearch.php'
   IA_ITEM_URL = 'https://archive.org/metadata'
 
-  # In-memory cache for book data (loaded once per worker)
-  @@jai_gyan_cache = nil
-  @@servants_cache = nil
-  @@ankita_cache = nil
-  @@ruthumana_cache = nil
-  @@harivu_cache = nil
-  @@kbh_cache = nil
-  @@nkp_cache = nil
-  @@google_books_cache = nil
+  scope :by_author, ->(name) { where(author: name) }
+  scope :by_publisher, ->(name) { where(publisher: name) }
+  scope :by_library, ->(name) { where(library: name) }
+  scope :by_category, ->(name) { where(categories: name) }
 
   def self.search params
     search_items = params.squish
@@ -117,122 +111,39 @@ class Book
     }
   end
 
-  def self.load_jai_gyan_cache
-    return @@jai_gyan_cache if @@jai_gyan_cache
-    file_path = Rails.root.join('db', 'jai_gyan_books.json')
-    return [] unless File.exist?(file_path)
-    @@jai_gyan_cache = JSON.parse(File.read(file_path))
-  end
-
-  def self.search_jai_gyan_cache(query)
-    books = load_jai_gyan_cache
-    return [] if books.empty?
-    query = query.downcase
-    books.select do |book|
-      book['name'].to_s.downcase.include?(query) ||
-        book['author'].to_s.downcase.include?(query) ||
-        book['publisher'].to_s.downcase.include?(query)
-    end
-  end
-
-  def self.load_servants_cache
-    return @@servants_cache if @@servants_cache
-    file_path = Rails.root.join('db', 'servants_of_knowledge_books.json')
-    return [] unless File.exist?(file_path)
-    @@servants_cache = JSON.parse(File.read(file_path))
-  end
-
-  def self.search_servants_cache(query)
-    books = load_servants_cache
-    return [] if books.empty?
-    query = query.downcase
-    books.select do |book|
-      book['name'].to_s.downcase.include?(query) ||
-        book['author'].to_s.downcase.include?(query) ||
-        book['publisher'].to_s.downcase.include?(query)
-    end
-  end
-
-  def self.load_ankita_cache
-    return @@ankita_cache if @@ankita_cache
-    file_path = Rails.root.join('db', 'ankita_pustaka_books.json')
-    return [] unless File.exist?(file_path)
-    @@ankita_cache = JSON.parse(File.read(file_path))
-  end
-
-  def self.search_ankita_cache(query)
-    books = load_ankita_cache
-    return [] if books.empty?
-    query = query.downcase
-    books.select do |book|
-      book['name'].to_s.downcase.include?(query) ||
-        book['name_english'].to_s.downcase.include?(query) ||
-        book['author'].to_s.downcase.include?(query) ||
-        book['publisher'].to_s.downcase.include?(query)
-    end
-  end
-
-  # --- Ruthumana ---
-  def self.load_ruthumana_cache
-    return @@ruthumana_cache if @@ruthumana_cache
-    file_path = Rails.root.join('db', 'ruthumana_books.json')
-    return [] unless File.exist?(file_path)
-    @@ruthumana_cache = JSON.parse(File.read(file_path))
-  end
-
-  # --- Harivu Books ---
-  def self.load_harivu_cache
-    return @@harivu_cache if @@harivu_cache
-    file_path = Rails.root.join('db', 'harivu_books.json')
-    return [] unless File.exist?(file_path)
-    @@harivu_cache = JSON.parse(File.read(file_path))
-  end
-
-  # --- Kannada Book House ---
-  def self.load_kbh_cache
-    return @@kbh_cache if @@kbh_cache
-    file_path = Rails.root.join('db', 'kannadabookhouse_books.json')
-    return [] unless File.exist?(file_path)
-    @@kbh_cache = JSON.parse(File.read(file_path))
-  end
-
-  # --- Nava Karnataka ---
-  def self.load_nkp_cache
-    return @@nkp_cache if @@nkp_cache
-    file_path = Rails.root.join('db', 'navakarnataka_books.json')
-    return [] unless File.exist?(file_path)
-    @@nkp_cache = JSON.parse(File.read(file_path))
-  end
-
-  # --- Google Books ---
-  def self.load_google_books_cache
-    return @@google_books_cache if @@google_books_cache
-    file_path = Rails.root.join('db', 'google_books.json')
-    return [] unless File.exist?(file_path)
-    @@google_books_cache = JSON.parse(File.read(file_path))
-  end
-
-  def self.search_store_cache(cache_method, query)
-    books = send(cache_method)
-    return [] if books.empty?
-    query = query.downcase
-    books.select do |book|
-      book['name'].to_s.downcase.include?(query) ||
-        book['author'].to_s.downcase.include?(query) ||
-        book['publisher'].to_s.downcase.include?(query)
-    end
-  end
-
   def self.search_all_cached(query)
-    jg = search_jai_gyan_cache(query)
-    sok = search_servants_cache(query)
-    ankita = search_ankita_cache(query)
-    ruthumana = search_store_cache(:load_ruthumana_cache, query)
-    harivu = search_store_cache(:load_harivu_cache, query)
-    kbh = search_store_cache(:load_kbh_cache, query)
-    nkp = search_store_cache(:load_nkp_cache, query)
-    google_books = search_store_cache(:load_google_books_cache, query)
-    (jg + sok + ankita + ruthumana + harivu + kbh + nkp + google_books).uniq { |b| b['source_identifier'] }
+    where('name LIKE :q OR author LIKE :q OR publisher LIKE :q', q: "%#{query}%")
   end
 
+  def self.all_authors
+    distinct.order(:author).pluck(:author).reject(&:blank?)
+  end
+
+  def self.all_publishers
+    distinct.order(:publisher).pluck(:publisher).reject(&:blank?)
+  end
+
+  def self.all_libraries
+    distinct.order(:library).pluck(:library).reject(&:blank?)
+  end
+
+  def self.all_categories
+    distinct.order(:categories).pluck(:categories).reject(&:blank?)
+  end
+
+  def self.author_counts
+    where.not(author: [nil, '']).group(:author).order('count_id DESC').count('id')
+  end
+
+  def self.publisher_counts
+    where.not(publisher: [nil, '']).group(:publisher).order('count_id DESC').count('id')
+  end
+
+  def self.library_counts
+    where.not(library: [nil, '']).group(:library).order('count_id DESC').count('id')
+  end
+
+  def self.category_counts
+    where.not(categories: [nil, '']).group(:categories).order('count_id DESC').count('id')
+  end
 end

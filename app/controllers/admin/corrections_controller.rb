@@ -3,9 +3,7 @@ class Admin::CorrectionsController < ApplicationController
   before_action :authorize_admin!
 
   def index
-    corrections_data = Correction.all
-    @edits = corrections_data['edits'] || []
-    @edits = Kaminari.paginate_array(@edits.reverse).page(params[:page]).per(20)
+    @edits = Correction.edits.order(timestamp: :desc).page(params[:page]).per(20)
   end
 
   def audit_log

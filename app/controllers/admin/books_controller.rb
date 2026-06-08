@@ -16,7 +16,7 @@ class Admin::BooksController < ApplicationController
   def search
     query = params[:q] || ''
     books = query.present? ? Book.search_all_cached(query) : []
-    
+
     render json: {
       results: books.map { |b| format_book_for_json(b) }
     }
@@ -31,7 +31,6 @@ class Admin::BooksController < ApplicationController
       return
     end
 
-    # Get existing edits for this book
     @corrections = Correction.edits_for_book(source_identifier)
 
     render json: {
@@ -53,8 +52,7 @@ class Admin::BooksController < ApplicationController
 
     old_value = @book[field]
 
-    # Record the edit
-    edit = Correction.record_edit(
+    Correction.record_edit(
       source_identifier,
       field,
       old_value,
@@ -63,71 +61,52 @@ class Admin::BooksController < ApplicationController
       params[:description]
     )
 
+    # Persist the change to MySQL
+    Book.where(source_identifier: source_identifier).update_all(field => new_value)
+
     render json: {
       success: true,
-      edit: edit,
       message: "#{field.humanize} updated successfully"
     }
   end
 
   def bulk_edit
-    # Show bulk edit interface
   end
 
   def bulk_update
     field = params[:field]
     find_value = params[:find_value]
     replace_value = params[:replace_value]
-    scope = params[:scope] || 'all'  # all, author, publisher, library
+    scope = params[:scope] || 'all'
 
-    all_books = load_all_books
-    affected_books = []
-
-    all_books.each do |book|
-      next unless book[field]
-      
-      should_update = false
-      old_value = book[field].to_s
-
-      case scope
-      when 'exact'
-        should_update = old_value == find_value
-      when 'contains'
-        should_update = old_value.include?(find_value)
-      when 'starts_with'
-        should_update = old_value.start_with?(find_value)
-      when 'ends_with'
-        should_update = old_value.end_with?(find_value)
-      else
-        should_update = true
-      end
-
-      if should_update
-        # Record the edit
-        edit = Correction.record_edit(
-          book['source_identifier'],
-          field,
-          old_value,
-          replace_value,
-          current_admin.email,
-          "Bulk #{field} update: '#{find_value}' → '#{replace_value}' (#{scope})"
-        )
-        
-        affected_books << {
-          source_identifier: book['source_identifier'],
-          title: book['name'],
-          old_value: old_value,
-          new_value: replace_value,
-          edit_id: edit['id']
-        }
-      end
+    scope_condition = case scope
+    when 'exact' then { field => find_value }
+    when 'contains' then ["#{field} LIKE ?", "%#{find_value}%"]
+    when 'starts_with' then ["#{field} LIKE ?", "#{find_value}%"]
+    when 'ends_with' then ["#{field} LIKE ?", "%#{find_value}"]
+    else nil
     end
+
+    affected = scope_condition ? Book.where(scope_condition) : Book.all
+    count = affected.count
+
+    affected.find_each do |book|
+      Correction.record_edit(
+        book.source_identifier,
+        field,
+        book[field],
+        replace_value,
+        current_admin.email,
+        "Bulk #{field} update: '#{find_value}' → '#{replace_value}' (#{scope})"
+      )
+    end
+
+    affected.update_all(field => replace_value)
 
     render json: {
       success: true,
-      affected_count: affected_books.length,
-      affected_books: affected_books,
-      message: "Updated #{affected_books.length} book(s)"
+      affected_count: count,
+      message: "Updated #{count} book(s)"
     }
   end
 
@@ -137,42 +116,32 @@ class Admin::BooksController < ApplicationController
     replace_value = params[:replace_value]
     scope = params[:scope] || 'contains'
 
-    all_books = load_all_books
-    preview_books = []
-
-    all_books.each do |book|
-      next unless book[field]
-      
-      should_update = false
-      old_value = book[field].to_s
-
-      case scope
-      when 'exact'
-        should_update = old_value == find_value
-      when 'contains'
-        should_update = old_value.include?(find_value)
-      when 'starts_with'
-        should_update = old_value.start_with?(find_value)
-      when 'ends_with'
-        should_update = old_value.end_with?(find_value)
-      end
-
-      if should_update
-        preview_books << {
-          source_identifier: book['source_identifier'],
-          title: book['name'],
-          library: book['library'],
-          old_value: old_value,
-          new_value: replace_value
-        }
-      end
+    scope_condition = case scope
+    when 'exact' then { field => find_value }
+    when 'contains' then ["#{field} LIKE ?", "%#{find_value}%"]
+    when 'starts_with' then ["#{field} LIKE ?", "#{find_value}%"]
+    when 'ends_with' then ["#{field} LIKE ?", "%#{find_value}%"]
+    else nil
     end
+
+    affected = scope_condition ? Book.where(scope_condition) : Book.all
+    preview_books = affected.limit(50).map do |book|
+      {
+        source_identifier: book.source_identifier,
+        title: book.name,
+        library: book.library,
+        old_value: book[field],
+        new_value: replace_value
+      }
+    end
+
+    total_count = affected.count
 
     render json: {
       success: true,
-      preview_count: preview_books.length,
-      preview_books: preview_books.first(50),  # Show first 50 in preview
-      has_more: preview_books.length > 50
+      preview_count: total_count,
+      preview_books: preview_books,
+      has_more: total_count > 50
     }
   end
 
@@ -191,44 +160,19 @@ class Admin::BooksController < ApplicationController
   helper_method :current_admin
 
   def find_book_by_identifier(source_identifier)
-    # Load all caches and find the book
-    all_books = (
-      Book.load_jai_gyan_cache +
-      Book.load_servants_cache +
-      Book.load_ankita_cache +
-      Book.load_ruthumana_cache +
-      Book.load_harivu_cache +
-      Book.load_kbh_cache +
-      Book.load_nkp_cache +
-      Book.load_google_books_cache
-    )
-
-    all_books.find { |b| b['source_identifier'] == source_identifier }
+    Book.find_by(source_identifier: source_identifier)
   end
 
   def format_book_for_json(book)
     {
-      source_identifier: book['source_identifier'],
-      name: book['name'],
+      source_identifier: book.source_identifier,
+      name: book.name,
       title: book['title'],
-      author: book['author'],
-      publisher: book['publisher'],
-      year: book['year'],
-      library: book['library'],
-      thumbnail: book['thumbnail']
+      author: book.author,
+      publisher: book.publisher,
+      year: book.year,
+      library: book.library,
+      thumbnail: book.thumbnail
     }
-  end
-
-  def load_all_books
-    @all_books ||= (
-      Book.load_jai_gyan_cache +
-      Book.load_servants_cache +
-      Book.load_ankita_cache +
-      Book.load_ruthumana_cache +
-      Book.load_harivu_cache +
-      Book.load_kbh_cache +
-      Book.load_nkp_cache +
-      Book.load_google_books_cache
-    )
   end
 end

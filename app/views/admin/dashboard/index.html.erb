@@ -62,11 +62,11 @@
           </div>
           <div class="list-group-item d-flex justify-content-between">
             <span>Book Edits</span>
-            <strong><%= @corrections_count > 0 ? @corrections['edits'].select { |e| e['type'] == 'book_edit' }.length : 0 %></strong>
+            <strong><%= Correction.edits.count %></strong>
           </div>
           <div class="list-group-item d-flex justify-content-between">
             <span>Duplicates Merged</span>
-            <strong><%= @corrections_count > 0 ? @corrections['merges'].length : 0 %></strong>
+            <strong><%= Correction.merges.count %></strong>
           </div>
         </div>
         <div style="margin-top: 15px;">
@@ -169,22 +169,22 @@
                 <% @recent_edits.each do |edit| %>
                   <tr>
                     <td>
-                      <small><%= Time.parse(edit['timestamp']).strftime('%b %d, %H:%M') %></small>
+                      <small><%= edit.timestamp.strftime('%b %d, %H:%M') %></small>
                     </td>
                     <td>
-                      <small><%= edit['editor'] %></small>
+                      <small><%= edit.editor %></small>
                     </td>
                     <td>
                       <small>
-                        <% if edit['type'] == 'book_edit' %>
+                        <% if edit.correction_type == 'edit' %>
                           <span class="badge bg-info">Book Edit</span>
-                        <% elsif edit['type'] == 'merge' %>
+                        <% elsif edit.correction_type == 'merge' %>
                           <span class="badge bg-warning">Merge</span>
                         <% end %>
                       </small>
                     </td>
                     <td>
-                      <small style="color: #666;"><%= truncate(edit['description'], length: 50) %></small>
+                      <small style="color: #666;"><%= truncate(edit.description, length: 50) %></small>
                     </td>
                   </tr>
                 <% end %>

@@ -7,7 +7,7 @@ class Admin::DuplicatesController < ApplicationController
   end
 
   def find
-    field = params[:field] || 'author'  # author, publisher, or name
+    field = params[:field] || 'author'
     @suggested_duplicates = find_similar_records(field)
 
     render json: {
@@ -24,28 +24,26 @@ class Admin::DuplicatesController < ApplicationController
       return render json: { error: 'Please select records to merge' }, status: 400
     end
 
-    # Find the canonical book
-    canonical_book = find_book_by_identifier(canonical_id)
+    canonical_book = Book.find_by(source_identifier: canonical_id)
     unless canonical_book
       return render json: { error: 'Canonical book not found' }, status: 404
     end
 
-    # Apply corrections to other books (mark them as duplicates)
     source_ids.each do |source_id|
       next if source_id == canonical_id
 
-      book = find_book_by_identifier(source_id)
+      book = Book.find_by(source_identifier: source_id)
       next unless book
 
-      # Record the merge
       Correction.record_merge(
         source_ids,
         canonical_id,
         {
           'source_identifier' => source_id,
-          'name' => book['name'],
-          'author' => book['author'],
-          'publisher' => book['publisher']
+          'name' => book.name,
+          'author' => book.author,
+          'publisher' => book.publisher,
+          'category' => book.categories
         },
         current_admin.email,
         "Merged #{source_ids.length} duplicate records"
@@ -74,77 +72,45 @@ class Admin::DuplicatesController < ApplicationController
   helper_method :current_admin
 
   def find_similar_records(field)
-    all_books = load_all_books
-    duplicates_by_field = {}
+    column = field_to_column(field)
+    return [] unless column
 
-    # Group by field and find similar values
-    all_books.each do |book|
-      value = normalize_value(book[field])
-      next if value.blank?
+    groups = Book.where.not(column => [nil, '']).group(column)
+                  .having('count(*) > 1')
+                  .order('count_all DESC')
+                  .count
 
-      # Calculate similarity and group
-      key = value
-      duplicates_by_field[key] ||= []
-      duplicates_by_field[key] << book
-    end
-
-    # Return groups with more than one record
-    result = []
-    duplicates_by_field.each do |key, books|
-      next if books.length < 2
-
-      # Calculate similarity score
-      similarity_group = {
+    groups.map do |value, count|
+      books = Book.where(column => value).limit(50).map { |b| format_book_for_display(b) }
+      {
         field: field,
-        value: key,
-        count: books.length,
-        books: books.map { |b| format_book_for_display(b) },
-        similarity_score: calculate_group_similarity(books, field)
+        value: value,
+        count: count,
+        books: books,
+        similarity_score: 1.0
       }
-
-      result << similarity_group
     end
-
-    result.sort_by { |g| -g[:count] }
   end
 
-  def normalize_value(value)
-    return '' if value.blank?
-    value.to_s.strip.downcase.gsub(/[^a-z0-9]/i, '')
-  end
-
-  def calculate_group_similarity(books, field)
-    return 1.0 if books.length < 2
-
-    # Simple similarity: exact match on normalized value = 1.0
-    1.0
-  end
-
-  def load_all_books
-    @all_books ||= (
-      Book.load_jai_gyan_cache +
-      Book.load_servants_cache +
-      Book.load_ankita_cache +
-      Book.load_ruthumana_cache +
-      Book.load_harivu_cache +
-      Book.load_kbh_cache +
-      Book.load_nkp_cache +
-      Book.load_google_books_cache
-    )
-  end
-
-  def find_book_by_identifier(source_identifier)
-    load_all_books.find { |b| b['source_identifier'] == source_identifier }
+  def field_to_column(field)
+    case field
+    when 'author' then :author
+    when 'publisher' then :publisher
+    when 'name' then :name
+    when 'category' then :categories
+    else nil
+    end
   end
 
   def format_book_for_display(book)
     {
-      source_identifier: book['source_identifier'],
-      name: book['name'],
-      author: book['author'],
-      publisher: book['publisher'],
-      year: book['year'],
-      library: book['library']
+      source_identifier: book.source_identifier,
+      name: book.name,
+      author: book.author,
+      publisher: book.publisher,
+      category: book.categories,
+      year: book.year,
+      library: book.library
     }
   end
 end

@@ -25,31 +25,32 @@
                 <% @audit_log.each do |item| %>
                   <tr>
                     <td style="white-space: nowrap;">
-                      <small><%= Time.parse(item['timestamp']).strftime('%b %d, %Y %H:%M:%S') %></small>
+                      <small><%= item.timestamp.strftime('%b %d, %Y %H:%M:%S') %></small>
                     </td>
                     <td>
-                      <% if item['type'] == 'book_edit' %>
+                      <% if item.correction_type == 'edit' %>
                         <span class="badge bg-info">Book Edit</span>
-                      <% elsif item['type'] == 'merge' %>
+                      <% elsif item.correction_type == 'merge' %>
                         <span class="badge bg-warning text-dark">Merge</span>
                       <% end %>
                     </td>
                     <td>
-                      <small><%= item['editor'] %></small>
+                      <small><%= item.editor %></small>
                     </td>
                     <td>
                       <small style="color: #666;">
-                        <% if item['type'] == 'book_edit' %>
-                          Changed <strong><%= item['field'] %></strong> 
-                          from '<code><%= truncate(item['old_value'], length: 25) %></code>' 
-                          to '<code><%= truncate(item['new_value'], length: 25) %></code>'
+                        <% if item.correction_type == 'edit' %>
+                          Changed <strong><%= item.field %></strong> 
+                          from '<code><%= truncate(item.old_value, length: 25) %></code>' 
+                          to '<code><%= truncate(item.new_value, length: 25) %></code>'
                           <br>
-                          <code style="font-size: 11px; color: #999;"><%= truncate(item['source_identifier'], length: 40) %></code>
-                        <% elsif item['type'] == 'merge' %>
-                          Merged <%= item['source_ids'].length %> records into 
-                          <code><%= truncate(item['canonical_id'], length: 30) %></code>
+                          <code style="font-size: 11px; color: #999;"><%= truncate(item.source_identifier, length: 40) %></code>
+                        <% elsif item.correction_type == 'merge' %>
+                          <% source_ids_len = JSON.parse(item.source_ids || '[]').length %>
+                          Merged <%= source_ids_len %> records into 
+                          <code><%= truncate(item.canonical_id, length: 30) %></code>
                           <br>
-                          <%= truncate(item['description'], length: 60) %>
+                          <%= truncate(item.description, length: 60) %>
                         <% end %>
                       </small>
                     </td>

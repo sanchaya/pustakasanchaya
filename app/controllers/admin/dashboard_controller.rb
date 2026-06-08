@@ -4,25 +4,16 @@ class Admin::DashboardController < ApplicationController
 
   def index
     @admin = current_admin
-    
-    # Load statistics
-    stats_file = Rails.root.join('db', 'stats.json')
-    @stats = JSON.parse(File.read(stats_file)) if File.exist?(stats_file)
-    @stats ||= {
-      'total_books' => 0,
-      'total_authors' => 0,
-      'total_publishers' => 0,
-      'libraries' => {}
+
+    @stats = {
+      'total_books' => Book.count,
+      'total_authors' => Book.where.not(author: [nil, '']).distinct.count(:author),
+      'total_publishers' => Book.where.not(publisher: [nil, '']).distinct.count(:publisher),
+      'libraries' => Book.where.not(library: [nil, '']).group(:library).count
     }
 
-    # Load corrections count
-    corrections_file = Rails.root.join('db', 'corrections.json')
-    @corrections = JSON.parse(File.read(corrections_file)) if File.exist?(corrections_file)
-    @corrections ||= { 'edits' => [], 'merges' => [] }
-    @corrections_count = @corrections['edits'].length
-
-    # Get recent edits
-    @recent_edits = @corrections['edits'].reverse.first(10)
+    @corrections_count = Correction.where(correction_type: 'edit').count
+    @recent_edits = Correction.edits.order(timestamp: :desc).limit(10)
   end
 
   def editors
@@ -37,16 +28,14 @@ class Admin::DashboardController < ApplicationController
 
   def update_profile
     @admin = current_admin
-    
+
     if params[:current_password].blank? && params[:new_password].blank?
-      # Just update profile info
       if @admin.update_profile(params[:name], params[:email])
         redirect_to admin_dashboard_path, notice: 'Profile updated successfully'
       else
         redirect_to admin_profile_path, alert: 'Error updating profile'
       end
     else
-      # Update password
       if params[:current_password].blank?
         redirect_to admin_profile_path, alert: 'Current password is required to change password'
         return
@@ -67,14 +56,12 @@ class Admin::DashboardController < ApplicationController
         return
       end
 
-      # Verify current password
       authenticated = Admin.authenticate(@admin.email, params[:current_password])
       unless authenticated
         redirect_to admin_profile_path, alert: 'Current password is incorrect'
         return
       end
 
-      # Update password
       if @admin.update_password(params[:new_password])
         redirect_to admin_dashboard_path, notice: 'Password changed successfully'
       else
