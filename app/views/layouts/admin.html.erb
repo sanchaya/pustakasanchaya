@@ -111,6 +111,26 @@
       border-radius: 8px;
     }
     
+    .pagination {
+      margin-bottom: 0;
+      gap: 2px;
+    }
+    
+    .pagination .page-link {
+      border-radius: 4px;
+      padding: 0.4rem 0.75rem;
+      color: #5F3792;
+    }
+    
+    .pagination .page-item.active .page-link {
+      background: #5F3792;
+      border-color: #5F3792;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+      color: #999;
+    }
+    
     @media (max-width: 768px) {
       .sidebar {
         width: 100%;
