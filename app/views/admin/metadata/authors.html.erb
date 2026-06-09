@@ -180,9 +180,39 @@
 let renameModal, mergeModal, mergeMultipleModal;
 
 document.addEventListener('DOMContentLoaded', function() {
-  renameModal = new bootstrap.Modal(document.getElementById('renameModal'));
-  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'));
-  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'));
+  // Initialize modals
+  renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: true });
+  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: true });
+  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: true });
+
+  // Fix Bootstrap 3 aria-hidden bug - ensure aria-hidden is false when modal is visible
+  [renameModal, mergeModal, mergeMultipleModal].forEach(function(modal) {
+    modal._element.addEventListener('show.bs.modal', function() {
+      // Bootstrap 3 bug: modal gets aria-hidden="true" when shown
+      // Fix it immediately when modal starts showing
+      this.setAttribute('aria-hidden', 'false');
+    });
+    
+    modal._element.addEventListener('shown.bs.modal', function() {
+      // Ensure aria-hidden is false when fully shown
+      this.setAttribute('aria-hidden', 'false');
+      // Focus the first input
+      var input = this.querySelector('input[type="text"], input[type="url"], input[type="email"], textarea');
+      if (input) {
+        setTimeout(function() { input.focus(); }, 0);
+      }
+    });
+    
+    modal._element.addEventListener('hide.bs.modal', function() {
+      // Set aria-hidden to true when hiding
+      this.setAttribute('aria-hidden', 'true');
+    });
+    
+    modal._element.addEventListener('hidden.bs.modal', function() {
+      // Ensure aria-hidden is true when fully hidden
+      this.setAttribute('aria-hidden', 'true');
+    });
+  });
 
   document.querySelectorAll('.rename-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
