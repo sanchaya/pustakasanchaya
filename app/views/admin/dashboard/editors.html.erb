@@ -34,7 +34,7 @@
                     </td>
                     <td><small><%= Time.parse(admin.created_at).strftime('%b %d, %Y') %></small></td>
                     <td>
-                      <% if admin.last_login %>
+                      <% if admin.last_login.present? %>
                         <small><%= Time.parse(admin.last_login).strftime('%b %d, %H:%M') %></small>
                       <% else %>
                         <small class="text-muted">Never</small>
@@ -86,7 +86,7 @@
                     <strong><%= invite['email'] %></strong>
                     <br>
                     <small class="text-muted">
-                      Invited <%= Time.parse(invite['created_at']).strftime('%b %d') %>
+                      Invited <%= invite['created_at'].strftime('%b %d') if invite['created_at'] %>
                     </small>
                     <br>
                     <small class="badge bg-secondary"><%= invite['role'].humanize %></small>

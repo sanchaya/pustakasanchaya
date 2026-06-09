@@ -1,0 +1,39 @@
+<% content_for :page_title do %>
+  ಪುಸ್ತಕ ಮಳಿಗೆಗಳು ಮತ್ತು ಗ್ರಂಥಾಲಯಗಳು
+<% end %>
+
+<div class="container mt-5">
+  <div class="row mb-4">
+    <div class="col-md-12 text-center">
+      <h1>ಪುಸ್ತಕ ಮಳಿಗೆಗಳು ಮತ್ತು ಗ್ರಂಥಾಲಯಗಳು</h1>
+      <p class="text-muted">ಈ ಆನ್‌ಲೈನ್ ಮಳಿಗೆಗಳು ಮತ್ತು ಡಿಜಿಟಲ್ ಗ್ರಂಥಾಲಯಗಳಲ್ಲಿ ಕನ್ನಡ ಪುಸ್ತಕಗಳನ್ನು ಹುಡುಕಿರಿ</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <% @stores.each do |store| %>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+          <div class="card-body">
+            <% if store.logo.present? %>
+              <img src="<%= store.logo %>" alt="<%= store.name %>" class="mb-3" style="width: 80px; height: 80px; object-fit: contain;">
+            <% else %>
+              <div class="d-flex align-items-center justify-content-center mx-auto mb-3 bg-light rounded" style="width: 80px; height: 80px;">
+                <i class="fas fa-store fa-2x text-muted"></i>
+              </div>
+            <% end %>
+            <h5 class="card-title"><%= store.name %></h5>
+            <p class="card-text">
+              <span class="badge bg-primary"><%= store.books.count %> books</span>
+            </p>
+            <% if store.url.present? %>
+              <a href="<%= store.url %>" target="_blank" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-external-link-alt"></i> Visit Store
+              </a>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

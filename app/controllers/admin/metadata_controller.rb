@@ -2,6 +2,16 @@ class Admin::MetadataController < ApplicationController
   layout 'admin'
   before_action :authorize_admin!
 
+  def parse_json_body
+    if request.content_type == 'application/json'
+      body = request.body.read
+      if body.present?
+        json_params = JSON.parse(body)
+        params.merge!(json_params)
+      end
+    end
+  end
+
   def authors
     @authors = Author.all_with_counts
     @search_query = params[:search] || ''
@@ -103,7 +113,11 @@ class Admin::MetadataController < ApplicationController
   end
 
   def categories
+    Rails.logger.info "DEBUG categories action START"
+    File.write('/tmp/categories_debug.txt', "START #{Time.now}\n", mode: 'a')
     @categories = Category.all_with_counts
+    Rails.logger.info "DEBUG categories: Category.all_with_counts = #{@categories.class} size=#{@categories.size}"
+    File.write('/tmp/categories_debug.txt', "CATEGORIES SET: #{@categories.class} size=#{@categories.size}\n", mode: 'a')
     @search_query = params[:search] || ''
     
     if @search_query.present?
@@ -111,6 +125,9 @@ class Admin::MetadataController < ApplicationController
     end
     
     @categories = Kaminari.paginate_array(@categories.map { |name, count| { name: name, count: count } }).page(params[:page]).per(30)
+    Rails.logger.info "DEBUG categories: paginated @categories = #{@categories.class} total=#{@categories.total_count}"
+    File.write('/tmp/categories_debug.txt', "PAGINATED: #{@categories.class} total=#{@categories.total_count}\n", mode: 'a')
+    Rails.logger.info "DEBUG categories action END"
   end
 
   def find_similar_categories
@@ -127,6 +144,7 @@ class Admin::MetadataController < ApplicationController
   end
 
   def merge_categories
+    parse_json_body
     old_category = params[:old_category] || ''
     new_category = params[:new_category] || ''
     
@@ -140,6 +158,7 @@ class Admin::MetadataController < ApplicationController
   end
 
   def rename_category
+    parse_json_body
     old_name = params[:old_name] || ''
     new_name = params[:new_name] || ''
     
@@ -149,6 +168,38 @@ class Admin::MetadataController < ApplicationController
     
     result = Category.rename(old_name, new_name, current_admin.email)
     
+    render json: result
+  end
+
+  def merge_multiple_authors
+    parse_json_body
+    source_names = params[:source_names] || []
+    target_name = params[:target_name] || ''
+    result = Author.merge_multiple(source_names, target_name, current_admin.email)
+    render json: result
+  end
+
+  def merge_multiple_publishers
+    parse_json_body
+    source_names = params[:source_names] || []
+    target_name = params[:target_name] || ''
+    result = Publisher.merge_multiple(source_names, target_name, current_admin.email)
+    render json: result
+  end
+
+  def merge_multiple_categories
+    parse_json_body
+    source_names = params[:source_names] || []
+    target_name = params[:target_name] || ''
+    result = Category.merge_multiple(source_names, target_name, current_admin.email)
+    render json: result
+  end
+
+  def merge_multiple_libraries
+    parse_json_body
+    source_names = params[:source_names] || []
+    target_name = params[:target_name] || ''
+    result = Library.merge_multiple(source_names, target_name, current_admin.email)
     render json: result
   end
 
@@ -177,6 +228,7 @@ class Admin::MetadataController < ApplicationController
   end
 
   def merge_libraries
+    parse_json_body
     old_library = params[:old_library] || ''
     new_library = params[:new_library] || ''
     
@@ -190,6 +242,7 @@ class Admin::MetadataController < ApplicationController
   end
 
   def rename_library
+    parse_json_body
     old_name = params[:old_name] || ''
     new_name = params[:new_name] || ''
     
@@ -202,7 +255,188 @@ class Admin::MetadataController < ApplicationController
     render json: result
   end
 
+  def suggested_merges
+    @dismissed = session[:dismissed_suggestions] || []
+    @author_suggestions = compute_author_suggestions.reject { |s| @dismissed.include?(s[:id]) }
+    @publisher_suggestions = compute_publisher_suggestions.reject { |s| @dismissed.include?(s[:id]) }
+    @book_suggestions = compute_book_suggestions.reject { |s| @dismissed.include?(s[:id]) }
+  end
+
+  def apply_suggestion
+    parse_json_body
+    type = params[:type]
+    source = params[:source]
+    target = params[:target]
+
+    result = case type
+    when 'author'
+      Author.merge(source, target, current_admin.email)
+    when 'publisher'
+      Publisher.merge(source, target, current_admin.email)
+    when 'book'
+      apply_book_merge(source, target)
+    else
+      { success: false, error: "Unknown type: #{type}" }
+    end
+
+    render json: result
+  end
+
+  def dismiss_suggestion
+    parse_json_body
+    session[:dismissed_suggestions] ||= []
+    id = "#{params[:type]}:#{params[:source]}:#{params[:target]}"
+    session[:dismissed_suggestions] << id unless session[:dismissed_suggestions].include?(id)
+    render json: { success: true }
+  end
+
   private
+
+  def compute_author_suggestions
+    cache_key = 'merge_suggestions/authors/v2'
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      suggestions = []
+      counts = Book.author_counts
+
+      names = counts.keys
+      normalized = {}
+      names.each do |name|
+        norm = normalize_name(name)
+        normalized[norm] ||= []
+        normalized[norm] << name
+      end
+
+      normalized.each do |_norm, group|
+        next if group.length < 2
+        target = group.max_by { |n| counts[n] || 0 }
+        group.each do |source|
+          next if source == target
+          suggestions << build_suggestion('author', source, target, counts, 'normalized')
+        end
+      end
+
+      already = {}
+      suggestions.each { |s| already[[s[:source], s[:target]]] = true }
+
+      names.each_with_index do |name, i|
+        next unless counts[name] && counts[name] > 0
+        names[(i + 1)..-1].each do |other|
+          next unless counts[other] && counts[other] > 0
+          next if already[[name, other]] || already[[other, name]]
+
+          if name.downcase.include?(other.downcase) || other.downcase.include?(name.downcase)
+            target = counts[name] >= counts[other] ? name : other
+            source = target == name ? other : name
+            suggestions << build_suggestion('author', source, target, counts, 'substring')
+          end
+        end
+      end
+
+      suggestions.sort_by { |s| -s[:target_count] }.first(100)
+    end
+  end
+
+  def compute_publisher_suggestions
+    cache_key = 'merge_suggestions/publishers/v2'
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      suggestions = []
+      counts = Book.publisher_counts
+
+      names = counts.keys
+      normalized = {}
+      names.each do |name|
+        norm = normalize_name(name)
+        normalized[norm] ||= []
+        normalized[norm] << name
+      end
+
+      normalized.each do |_norm, group|
+        next if group.length < 2
+        target = group.max_by { |n| counts[n] || 0 }
+        group.each do |source|
+          next if source == target
+          suggestions << build_suggestion('publisher', source, target, counts, 'normalized')
+        end
+      end
+
+      suggestions.sort_by { |s| -s[:target_count] }.first(100)
+    end
+  end
+
+  def compute_book_suggestions
+    cache_key = 'merge_suggestions/books/v2'
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      suggestions = []
+
+      Book.where.not(name: [nil, ''])
+          .where.not(author: [nil, ''])
+          .group(:name, :author)
+          .having('count(*) > 1')
+          .order('count_all DESC')
+          .limit(100)
+          .count
+          .each do |(name, author), count|
+        books = Book.where(name: name, author: author).limit(5)
+        next if books.length < 2
+
+        target = books.first
+        books.drop(1).each do |source|
+          suggestions << {
+            id: "book:#{source.source_identifier}:#{target.source_identifier}",
+            type: 'book',
+            source: source.source_identifier,
+            source_title: source.name,
+            source_author: source.author,
+            source_library: source.library,
+            target: target.source_identifier,
+            target_title: target.name,
+            target_author: target.author,
+            target_library: target.library,
+            match_type: 'exact',
+            confidence: 1.0
+          }
+        end
+      end
+
+      suggestions.first(100)
+    end
+  end
+
+  def build_suggestion(type, source, target, counts, match_type)
+    {
+      id: "#{type}:#{source}:#{target}",
+      type: type,
+      source: source,
+      source_count: counts[source] || 0,
+      target: target,
+      target_count: counts[target] || 0,
+      match_type: match_type,
+      confidence: match_type == 'normalized' ? 0.95 : 0.7
+    }
+  end
+
+  def normalize_name(name)
+    name.strip.downcase.gsub(/[[:punct:]]/, ' ').gsub(/\s+/, ' ').strip
+  end
+
+  def apply_book_merge(source_id, target_id)
+    source = Book.find_by(source_identifier: source_id)
+    target = Book.find_by(source_identifier: target_id)
+
+    unless source && target
+      return { success: false, error: 'One or both books not found' }
+    end
+
+    Correction.record_merge(
+      [source_id],
+      target_id,
+      { 'source_identifier' => source_id, 'name' => source.name, 'author' => source.author },
+      current_admin.email,
+      "Merged book '#{source.name}' (#{source_id}) into '#{target.name}' (#{target_id})"
+    )
+    source.destroy
+    { success: true, message: "Merged into #{target.name}" }
+  end
 
   def authorize_admin!
     unless session[:admin_id]

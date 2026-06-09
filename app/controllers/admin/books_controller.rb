@@ -4,10 +4,12 @@ class Admin::BooksController < ApplicationController
 
   def index
     @query = params[:q] || ''
-    @books = []
 
-    if @query.present?
-      @books = Book.search_all_cached(@query)
+    @books = if @query.present?
+      books = Book.search_all_cached(@query)
+      Book.where(id: books.map(&:id)).includes(:stores).order(:name)
+    else
+      Book.order(:name).includes(:stores).all
     end
 
     @books = Kaminari.paginate_array(@books).page(params[:page]).per(20)
@@ -23,29 +25,27 @@ class Admin::BooksController < ApplicationController
   end
 
   def edit
-    source_identifier = params[:id]
-    @book = find_book_by_identifier(source_identifier)
+    @book = Book.find(params[:id])
 
     unless @book
       render json: { error: 'Book not found' }, status: 404
       return
     end
 
-    @corrections = Correction.edits_for_book(source_identifier)
+    @corrections = Correction.edits_for_book(@book.source_identifier)
 
     render json: {
       book: @book,
-      source_identifier: source_identifier,
+      source_identifier: @book.source_identifier,
       corrections: @corrections
     }
   end
 
   def update
-    source_identifier = params[:id]
+    @book = Book.find(params[:id])
     field = params[:field]
     new_value = params[:value]
 
-    @book = find_book_by_identifier(source_identifier)
     unless @book
       return render json: { error: 'Book not found' }, status: 404
     end
@@ -53,7 +53,7 @@ class Admin::BooksController < ApplicationController
     old_value = @book[field]
 
     Correction.record_edit(
-      source_identifier,
+      @book.source_identifier,
       field,
       old_value,
       new_value,
@@ -61,8 +61,8 @@ class Admin::BooksController < ApplicationController
       params[:description]
     )
 
-    # Persist the change to MySQL
-    Book.where(source_identifier: source_identifier).update_all(field => new_value)
+    Book.where(source_identifier: @book.source_identifier).update_all(field => new_value)
+    Book.bump_search_cache
 
     render json: {
       success: true,
@@ -102,6 +102,7 @@ class Admin::BooksController < ApplicationController
     end
 
     affected.update_all(field => replace_value)
+    Book.bump_search_cache
 
     render json: {
       success: true,
@@ -142,6 +143,54 @@ class Admin::BooksController < ApplicationController
       preview_count: total_count,
       preview_books: preview_books,
       has_more: total_count > 50
+    }
+  end
+
+  def merge_multiple
+    source_ids = params[:source_ids] || []
+    target_id = params[:target_id]
+
+    if source_ids.empty? || target_id.blank?
+      return render json: { error: 'Please select books to merge and a target book' }, status: 400
+    end
+
+    target_book = Book.find_by(id: target_id)
+    unless target_book
+      return render json: { error: 'Target book not found' }, status: 404
+    end
+
+    merged_count = 0
+    source_ids.each do |source_id|
+      next if source_id.to_i == target_id.to_i
+
+      source_book = Book.find_by(id: source_id)
+      next unless source_book
+
+      Correction.record_merge(
+        source_ids,
+        target_id,
+        {
+          'source_identifier' => source_book.source_identifier,
+          'name' => source_book.name,
+          'author' => source_book.author,
+          'publisher' => source_book.publisher,
+          'category' => source_book.categories
+        },
+        current_admin.email,
+        "Merged #{source_ids.length} duplicate book records"
+      )
+
+      source_book.destroy
+      merged_count += 1
+    end
+
+    Book.bump_search_cache
+
+    render json: {
+      success: true,
+      message: "Successfully merged #{merged_count} book(s)",
+      merged_count: merged_count,
+      target_book: target_book
     }
   end
 

@@ -17,22 +17,26 @@
    <td>
     <%= book_row['year'] %>
   </td>
-  <td>
-	<% if store_book?(book_row) && book_row['book_link'].present? %>
-     <%= link_to book_row['book_link'], class: 'buy-link', target: '_blank', title: "#{book_row['library']} - ಖರೀದಿಸಿ" do %> <%= fa_icon "shopping-cart 2x" %> <% end %>
-	<% elsif book_row['book_link'] && !book_row['book_link'].blank? && !broken_link?(book_row['book_link']) %>
-     <%= link_to(book_row['book_link'], target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
-	<% end %>
-     <% if book_row['archive_url'] && !book_row['archive_url'].blank? %>
-      <%= link_to book_row['archive_url'], class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
-  	<% end %>
-     <% if book_row['metadata'] %>
-     <% if wikimedia_url(book_row['metadata']) &&  !wikimedia_url(book_row['metadata']).blank? %>
-      <%= link_to wikimedia_url(book_row['metadata']), class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
-     <% end %>
-     <% if wikisource_url(book_row['metadata']) &&  !wikisource_url(book_row['metadata']).blank? %>
-        <%= link_to wikisource_url(book_row['metadata']), class: 'archive-url', target: '_blank'  do %> <%= image_tag('commonswiki.png') %> <% end %>
-       <% end %>
-       <% end %>
+   <td>
+  <% shown_urls = [] %>
+  <% is_archive_link = book_row['book_link'].present? && book_row['book_link'].include?('archive.org') %>
+ 	<% if store_book?(book_row) && book_row['book_link'].present? && !is_archive_link %>
+    <% unless shown_urls.include?(book_row['book_link']) %>
+      <% shown_urls << book_row['book_link'] %>
+      <%= link_to book_row['book_link'], class: 'buy-link', target: '_blank', title: "#{book_row['library']} - ಖರೀದಿಸಿ" do %> <%= fa_icon "shopping-cart 2x" %> <% end %>
+    <% end %>
+ 	<% elsif book_row['book_link'] && !book_row['book_link'].blank? && !broken_link?(book_row['book_link']) && !is_archive_link %>
+    <% unless shown_urls.include?(book_row['book_link']) %>
+      <% shown_urls << book_row['book_link'] %>
+      <%= link_to(book_row['book_link'], target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
+    <% end %>
+ 	<% end %>
+  <% if book_row['archive_url'].present? && !shown_urls.include?(book_row['archive_url']) %>
+    <% shown_urls << book_row['archive_url'] %>
+    <%= link_to book_row['archive_url'], class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
+  <% elsif is_archive_link && !shown_urls.include?(book_row['book_link']) %>
+    <% shown_urls << book_row['book_link'] %>
+    <%= link_to book_row['book_link'], class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
+  <% end %>
   </td>
 </tr>

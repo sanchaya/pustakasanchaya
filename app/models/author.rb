@@ -22,10 +22,13 @@ class Author
   end
 
   def self.merge(old_author, new_author, editor_email)
+    old_author = old_author.strip
+    new_author = new_author.strip
     return { success: false, error: 'Authors cannot be blank' } if old_author.blank? || new_author.blank?
     affected = Book.where(author: old_author)
     count = affected.count
     affected.update_all(author: new_author)
+    Book.bump_search_cache
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'author', old_author, new_author, editor_email, "Merged author: '#{old_author}' → '#{new_author}'")
     end
@@ -33,14 +36,37 @@ class Author
   end
 
   def self.rename(old_name, new_name, editor_email)
+    old_name = old_name.strip
+    new_name = new_name.strip
     return { success: false, error: 'Author names cannot be blank' } if old_name.blank? || new_name.blank?
     affected = Book.where(author: old_name)
     count = affected.count
     affected.update_all(author: new_name)
+    Book.bump_search_cache
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'author', old_name, new_name, editor_email, "Renamed author: '#{old_name}' → '#{new_name}'")
     end
     { success: true, renamed_from: old_name, renamed_to: new_name, affected_count: count }
+  end
+
+  def self.merge_multiple(source_names, target_name, editor_email)
+    target_name = target_name.strip
+    return { success: false, error: 'No sources or target specified' } if source_names.blank? || target_name.blank?
+    total = 0
+    unmatched = []
+    source_names.each do |old_name|
+      old_name = old_name.strip
+      next if old_name == target_name
+      result = merge(old_name, target_name, editor_email)
+      if result[:success]
+        total += result[:affected_count]
+        unmatched << old_name if result[:affected_count] == 0
+      else
+        unmatched << old_name
+      end
+    end
+    Rails.logger.warn "[merge_multiple] No matches found for authors: #{unmatched.inspect}" if unmatched.any?
+    { success: true, merged_count: total, unmatched: unmatched }
   end
 
   private

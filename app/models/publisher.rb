@@ -22,10 +22,13 @@ class Publisher
   end
 
   def self.merge(old_publisher, new_publisher, editor_email)
+    old_publisher = old_publisher.strip
+    new_publisher = new_publisher.strip
     return { success: false, error: 'Publishers cannot be blank' } if old_publisher.blank? || new_publisher.blank?
     affected = Book.where(publisher: old_publisher)
     count = affected.count
     affected.update_all(publisher: new_publisher)
+    Book.bump_search_cache
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'publisher', old_publisher, new_publisher, editor_email, "Merged publisher: '#{old_publisher}' → '#{new_publisher}'")
     end
@@ -33,14 +36,37 @@ class Publisher
   end
 
   def self.rename(old_name, new_name, editor_email)
+    old_name = old_name.strip
+    new_name = new_name.strip
     return { success: false, error: 'Publisher names cannot be blank' } if old_name.blank? || new_name.blank?
     affected = Book.where(publisher: old_name)
     count = affected.count
     affected.update_all(publisher: new_name)
+    Book.bump_search_cache
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'publisher', old_name, new_name, editor_email, "Renamed publisher: '#{old_name}' → '#{new_name}'")
     end
     { success: true, renamed_from: old_name, renamed_to: new_name, affected_count: count }
+  end
+
+  def self.merge_multiple(source_names, target_name, editor_email)
+    target_name = target_name.strip
+    return { success: false, error: 'No sources or target specified' } if source_names.blank? || target_name.blank?
+    total = 0
+    unmatched = []
+    source_names.each do |old_name|
+      old_name = old_name.strip
+      next if old_name == target_name
+      result = merge(old_name, target_name, editor_email)
+      if result[:success]
+        total += result[:affected_count]
+        unmatched << old_name if result[:affected_count] == 0
+      else
+        unmatched << old_name
+      end
+    end
+    Rails.logger.warn "[merge_multiple] No matches found for publishers: #{unmatched.inspect}" if unmatched.any?
+    { success: true, merged_count: total, unmatched: unmatched }
   end
 
   private

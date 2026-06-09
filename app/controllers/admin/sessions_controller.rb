@@ -28,14 +28,25 @@ class Admin::SessionsController < ApplicationController
       result = Admin.create_invite(params[:email], params[:role] || 'editor')
       if result[:success]
         invite_url = admin_accept_invite_url(token: result[:token])
-        flash.now[:success] = "Invite created! Share this link: #{invite_url}"
-        @invite = result[:invite]
+        render json: { success: true, invite_url: invite_url }
       else
-        flash.now[:alert] = result[:error]
+        render json: { error: result[:error] }
       end
+      return
     end
 
-    @pending_invites = Admin.pending_invites
+    if request.delete?
+      body = JSON.parse(request.body.read)
+      token = body['token']
+      if Admin.revoke_invite(token)
+        render json: { success: true }
+      else
+        render json: { error: 'Invalid or expired invite' }
+      end
+      return
+    end
+
+    redirect_to admin_editors_path
   end
 
   def accept_invite

@@ -4,15 +4,43 @@ class Book < ActiveRecord::Base
   IA_SEARCH_URL = 'https://archive.org/advancedsearch.php'
   IA_ITEM_URL = 'https://archive.org/metadata'
 
+  has_many :book_stores, dependent: :destroy
+  has_many :stores, through: :book_stores
+
+  after_save :clear_search_cache
+  after_destroy :clear_search_cache
+
+  def self.search_cache_version
+    Rails.cache.fetch('search/version', expires_in: 1.day) { 1 }
+  end
+
+  def self.bump_search_cache
+    Rails.cache.write('search/version', search_cache_version + 1, expires_in: 1.day)
+  end
+
+  def clear_search_cache
+    self.class.bump_search_cache
+  end
+
   scope :by_author, ->(name) { where(author: name) }
   scope :by_publisher, ->(name) { where(publisher: name) }
   scope :by_library, ->(name) { where(library: name) }
-  scope :by_category, ->(name) { where(categories: name) }
+  scope :by_category, ->(name) { where("categories = ? OR categories LIKE ?", name, "%- #{escape_like(name)}%") }
+  scope :with_stores, -> { includes(:stores) }
 
   def self.search params
     search_items = params.squish
-    full_url = "#{BASE_SEARCH_URL}#{search_items}"
-    return parse_url(full_url).body
+    # Using a local cache key for search results
+    cache_key = "search/local/v#{search_cache_version}/#{Digest::MD5.hexdigest(search_items)}/p1/pp50" 
+    Rails.cache.fetch(cache_key, expires_in: 10.minutes) do # Local cache for search results
+      # Implement local search logic here, querying the local 'books' table
+      # MySQL doesn't support ILIKE, use LIKE with LOWER() for case-insensitive search
+      search_term = "%#{search_items.downcase}%"
+      Book.where('LOWER(name) LIKE ? OR LOWER(author) LIKE ?', search_term, search_term)
+          .select(:id, :name, :author, :publisher, :library, :year, :book_link, :archive_url, :thumbnail, :source_identifier, :categories)
+          .order(:name) # Default order for local search
+          .limit(50) # Limit results to avoid performance issues with broad search
+    end
   end
 
   def self.wiki_search
@@ -42,24 +70,27 @@ class Book < ActiveRecord::Base
   end
 
   def self.search_ia(query, page: 1, per_page: 50)
-    start = (page - 1) * per_page
-    params = {
-      q: "collection:JaiGyan AND language:kan AND mediatype:texts -collection:gazetteofindia AND (#{query})",
-      fl: 'identifier,title,creator,date,publisher,language,collection,description,year',
-      output: 'json',
-      rows: per_page,
-      start: start,
-      sort: 'publicdate desc'
-    }
+    cache_key = "search/ia/v#{search_cache_version}/#{Digest::MD5.hexdigest(query.to_s.downcase.strip)}/p#{page}/pp#{per_page}"
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      start = (page - 1) * per_page
+      params = {
+        q: "collection:JaiGyan AND language:kan AND mediatype:texts -collection:gazetteofindia AND (#{query})",
+        fl: 'identifier,title,creator,date,publisher,language,collection,description,year',
+        output: 'json',
+        rows: per_page,
+        start: start,
+        sort: 'publicdate desc'
+      }
 
-    url = "#{IA_SEARCH_URL}?#{params.to_query}"
-    response = parse_url(url)
-    data = JSON.parse(response.body)
-    docs = data['response']['docs'] || []
-    total = data['response']['numFound'] || 0
+      url = "#{IA_SEARCH_URL}?#{params.to_query}"
+      response = parse_url(url)
+      data = JSON.parse(response.body)
+      docs = data['response']['docs'] || []
+      total = data['response']['numFound'] || 0
 
-    books = docs.map { |doc| ia_doc_to_book(doc) }
-    { books: books, total: total, page: page, per_page: per_page }
+      books = docs.map { |doc| ia_doc_to_book(doc) }
+      { books: books, total: total, page: page, per_page: per_page }
+    end
   end
 
   def self.ia_jai_gyan_books(page: 1, per_page: 50)
@@ -112,7 +143,10 @@ class Book < ActiveRecord::Base
   end
 
   def self.search_all_cached(query)
-    where('name LIKE :q OR author LIKE :q OR publisher LIKE :q', q: "%#{query}%")
+    cache_key = "search/local/v#{search_cache_version}/#{Digest::MD5.hexdigest(query.to_s.downcase.strip)}"
+    Rails.cache.fetch(cache_key, expires_in: 10.minutes) do
+      where('name LIKE :q OR author LIKE :q OR publisher LIKE :q OR library LIKE :q', q: "%#{query}%").to_a
+    end
   end
 
   def self.all_authors
@@ -128,7 +162,8 @@ class Book < ActiveRecord::Base
   end
 
   def self.all_categories
-    distinct.order(:categories).pluck(:categories).reject(&:blank?)
+    raw = where.not(categories: [nil, '']).distinct.pluck(:categories)
+    raw.flat_map { |c| parse_categories_string(c) }.reject(&:blank?).uniq.sort
   end
 
   def self.author_counts
@@ -144,6 +179,33 @@ class Book < ActiveRecord::Base
   end
 
   def self.category_counts
-    where.not(categories: [nil, '']).group(:categories).order('count_id DESC').count('id')
+    raw_counts = where.not(categories: [nil, '']).group(:categories).count
+    result = Hash.new(0)
+    raw_counts.each do |raw_str, count|
+      parse_categories_string(raw_str).each { |cat| result[cat] += count }
+    end
+    result.sort_by { |_, v| -v }.to_h
+  end
+
+  def self.escape_like(str)
+    str.gsub(/[\\%_]/) { |m| "\\#{m}" }
+  end
+
+  def self.parse_categories_string(str)
+    return [] if str.blank?
+    if str.start_with?("---")
+      result = YAML.safe_load(str)
+      result.is_a?(Array) ? result.reject(&:blank?).map(&:strip) : []
+    else
+      [str.strip]
+    end
+  rescue Psych::SyntaxError
+    str.split("\n").grep(/^- /).map { |l| l.sub(/^- /, "").strip }.reject(&:blank?)
+  end
+
+  def self.serialize_categories(arr)
+    return nil if arr.blank?
+    return arr.first if arr.length == 1
+    YAML.dump(arr)
   end
 end

@@ -5,7 +5,14 @@ class BooksController < ApplicationController
       if params && params[:search] && !params[:search].blank?
         # Search remote API
         remote_books = begin
-          JSON.parse(Book.search(params[:search]))
+          books = JSON.parse(Book.search(params[:search]))
+          # Normalize URLs from remote API
+          books.each do |b|
+            b['book_link'] = b['book_link']&.gsub('oudl_osmania_ac_in', 'oudl.osmania.ac.in')
+            b['archive_url'] = b['archive_url']&.gsub('oudl_osmania_ac_in', 'oudl.osmania.ac.in')
+            b['metadata'] = b['metadata']&.gsub('oudl_osmania_ac_in', 'oudl.osmania.ac.in')
+          end
+          books
         rescue StandardError
           []
         end

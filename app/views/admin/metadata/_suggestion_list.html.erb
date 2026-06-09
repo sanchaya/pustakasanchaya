@@ -1,0 +1,43 @@
+<div class="row">
+  <% suggestions.each do |s| %>
+    <div class="col-md-6 mb-3">
+      <div class="card suggestion-card" id="suggestion-<%= s[:id] %>">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge <%= s[:match_type] == 'normalized' ? 'bg-info' : 'bg-warning' %> badge-confidence">
+              <%= s[:match_type] == 'normalized' ? 'Normalized match' : 'Substring match' %>
+            </span>
+            <small class="text-muted"><%= (s[:confidence] * 100).to_i %>% confidence</small>
+          </div>
+
+          <div class="row align-items-center">
+            <div class="col-5 text-end">
+              <div class="text-danger" style="text-decoration: line-through; font-size: 0.9rem;">
+                <strong><%= s[:source] %></strong>
+              </div>
+              <small class="text-muted"><%= s[:source_count] %> books</small>
+            </div>
+            <div class="col-2 text-center merge-arrow">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+            <div class="col-5">
+              <div class="text-success" style="font-size: 0.9rem;">
+                <strong><%= s[:target] %></strong>
+              </div>
+              <small class="text-muted"><%= s[:target_count] %> books</small>
+            </div>
+          </div>
+
+          <div class="mt-3 text-center">
+            <button class="btn btn-sm btn-success me-2" onclick="applySuggestion('<%= s[:type] %>', '<%= j s[:source] %>', '<%= j s[:target] %>', this)">
+              <i class="fas fa-code-merge"></i> Merge
+            </button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="dismissSuggestion('<%= s[:type] %>', '<%= j s[:source] %>', '<%= j s[:target] %>', this)">
+              <i class="fas fa-times"></i> Dismiss
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

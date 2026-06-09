@@ -50,6 +50,8 @@ class Admin::DuplicatesController < ApplicationController
       )
     end
 
+    Book.bump_search_cache
+
     render json: {
       success: true,
       message: "Successfully merged #{source_ids.length} records",

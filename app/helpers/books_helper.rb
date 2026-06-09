@@ -1,12 +1,14 @@
 module BooksHelper
 
   def archive_url(metadata)
+    return false if metadata.blank?
     # if keyword matches for split then result will always be more than 1
     metadata.split('archive_url:').count > 1
   end
 
 # very hard and worst way of fetching the link, should think of changing it
   def wikimedia_url(metadata)
+    return '' if metadata.blank?
     links = metadata.split("\n")
     @url = ''
     links.each do |meta|
@@ -22,6 +24,7 @@ module BooksHelper
 
   # very hard and worst way of fetching the link, should think of changing it
   def wikisource_url(metadata)
+    return '' if metadata.blank?
     links = metadata.split("\n")
     @url = ''
     links.each do |meta|
@@ -48,8 +51,13 @@ module BooksHelper
 
   def broken_link?(url)
     return true if url.blank?
-    broken_domains = ['dli.gov.in', 'oudl.osmania.ac.in', 'dli.ernet.in', 'osmania']
-    broken_domains.any? { |domain| url.include?(domain) }
+    broken_domains = ['dli.gov.in', 'oudl.osmania.ac.in', 'dli.ernet.in']
+    begin
+      host = URI.parse(url).host
+      broken_domains.any? { |domain| host&.include?(domain) }
+    rescue URI::InvalidURIError
+      false
+    end
   end
 
   STORE_LIBRARIES = ['Ankita Pustaka', 'Ruthumana', 'Harivu Books', 'Kannada Book House', 'Nava Karnataka', 'Bahuroopi', 'Veeraloka Books', 'Total Kannada', 'Sahitya Books', 'Beetle Bookshop'].freeze

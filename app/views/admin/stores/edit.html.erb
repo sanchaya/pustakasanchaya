@@ -1,0 +1,48 @@
+<div class="container-fluid mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h1>Edit Store</h1>
+      <p class="text-muted">Update store information</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <%= form_for(@store, url: admin_store_path(@store), method: :patch, html: { class: 'needs-validation' }) do |f| %>
+        <div class="mb-3">
+          <%= f.label :name, class: 'form-label' %>
+          <%= f.text_field :name, class: 'form-control', required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :url, 'Website URL', class: 'form-label' %>
+          <%= f.url_field :url, class: 'form-control', placeholder: 'https://example.com' %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :logo, 'Logo URL', class: 'form-label' %>
+          <%= f.url_field :logo, class: 'form-control', placeholder: 'https://example.com/logo.png' %>
+          <small class="text-muted">URL to the store's logo image</small>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :position, class: 'form-label' %>
+          <%= f.number_field :position, class: 'form-control', min: 0 %>
+          <small class="text-muted">Display order (lower numbers first)</small>
+        </div>
+
+        <div class="mb-3">
+          <div class="form-check">
+            <%= f.check_box :active, class: 'form-check-input' %>
+            <%= f.label :active, 'Active', class: 'form-check-label' %>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <%= f.submit 'Update Store', class: 'btn btn-primary' %>
+          <a href="<%= admin_stores_path %>" class="btn btn-secondary">Cancel</a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

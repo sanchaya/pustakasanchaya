@@ -1,1 +1,1 @@
-Rails.application.config.middleware.use RateLimiter
+# Rails.application.config.middleware.use RateLimiter

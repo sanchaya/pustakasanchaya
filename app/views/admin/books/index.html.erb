@@ -10,7 +10,7 @@
           <div class="input-group">
             <input 
               type="text" 
-              class="form-control" 
+              class="form-control kan-ime" 
               name="q"
               placeholder="Search books by title, author, or publisher..."
               value="<%= @query %>"
@@ -70,13 +70,31 @@
                     </td>
                     <td>
                       <small>
-                        <span class="badge bg-secondary"><%= book['library'] %></span>
+                        <% if book.stores.any? %>
+                          <div class="d-flex gap-1 flex-wrap">
+                            <% shown_urls = [] %>
+                            <% book.stores.each do |store| %>
+                              <% store_link = book.book_stores.find { |bs| bs.store_id == store.id }&.store_url %>
+                              <% next if store_link.blank? || shown_urls.include?(store_link) %>
+                              <% shown_urls << store_link %>
+                              <a href="<%= store_link %>" target="_blank" title="<%= store.name %>" class="text-decoration-none">
+                                <% if store.logo.present? %>
+                                  <img src="<%= store.logo %>" alt="<%= store.name %>" style="width: 24px; height: 24px; object-fit: contain;">
+                                <% else %>
+                                  <span class="badge bg-light text-dark" style="font-size: 0.7rem;"><%= truncate(store.name, length: 8) %></span>
+                                <% end %>
+                              </a>
+                            <% end %>
+                          </div>
+                        <% else %>
+                          <span class="badge bg-secondary"><%= book['library'] %></span>
+                        <% end %>
                       </small>
                     </td>
                     <td>
                       <button 
-                        class="btn btn-sm btn-outline-primary"
-                        onclick="editBook('<%= book['source_identifier'] %>', this)"
+                        class="btn btn-sm btn-outline-primary edit-book-btn"
+                        data-book-id="<%= book['id'] %>"
                         title="Edit metadata">
                         <i class="fas fa-edit"></i> Edit
                       </button>
@@ -121,18 +139,22 @@
   <div class="alert alert-info">
     <i class="fas fa-search"></i> No books found matching "<strong><%= @query %></strong>". Try a different search.
   </div>
-<% else %>
-  <div class="alert alert-info">
-    <i class="fas fa-info-circle"></i> Enter a search query to find books to edit.
-  </div>
 <% end %>
 
 <script>
-  function editBook(sourceId, button) {
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.edit-book-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        editBook(this.dataset.bookId, this);
+      });
+    });
+  });
+
+  function editBook(bookId, button) {
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
 
-    fetch('<%= admin_edit_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', sourceId))
+    fetch('<%= admin_edit_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', bookId))
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -163,21 +185,21 @@
     const book = data.book;
     const html = `
       <form id="editForm">
-        <div class="mb-3">
+        <div class="mb-3 kan-ime-wrapper">
           <label class="form-label">Title</label>
-          <input type="text" class="form-control" data-field="name" value="${book.name || ''}">
+          <input type="text" class="form-control kan-ime" data-field="name" value="${(book.name || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
         </div>
-        <div class="mb-3">
+        <div class="mb-3 kan-ime-wrapper">
           <label class="form-label">Author</label>
-          <input type="text" class="form-control" data-field="author" value="${book.author || ''}">
+          <input type="text" class="form-control kan-ime" data-field="author" value="${(book.author || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
         </div>
-        <div class="mb-3">
+        <div class="mb-3 kan-ime-wrapper">
           <label class="form-label">Publisher</label>
-          <input type="text" class="form-control" data-field="publisher" value="${book.publisher || ''}">
+          <input type="text" class="form-control kan-ime" data-field="publisher" value="${(book.publisher || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
         </div>
         <div class="mb-3">
           <label class="form-label">Year</label>
-          <input type="number" class="form-control" data-field="year" value="${book.year || ''}">
+          <input type="number" class="form-control" data-field="year" value="${(book.year || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
         </div>
         <div class="alert alert-info">
           <small><strong>Source:</strong> ${data.source_identifier}</small>
@@ -197,7 +219,7 @@
       const field = input.dataset.field;
       const value = input.value;
 
-      fetch('<%= admin_update_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', sourceId), {
+      fetch('<%= admin_update_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', bookId), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

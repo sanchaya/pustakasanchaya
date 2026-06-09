@@ -1,0 +1,144 @@
+<% content_for :page_title do %>
+  Suggested Merges
+<% end %>
+
+<style>
+  .suggestion-card {
+    border-left: 4px solid #5F3792;
+    transition: all 0.2s;
+  }
+  .suggestion-card.dismissed {
+    opacity: 0.4;
+    border-left-color: #999;
+  }
+  .suggestion-card .merge-arrow {
+    color: #5F3792;
+    font-size: 1.2rem;
+  }
+  .badge-confidence {
+    font-size: 0.7rem;
+  }
+  .nav-tabs .nav-link.active {
+    color: #5F3792;
+    font-weight: 600;
+    border-bottom: 3px solid #5F3792;
+  }
+  .nav-tabs .nav-link {
+    color: #666;
+  }
+</style>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <p class="text-muted mb-0">
+          <i class="fas fa-lightbulb"></i>
+          These suggestions are auto-computed by comparing normalized names.
+          Review and accept merges, or dismiss suggestions you disagree with.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="nav nav-tabs mb-4" id="suggestionTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="authors-tab" data-bs-toggle="tab" data-bs-target="#authors" type="button">
+      <i class="fas fa-feather"></i> Authors
+      <span class="badge bg-primary ms-1"><%= @author_suggestions.length %></span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="publishers-tab" data-bs-toggle="tab" data-bs-target="#publishers" type="button">
+      <i class="fas fa-building"></i> Publishers
+      <span class="badge bg-primary ms-1"><%= @publisher_suggestions.length %></span>
+    </button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="books-tab" data-bs-toggle="tab" data-bs-target="#books" type="button">
+      <i class="fas fa-book"></i> Books
+      <span class="badge bg-primary ms-1"><%= @book_suggestions.length %></span>
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content" id="suggestionTabContent">
+  <!-- Authors Tab -->
+  <div class="tab-pane fade show active" id="authors" role="tabpanel">
+    <% if @author_suggestions.empty? %>
+      <div class="alert alert-success"><i class="fas fa-check-circle"></i> No author merge suggestions at this time.</div>
+    <% else %>
+      <%= render partial: 'suggestion_list', locals: { suggestions: @author_suggestions, type: 'author' } %>
+    <% end %>
+  </div>
+
+  <!-- Publishers Tab -->
+  <div class="tab-pane fade" id="publishers" role="tabpanel">
+    <% if @publisher_suggestions.empty? %>
+      <div class="alert alert-success"><i class="fas fa-check-circle"></i> No publisher merge suggestions at this time.</div>
+    <% else %>
+      <%= render partial: 'suggestion_list', locals: { suggestions: @publisher_suggestions, type: 'publisher' } %>
+    <% end %>
+  </div>
+
+  <!-- Books Tab -->
+  <div class="tab-pane fade" id="books" role="tabpanel">
+    <% if @book_suggestions.empty? %>
+      <div class="alert alert-success"><i class="fas fa-check-circle"></i> No book merge suggestions at this time.</div>
+    <% else %>
+      <%= render partial: 'book_suggestion_list', locals: { suggestions: @book_suggestions } %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+function applySuggestion(type, source, target, btn) {
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+  fetch('<%= admin_apply_suggestion_path %>', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': '<%= form_authenticity_token %>'
+    },
+    body: JSON.stringify({ type: type, source: source, target: target })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success) {
+      var card = btn.closest('.suggestion-card');
+      card.classList.add('dismissed');
+      btn.innerHTML = '<i class="fas fa-check"></i> Merged';
+      btn.classList.remove('btn-success');
+      btn.classList.add('btn-secondary');
+    } else {
+      alert('Error: ' + (data.error || 'Unknown'));
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-code-merge"></i> Merge';
+    }
+  })
+  .catch(function(e) {
+    alert('Error: ' + e.message);
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-code-merge"></i> Merge';
+  });
+}
+
+function dismissSuggestion(type, source, target, btn) {
+  var card = btn.closest('.suggestion-card');
+  card.classList.add('dismissed');
+
+  fetch('<%= admin_dismiss_suggestion_path %>', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': '<%= form_authenticity_token %>'
+    },
+    body: JSON.stringify({ type: type, source: source, target: target })
+  })
+  .then(function(r) { return r.json(); })
+  .catch(function(e) { console.error(e); });
+}
+</script>

@@ -22,10 +22,13 @@ class Library
   end
 
   def self.merge(old_library, new_library, editor_email)
+    old_library = old_library.strip
+    new_library = new_library.strip
     return { success: false, error: 'Libraries cannot be blank' } if old_library.blank? || new_library.blank?
     affected = Book.where(library: old_library)
     count = affected.count
     affected.update_all(library: new_library)
+    Book.bump_search_cache
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'library', old_library, new_library, editor_email, "Merged library: '#{old_library}' → '#{new_library}'")
     end
@@ -33,14 +36,37 @@ class Library
   end
 
   def self.rename(old_name, new_name, editor_email)
+    old_name = old_name.strip
+    new_name = new_name.strip
     return { success: false, error: 'Library names cannot be blank' } if old_name.blank? || new_name.blank?
     affected = Book.where(library: old_name)
     count = affected.count
     affected.update_all(library: new_name)
+    Book.bump_search_cache
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'library', old_name, new_name, editor_email, "Renamed library: '#{old_name}' → '#{new_name}'")
     end
     { success: true, renamed_from: old_name, renamed_to: new_name, affected_count: count }
+  end
+
+  def self.merge_multiple(source_names, target_name, editor_email)
+    target_name = target_name.strip
+    return { success: false, error: 'No sources or target specified' } if source_names.blank? || target_name.blank?
+    total = 0
+    unmatched = []
+    source_names.each do |old_name|
+      old_name = old_name.strip
+      next if old_name == target_name
+      result = merge(old_name, target_name, editor_email)
+      if result[:success]
+        total += result[:affected_count]
+        unmatched << old_name if result[:affected_count] == 0
+      else
+        unmatched << old_name
+      end
+    end
+    Rails.logger.warn "[merge_multiple] No matches found for libraries: #{unmatched.inspect}" if unmatched.any?
+    { success: true, merged_count: total, unmatched: unmatched }
   end
 
   private

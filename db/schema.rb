@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20260608000103) do
+ActiveRecord::Schema.define(version: 20260608174316) do
 
   create_table "admin_users", force: :cascade do |t|
     t.string   "email",         limit: 255,                   null: false
@@ -25,6 +25,19 @@ ActiveRecord::Schema.define(version: 20260608000103) do
   end
 
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
+
+  create_table "book_stores", force: :cascade do |t|
+    t.integer  "book_id",      limit: 4,   null: false
+    t.integer  "store_id",     limit: 4,   null: false
+    t.string   "store_url",    limit: 255
+    t.string   "price",        limit: 255
+    t.string   "availability", limit: 255
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "book_stores", ["book_id", "store_id"], name: "index_book_stores_on_book_id_and_store_id", unique: true, using: :btree
+  add_index "book_stores", ["store_id"], name: "index_book_stores_on_store_id", using: :btree
 
   create_table "books", force: :cascade do |t|
     t.string   "source_identifier", limit: 255,   null: false
@@ -80,4 +93,19 @@ ActiveRecord::Schema.define(version: 20260608000103) do
     t.datetime "updated_at",                             null: false
   end
 
+  create_table "stores", force: :cascade do |t|
+    t.string   "name",       limit: 255,                null: false
+    t.string   "url",        limit: 255
+    t.string   "logo",       limit: 255
+    t.boolean  "active",                 default: true, null: false
+    t.integer  "position",   limit: 4,   default: 0,    null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+  end
+
+  add_index "stores", ["active"], name: "index_stores_on_active", using: :btree
+  add_index "stores", ["name"], name: "index_stores_on_name", unique: true, using: :btree
+
+  add_foreign_key "book_stores", "books"
+  add_foreign_key "book_stores", "stores"
 end
