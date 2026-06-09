@@ -180,9 +180,9 @@
 let renameModal, mergeModal, mergeMultipleModal;
 
 document.addEventListener('DOMContentLoaded', function() {
-  renameModal = new bootstrap.Modal(document.getElementById('renameModal'));
-  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'));
-  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'));
+  renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
+  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
+  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
 
   document.querySelectorAll('.rename-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
@@ -287,21 +287,35 @@ function submitMergeMultiple() {
 }
 
 function openRenameModal(authorName) {
-  document.getElementById('renameOldName').value = authorName;
-  document.getElementById('renameNewName').value = '';
-  document.getElementById('renameError').classList.add('d-none');
-  document.getElementById('renameSuccess').classList.add('d-none');
-  renameModal.show();
+  console.log('openRenameModal called with:', authorName);
+  try {
+    document.getElementById('renameOldName').value = authorName;
+    document.getElementById('renameNewName').value = '';
+    document.getElementById('renameError').classList.add('d-none');
+    document.getElementById('renameSuccess').classList.add('d-none');
+    console.log('About to show renameModal');
+    renameModal.show();
+    console.log('renameModal shown');
+  } catch(e) {
+    console.error('Error in openRenameModal:', e);
+  }
 }
 
 function openMergeModal(authorName) {
-  document.getElementById('mergeOldAuthor').value = authorName;
-  document.getElementById('mergeNewAuthor').value = '';
-  document.getElementById('mergeSimilarList').innerHTML = '';
-  document.getElementById('mergeError').classList.add('d-none');
-  document.getElementById('mergeSuccess').classList.add('d-none');
-  document.getElementById('mergePreview').classList.add('d-none');
-  mergeModal.show();
+  console.log('openMergeModal called with:', authorName);
+  try {
+    document.getElementById('mergeOldAuthor').value = authorName;
+    document.getElementById('mergeNewAuthor').value = '';
+    document.getElementById('mergeSimilarList').innerHTML = '';
+    document.getElementById('mergeError').classList.add('d-none');
+    document.getElementById('mergeSuccess').classList.add('d-none');
+    document.getElementById('mergePreview').classList.add('d-none');
+    console.log('About to show mergeModal');
+    mergeModal.show();
+    console.log('mergeModal shown');
+  } catch(e) {
+    console.error('Error in openMergeModal:', e);
+  }
 }
 
 function submitRename() {

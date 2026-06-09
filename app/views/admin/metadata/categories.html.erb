@@ -180,10 +180,9 @@
 let renameModal, mergeModal, mergeMultipleModal;
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize modals - Bootstrap is loaded via asset pipeline
-  renameModal = new bootstrap.Modal(document.getElementById('renameModal'));
-  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'));
-  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'));
+  renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
+  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
+  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
 
   document.querySelectorAll('.rename-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {
