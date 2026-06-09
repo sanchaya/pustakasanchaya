@@ -180,21 +180,36 @@
 let renameModal, mergeModal, mergeMultipleModal;
 
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOMContentLoaded fired, initializing modals...');
+  
   renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
   mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
   mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
+  console.log('Modals initialized');
 
-  document.querySelectorAll('.rename-btn').forEach(function(btn) {
+  var renameBtns = document.querySelectorAll('.rename-btn');
+  console.log('Found ' + renameBtns.length + ' rename buttons');
+  
+  renameBtns.forEach(function(btn) {
     btn.addEventListener('click', function(e) {
+      console.log('Rename button clicked');
       e.preventDefault();
-      openRenameModal(this.dataset.categoryName);
+      var publisherName = this.getAttribute('data-category-name');
+      console.log('Opening rename modal for:', publisherName);
+      openRenameModal(publisherName);
     });
   });
 
-  document.querySelectorAll('.merge-btn').forEach(function(btn) {
+  var mergeBtns = document.querySelectorAll('.merge-btn');
+  console.log('Found ' + mergeBtns.length + ' merge buttons');
+  
+  mergeBtns.forEach(function(btn) {
     btn.addEventListener('click', function(e) {
+      console.log('Merge button clicked');
       e.preventDefault();
-      openMergeModal(this.dataset.categoryName);
+      var publisherName = this.getAttribute('data-category-name');
+      console.log('Opening merge modal for:', publisherName);
+      openMergeModal(publisherName);
     });
   });
 
