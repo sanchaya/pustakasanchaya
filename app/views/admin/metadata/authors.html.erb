@@ -180,35 +180,27 @@
 let renameModal, mergeModal, mergeMultipleModal;
 
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOMContentLoaded fired, initializing modals...');
   
   renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
   mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
   mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
-  console.log('Modals initialized');
 
   var renameBtns = document.querySelectorAll('.rename-btn');
-  console.log('Found ' + renameBtns.length + ' rename buttons');
   
   renameBtns.forEach(function(btn) {
     btn.addEventListener('click', function(e) {
-      console.log('Rename button clicked');
       e.preventDefault();
       var authorName = this.getAttribute('data-category-name');
-      console.log('Opening rename modal for:', authorName);
       openRenameModal(authorName);
     });
   });
 
   var mergeBtns = document.querySelectorAll('.merge-btn');
-  console.log('Found ' + mergeBtns.length + ' merge buttons');
   
   mergeBtns.forEach(function(btn) {
     btn.addEventListener('click', function(e) {
-      console.log('Merge button clicked');
       e.preventDefault();
       var authorName = this.getAttribute('data-category-name');
-      console.log('Opening merge modal for:', authorName);
       openMergeModal(authorName);
     });
   });
@@ -304,32 +296,21 @@ function submitMergeMultiple() {
 }
 
 function openRenameModal(authorName) {
-  console.log('openRenameModal called with:', authorName);
   try {
-    console.log('Setting renameOldName value');
     document.getElementById('renameOldName').value = authorName;
-    console.log('Clearing renameNewName');
     document.getElementById('renameNewName').value = '';
-    console.log('Hiding error message');
     document.getElementById('renameError').classList.add('d-none');
-    console.log('Hiding success message');
     document.getElementById('renameSuccess').classList.add('d-none');
-    console.log('About to schedule modal show via setTimeout');
     // Use setTimeout to avoid blocking
     setTimeout(function() {
-      console.log('Inside setTimeout, renameModal is:', typeof renameModal);
-      console.log('Calling renameModal.show()');
       renameModal.show();
-      console.log('renameModal.show() completed');
     }, 0);
-    console.log('setTimeout scheduled');
   } catch(e) {
     console.error('Error in openRenameModal:', e);
   }
 }
 
 function openMergeModal(authorName) {
-  console.log('openMergeModal called with:', authorName);
   try {
     document.getElementById('mergeOldAuthor').value = authorName;
     document.getElementById('mergeNewAuthor').value = '';
@@ -337,11 +318,9 @@ function openMergeModal(authorName) {
     document.getElementById('mergeError').classList.add('d-none');
     document.getElementById('mergeSuccess').classList.add('d-none');
     document.getElementById('mergePreview').classList.add('d-none');
-    console.log('About to show mergeModal');
     // Use setTimeout to avoid blocking
     setTimeout(function() {
       mergeModal.show();
-      console.log('mergeModal shown');
     }, 0);
   } catch(e) {
     console.error('Error in openMergeModal:', e);
