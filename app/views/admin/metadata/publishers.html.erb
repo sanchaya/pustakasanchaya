@@ -301,12 +301,25 @@ function submitMergeMultiple() {
   });
 }
 
-function openRenameModal(publisherName) {
-  document.getElementById('renameOldName').value = publisherName;
-  document.getElementById('renameNewName').value = '';
-  document.getElementById('renameError').classList.add('d-none');
-  document.getElementById('renameSuccess').classList.add('d-none');
-  setTimeout(function() { renameModal.show(); }, 0);
+function openRenameModal(itemName) {
+  console.log("openRenameModal called with:", itemName);
+  try {
+    console.log("Setting old value");
+    var oldNameEl = document.getElementById("renameOldName");
+    if (!oldNameEl) { console.error("renameOldName element not found"); return; }
+    oldNameEl.value = itemName;
+    console.log("Clearing new value");
+    document.getElementById("renameNewName").value = "";
+    console.log("About to show modal via setTimeout");
+    setTimeout(function() {
+      console.log("setTimeout fired, showing modal");
+      if (!renameModal) { console.error("renameModal not initialized"); return; }
+      renameModal.show();
+      console.log("Modal shown");
+    }, 0);
+  } catch(e) {
+    console.error("Error in openRenameModal:", e);
+  }
 }
 
 function openMergeModal(publisherName) {

@@ -306,16 +306,23 @@ function submitMergeMultiple() {
 function openRenameModal(authorName) {
   console.log('openRenameModal called with:', authorName);
   try {
+    console.log('Setting renameOldName value');
     document.getElementById('renameOldName').value = authorName;
+    console.log('Clearing renameNewName');
     document.getElementById('renameNewName').value = '';
+    console.log('Hiding error message');
     document.getElementById('renameError').classList.add('d-none');
+    console.log('Hiding success message');
     document.getElementById('renameSuccess').classList.add('d-none');
-    console.log('About to show renameModal');
+    console.log('About to schedule modal show via setTimeout');
     // Use setTimeout to avoid blocking
     setTimeout(function() {
+      console.log('Inside setTimeout, renameModal is:', typeof renameModal);
+      console.log('Calling renameModal.show()');
       renameModal.show();
-      console.log('renameModal shown');
+      console.log('renameModal.show() completed');
     }, 0);
+    console.log('setTimeout scheduled');
   } catch(e) {
     console.error('Error in openRenameModal:', e);
   }
