@@ -180,34 +180,9 @@
 let renameModal, mergeModal, mergeMultipleModal;
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize modals - disable Bootstrap's focus management
-  renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: true });
-  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: true });
-  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: true });
-
-  // Disable Bootstrap's focus stealing - prevent aria-hidden focus issue
-  [renameModal, mergeModal, mergeMultipleModal].forEach(function(modal) {
-    modal._element.addEventListener('show.bs.modal', function() {
-      // Store the previously focused element
-      this._previouslyFocused = document.activeElement;
-    });
-    
-    modal._element.addEventListener('shown.bs.modal', function() {
-      // Restore focus to previous element, then set to modal input
-      if (this._previouslyFocused && this._previouslyFocused !== document.body) {
-        this._previouslyFocused.focus();
-      }
-      var input = this.querySelector('input[type="text"], input[type="url"]');
-      if (input) setTimeout(function() { input.focus(); }, 0);
-    });
-    
-    modal._element.addEventListener('hide.bs.modal', function() {
-      // Restore focus to previously focused element when modal hides
-      if (this._previouslyFocused && this._previouslyFocused !== document.body) {
-        this._previouslyFocused.focus();
-      }
-    });
-  });
+  renameModal = new bootstrap.Modal(document.getElementById('renameModal'));
+  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'));
+  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'));
 
   document.querySelectorAll('.rename-btn').forEach(function(btn) {
     btn.addEventListener('click', function(e) {

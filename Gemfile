@@ -43,11 +43,9 @@ end
 # gem 'debugger', group: [:development, :test]
 
 gem 'devise'
-# gem "therubyracer"
-gem "bootstrap", "~> 4.6"
-gem "sassc-rails"
-gem "mini_racer"
-gem "bigdecimal", "~> 1.3.2"
+gem "therubyracer"
+gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+gem "twitter-bootstrap-rails"
 gem 'will_paginate'
 gem "font-awesome-rails"
 # gem 'ransack'
