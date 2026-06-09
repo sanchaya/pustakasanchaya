@@ -209,38 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
     cb.addEventListener('change', updateSelectionToolbar);
   });
 });
-  
-  mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), {
-    keyboard: true
-  });
-  
-  mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), {
-    keyboard: true
-  });
-
-  document.querySelectorAll('.rename-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      openRenameModal(this.dataset.categoryName);
-    });
-  });
-
-  document.querySelectorAll('.merge-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      openMergeModal(this.dataset.categoryName);
-    });
-  });
-
-  document.getElementById('selectAll').addEventListener('change', function() {
-    document.querySelectorAll('.select-item').forEach(function(cb) {
-      cb.checked = this.checked;
-    }.bind(this));
-    updateSelectionToolbar();
-  });
-
-  document.querySelectorAll('.select-item').forEach(function(cb) {
-    cb.addEventListener('change', updateSelectionToolbar);
-  });
-});
 
 function updateSelectionToolbar() {
   var checked = document.querySelectorAll('.select-item:checked');

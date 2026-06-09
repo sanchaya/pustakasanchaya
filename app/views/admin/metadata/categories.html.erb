@@ -180,15 +180,7 @@
 let renameModal, mergeModal, mergeMultipleModal;
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Check if Bootstrap is available
-  if (typeof bootstrap === 'undefined' || typeof bootstrap.Modal === 'undefined') {
-    setTimeout(function() {
-      document.addEventListener('DOMContentLoaded', arguments.callee);
-    }, 100);
-    return;
-  }
-
-  // Initialize modals without custom event listeners to avoid focus issues
+  // Initialize modals - Bootstrap is loaded via asset pipeline
   renameModal = new bootstrap.Modal(document.getElementById('renameModal'));
   mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'));
   mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'));
