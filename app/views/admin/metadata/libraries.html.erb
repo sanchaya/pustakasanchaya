@@ -78,7 +78,7 @@
 </div>
 
 <!-- Rename Modal -->
-<div class="modal fade" id="renameModal" tabindex="-1" aria-modal="true" role="dialog" aria-labelledby="renameModalLabel">
+<div class="modal fade" id="renameModal" aria-modal="true" role="dialog" aria-labelledby="renameModalLabel">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -108,7 +108,7 @@
 </div>
 
 <!-- Merge Modal -->
-<div class="modal fade" id="mergeModal" tabindex="-1" aria-modal="true" role="dialog" aria-labelledby="mergeModalLabel">
+<div class="modal fade" id="mergeModal" aria-modal="true" role="dialog" aria-labelledby="mergeModalLabel">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -147,7 +147,7 @@
 </div>
 
 <!-- Merge Multiple Modal -->
-<div class="modal fade" id="mergeMultipleModal" tabindex="-1" aria-modal="true" role="dialog" aria-labelledby="mergeMultipleModalLabel">
+<div class="modal fade" id="mergeMultipleModal" aria-modal="true" role="dialog" aria-labelledby="mergeMultipleModalLabel">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -245,7 +245,7 @@ function openMergeMultipleModal() {
   document.getElementById('mergeTargetName').value = '';
   document.getElementById('mergeMultipleError').classList.add('d-none');
   document.getElementById('mergeMultipleSuccess').classList.add('d-none');
-  mergeMultipleModal.show();
+  setTimeout(function() { mergeMultipleModal.show(); }, 0);
 }
 
 function submitMergeMultiple() {
@@ -291,7 +291,7 @@ function openRenameModal(libraryName) {
   document.getElementById('renameNewName').value = '';
   document.getElementById('renameError').classList.add('d-none');
   document.getElementById('renameSuccess').classList.add('d-none');
-  renameModal.show();
+  setTimeout(function() { renameModal.show(); }, 0);
 }
 
 function openMergeModal(libraryName) {
@@ -301,7 +301,7 @@ function openMergeModal(libraryName) {
   document.getElementById('mergeError').classList.add('d-none');
   document.getElementById('mergeSuccess').classList.add('d-none');
   document.getElementById('mergePreview').classList.add('d-none');
-  mergeModal.show();
+  setTimeout(function() { mergeModal.show(); }, 0);
 }
 
 function submitRename() {
