@@ -205,6 +205,23 @@
       color: #999;
     }
     
+    /* Modal styling to ensure visibility */
+    .modal {
+      z-index: 1050 !important;
+    }
+    
+    .modal-backdrop {
+      z-index: 1040 !important;
+    }
+    
+    .modal.show {
+      display: block !important;
+    }
+    
+    .modal-dialog {
+      z-index: 1050 !important;
+    }
+    
     @media (max-width: 768px) {
       .sidebar {
         width: 100%;
