@@ -101,6 +101,8 @@
       return;
     }
 
+    console.log('Starting undo for edit:', editId);
+
     fetch('<%= admin_corrections_path %>', {
       method: 'DELETE',
       headers: {
@@ -110,27 +112,45 @@
       body: JSON.stringify({ edit_id: editId })
     })
     .then(response => {
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text().then(text => {
+          console.error('Response text:', text);
+          throw new Error(`HTTP error! status: ${response.status} - ${text}`);
+        });
       }
       return response.json();
     })
     .then(data => {
-      if (data.success) {
-        button.closest('tr').style.opacity = '0.5';
+      console.log('Response data:', data);
+      
+      if (data && data.success) {
+        console.log('Undo successful, marking row and reloading...');
+        const row = button.closest('tr');
+        if (row) {
+          row.style.opacity = '0.5';
+          row.style.backgroundColor = '#f0f0f0';
+        }
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-check"></i> Undone';
+        
+        // Wait a bit then reload
         setTimeout(() => {
+          console.log('Reloading page...');
           location.reload();
-        }, 1000);
+        }, 1500);
       } else {
-        alert('Error undoing edit: ' + (data.error || 'Unknown error'));
+        const errorMsg = data && data.error ? data.error : 'Unknown error';
+        console.error('Undo failed:', errorMsg);
+        alert('Error undoing edit: ' + errorMsg);
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-undo"></i> Undo';
       }
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('Fetch error:', error);
       alert('Error: ' + error.message);
       button.disabled = false;
       button.innerHTML = '<i class="fas fa-undo"></i> Undo';
