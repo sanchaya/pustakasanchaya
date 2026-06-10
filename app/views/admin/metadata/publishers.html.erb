@@ -13,10 +13,10 @@
   <div class="card mb-4">
     <div class="card-body">
       <form method="get" class="row g-2">
-        <div class="col-md-8">
-          <input type="text" name="search" class="form-control kan-ime" placeholder="Search publishers..." value="<%= @search_query %>">
+        <div class="col-md-12">
+          <input type="text" name="search" class="form-control" placeholder="Search publishers..." value="<%= @search_query %>">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-12">
           <button type="submit" class="btn btn-primary w-100">Search</button>
         </div>
       </form>
@@ -93,7 +93,7 @@
         <div class="mb-3">
           <label class="form-label">New Name</label>
           <div class="kan-ime-wrapper">
-            <input type="text" id="renameNewName" class="form-control kan-ime" placeholder="Enter new publisher name">
+            <input type="text" id="renameNewName" class="form-control" placeholder="Enter new publisher name">
           </div>
         </div>
         <div id="renameError" class="alert alert-danger d-none" role="alert"></div>
@@ -123,7 +123,7 @@
         <div class="mb-3">
           <label class="form-label">Type publisher name to merge with</label>
           <div class="kan-ime-wrapper">
-            <input type="text" id="mergeNewPublisher" class="form-control kan-ime" placeholder="Enter publisher name to merge with" oninput="findSimilarPublishers()">
+            <input type="text" id="mergeNewPublisher" class="form-control" placeholder="Enter publisher name to merge with" oninput="findSimilarPublishers()">
           </div>
           <small class="text-muted">Start typing to find similar names</small>
         </div>
@@ -162,7 +162,7 @@
         <div class="mb-3">
           <label class="form-label">Merge into (target name)</label>
           <div class="kan-ime-wrapper">
-            <input type="text" id="mergeTargetName" class="form-control kan-ime" placeholder="Enter target publisher name">
+            <input type="text" id="mergeTargetName" class="form-control" placeholder="Enter target publisher name">
           </div>
         </div>
         <div id="mergeMultipleError" class="alert alert-danger d-none" role="alert"></div>
@@ -179,30 +179,42 @@
 <script>
 let renameModal, mergeModal, mergeMultipleModal;
 
+function closeModal(modal) {
+  modal.classList.remove('show');
+  modal.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = 'auto';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   
   renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
   mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
   mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
 
-  var renameBtns = document.querySelectorAll('.rename-btn');
-  
-  renameBtns.forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
+  // Use event delegation instead of direct listeners
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.rename-btn')) {
       e.preventDefault();
-      var publisherName = this.getAttribute('data-category-name');
+      var btn = e.target.closest('.rename-btn');
+      var publisherName = btn.getAttribute('data-category-name');
       openRenameModal(publisherName);
-    });
-  });
-
-  var mergeBtns = document.querySelectorAll('.merge-btn');
-  
-  mergeBtns.forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
+    }
+    
+    if (e.target.closest('.merge-btn')) {
       e.preventDefault();
-      var publisherName = this.getAttribute('data-category-name');
+      var btn = e.target.closest('.merge-btn');
+      var publisherName = btn.getAttribute('data-category-name');
       openMergeModal(publisherName);
-    });
+    }
+    
+    // Handle modal close buttons
+    if (e.target.closest('[data-bs-dismiss="modal"]')) {
+      var modal = e.target.closest('.modal');
+      if (modal) {
+        closeModal(modal);
+      }
+    }
   });
 
   document.getElementById('selectAll').addEventListener('change', function() {
@@ -252,7 +264,21 @@ function openMergeMultipleModal() {
   document.getElementById('mergeTargetName').value = '';
   document.getElementById('mergeMultipleError').classList.add('d-none');
   document.getElementById('mergeMultipleSuccess').classList.add('d-none');
-  setTimeout(function() { mergeMultipleModal.show(); }, 0);
+  
+  // Directly manipulate DOM to show modal
+  var modal = document.getElementById('mergeMultipleModal');
+  modal.classList.remove('fade');
+  modal.classList.add('show');
+  modal.style.display = 'block';
+  modal.style.position = 'fixed';
+  modal.style.top = '0';
+  modal.style.left = '0';
+  modal.style.width = '100%';
+  modal.style.height = '100%';
+  modal.style.zIndex = '99999';
+  modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
 }
 
 function submitMergeMultiple() {
@@ -295,27 +321,56 @@ function submitMergeMultiple() {
 
 function openRenameModal(itemName) {
   try {
-    var oldNameEl = document.getElementById("renameOldName");
-    if (!oldNameEl) { console.error("renameOldName element not found"); return; }
-    oldNameEl.value = itemName;
-    document.getElementById("renameNewName").value = "";
-    setTimeout(function() {
-      if (!renameModal) { console.error("renameModal not initialized"); return; }
-      renameModal.show();
-    }, 0);
+    document.getElementById('renameOldName').value = itemName;
+    document.getElementById('renameNewName').value = '';
+    document.getElementById('renameError').classList.add('d-none');
+    document.getElementById('renameSuccess').classList.add('d-none');
+    
+    // Directly manipulate DOM to show modal
+    var modal = document.getElementById('renameModal');
+    modal.classList.remove('fade');
+    modal.classList.add('show');
+    modal.style.display = 'block';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.zIndex = '99999';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
   } catch(e) {
-    console.error("Error in openRenameModal:", e);
+    console.error('Error opening rename modal:', e);
   }
 }
 
 function openMergeModal(publisherName) {
-  document.getElementById('mergeOldPublisher').value = publisherName;
-  document.getElementById('mergeNewPublisher').value = '';
-  document.getElementById('mergeSimilarList').innerHTML = '';
-  document.getElementById('mergeError').classList.add('d-none');
-  document.getElementById('mergeSuccess').classList.add('d-none');
-  document.getElementById('mergePreview').classList.add('d-none');
-  setTimeout(function() { mergeModal.show(); }, 0);
+  try {
+    document.getElementById('mergeOldPublisher').value = publisherName;
+    document.getElementById('mergeNewPublisher').value = '';
+    document.getElementById('mergeSimilarList').innerHTML = '';
+    document.getElementById('mergeError').classList.add('d-none');
+    document.getElementById('mergeSuccess').classList.add('d-none');
+    document.getElementById('mergePreview').classList.add('d-none');
+    
+    // Directly manipulate DOM to show modal
+    var modal = document.getElementById('mergeModal');
+    modal.classList.remove('fade');
+    modal.classList.add('show');
+    modal.style.display = 'block';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.zIndex = '99999';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  } catch(e) {
+    console.error('Error opening merge modal:', e);
+  }
 }
 
 function submitRename() {

@@ -39368,6 +39368,61 @@
       "old_value": "Saisuthe",
       "new_value": "ಸಾಯಿಸುತೆ",
       "description": "Renamed author: 'Saisuthe' → 'ಸಾಯಿಸುತೆ'"
+    },
+    {
+      "id": "metadata_1781088007_1b15e0a1",
+      "type": "data_quality_flag",
+      "timestamp": "2026-06-10T16:10:07+05:30",
+      "source_identifier": "bahuroopi",
+      "field": "publisher",
+      "status": "incomplete_data",
+      "severity": "high",
+      "description": "Portal name used as default - individual publisher data not available - 233 books affected. Decision: Accept incomplete data as-is; original scraper did not capture individual publisher information.",
+      "action_taken": "Marked for future reference - no automatic correction attempted"
+    },
+    {
+      "id": "metadata_1781088007_53ac010b",
+      "type": "data_quality_flag",
+      "timestamp": "2026-06-10T16:10:07+05:30",
+      "source_identifier": "sahitya",
+      "field": "publisher",
+      "status": "incomplete_data",
+      "severity": "high",
+      "description": "Portal name used as default for all books - individual publisher data not available - 1779 books affected. Decision: Accept incomplete data as-is; original scraper did not capture individual publisher information.",
+      "action_taken": "Marked for future reference - no automatic correction attempted"
+    },
+    {
+      "id": "metadata_1781088007_fd2e2996",
+      "type": "data_quality_flag",
+      "timestamp": "2026-06-10T16:10:07+05:30",
+      "source_identifier": "sawanna",
+      "field": "publisher",
+      "status": "incomplete_data",
+      "severity": "high",
+      "description": "Portal name used as default; original site is single-page app - 66 books affected. Decision: Accept incomplete data as-is; original scraper did not capture individual publisher information.",
+      "action_taken": "Marked for future reference - no automatic correction attempted"
+    },
+    {
+      "id": "metadata_1781088007_94de759c",
+      "type": "data_quality_flag",
+      "timestamp": "2026-06-10T16:10:07+05:30",
+      "source_identifier": "navakarnataka",
+      "field": "publisher",
+      "status": "incomplete_data",
+      "severity": "medium",
+      "description": "Portal name used as default for 1,484 books; 6,624 have correct data - 1484 books affected. Decision: Accept incomplete data as-is; original scraper did not capture individual publisher information.",
+      "action_taken": "Marked for future reference - no automatic correction attempted"
+    },
+    {
+      "id": "metadata_1781088007_c0fbaf17",
+      "type": "data_quality_flag",
+      "timestamp": "2026-06-10T16:10:07+05:30",
+      "source_identifier": "veeraloka",
+      "field": "publisher",
+      "status": "incomplete_data",
+      "severity": "medium",
+      "description": "Portal name used as default for 4,931 books; 206 have correct data; 277 missing - 4931 books affected. Decision: Accept incomplete data as-is; original scraper did not capture individual publisher information.",
+      "action_taken": "Marked for future reference - no automatic correction attempted"
     }
   ],
   "merges": [

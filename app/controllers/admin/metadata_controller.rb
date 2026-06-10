@@ -77,11 +77,14 @@ class Admin::MetadataController < ApplicationController
     old_publisher = params[:old_publisher] || ''
     new_publisher = params[:new_publisher] || ''
     
+    Rails.logger.info "[merge_publishers] old_publisher=#{old_publisher.inspect}, new_publisher=#{new_publisher.inspect}, current_admin=#{current_admin.inspect}"
+    
     unless old_publisher.present? && new_publisher.present?
       return render json: { success: false, error: 'Both publishers must be specified' }
     end
     
     result = Publisher.merge(old_publisher, new_publisher, current_admin.email)
+    Rails.logger.info "[merge_publishers] result=#{result.inspect}"
     
     render json: result
   end
@@ -103,21 +106,20 @@ class Admin::MetadataController < ApplicationController
     old_name = params[:old_name] || ''
     new_name = params[:new_name] || ''
     
+    Rails.logger.info "[rename_publisher] old_name=#{old_name.inspect}, new_name=#{new_name.inspect}, current_admin=#{current_admin.inspect}"
+    
     unless old_name.present? && new_name.present?
       return render json: { success: false, error: 'Both names must be specified' }
     end
     
     result = Publisher.rename(old_name, new_name, current_admin.email)
+    Rails.logger.info "[rename_publisher] result=#{result.inspect}"
     
     render json: result
   end
 
   def categories
-    Rails.logger.info "DEBUG categories action START"
-    File.write('/tmp/categories_debug.txt', "START #{Time.now}\n", mode: 'a')
     @categories = Category.all_with_counts
-    Rails.logger.info "DEBUG categories: Category.all_with_counts = #{@categories.class} size=#{@categories.size}"
-    File.write('/tmp/categories_debug.txt', "CATEGORIES SET: #{@categories.class} size=#{@categories.size}\n", mode: 'a')
     @search_query = params[:search] || ''
     
     if @search_query.present?
@@ -125,9 +127,6 @@ class Admin::MetadataController < ApplicationController
     end
     
     @categories = Kaminari.paginate_array(@categories.map { |name, count| { name: name, count: count } }).page(params[:page]).per(30)
-    Rails.logger.info "DEBUG categories: paginated @categories = #{@categories.class} total=#{@categories.total_count}"
-    File.write('/tmp/categories_debug.txt', "PAGINATED: #{@categories.class} total=#{@categories.total_count}\n", mode: 'a')
-    Rails.logger.info "DEBUG categories action END"
   end
 
   def find_similar_categories

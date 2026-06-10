@@ -10,7 +10,7 @@
           <div class="input-group">
             <input 
               type="text" 
-              class="form-control kan-ime" 
+              class="form-control" 
               name="q"
               placeholder="Search books by title, author, or publisher..."
               value="<%= @query %>"
@@ -29,6 +29,8 @@
     </a>
   </div>
 </div>
+
+
 
 <% if @books.any? %>
   <div class="row">
@@ -185,17 +187,17 @@
     const book = data.book;
     const html = `
       <form id="editForm">
-        <div class="mb-3 kan-ime-wrapper">
+        <div class="mb-3-wrapper">
           <label class="form-label">Title</label>
-          <input type="text" class="form-control kan-ime" data-field="name" value="${(book.name || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
+          <input type="text" class="form-control" data-field="name" value="${(book.name || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
         </div>
-        <div class="mb-3 kan-ime-wrapper">
+        <div class="mb-3-wrapper">
           <label class="form-label">Author</label>
-          <input type="text" class="form-control kan-ime" data-field="author" value="${(book.author || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
+          <input type="text" class="form-control" data-field="author" value="${(book.author || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
         </div>
-        <div class="mb-3 kan-ime-wrapper">
+        <div class="mb-3-wrapper">
           <label class="form-label">Publisher</label>
-          <input type="text" class="form-control kan-ime" data-field="publisher" value="${(book.publisher || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
+          <input type="text" class="form-control" data-field="publisher" value="${(book.publisher || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;')}">
         </div>
         <div class="mb-3">
           <label class="form-label">Year</label>
