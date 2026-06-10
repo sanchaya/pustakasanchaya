@@ -40,7 +40,7 @@ class Admin::CorrectionsController < ApplicationController
           Rails.logger.info("Reverting #{field}: '#{new_value}' → '#{old_value}'")
           
           # Revert the field to its old value
-          book.update_attributes(field.to_sym => old_value)
+          book.update(field.to_sym => old_value)
           Rails.logger.info("Book updated successfully")
           
           # Log the undo action
