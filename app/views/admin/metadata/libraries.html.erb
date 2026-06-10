@@ -383,6 +383,19 @@ function openRenameModal(itemName) {
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     
+    // Auto-transliterate the current name and populate new name field
+    console.log('Auto-transliterating current name:', itemName);
+    performTransliteration(itemName, function(kannadaText) {
+      console.log('Transliteration result:', kannadaText);
+      if (kannadaText) {
+        var result = itemName + ' | ' + kannadaText;
+      } else {
+        var result = itemName;
+      }
+      document.getElementById('renameNewName').value = result;
+      console.log('Auto-populated new name:', result);
+    });
+    
     // Focus on name field for convenience
     document.getElementById('renameNewName').focus();
   } catch(e) {
