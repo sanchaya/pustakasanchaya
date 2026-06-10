@@ -93,19 +93,17 @@
         <div class="mb-3">
           <label class="form-label">New Name (English)</label>
           <div class="input-group">
-            <input type="text" id="renameNewNameEnglish" class="form-control" placeholder="Enter English name">
-            <button class="btn btn-outline-info" type="button" id="transliterateBtn" title="Transliterate to Kannada">
-              <i class="fas fa-language"></i> Transliterate
+            <input type="text" id="renameNewNameEnglish" class="form-control" placeholder="Enter English name" autocomplete="off">
+            <button class="btn btn-outline-info" type="button" id="transliterateBtn" title="Auto-transliterate to Kannada">
+              <i class="fas fa-magic"></i> Transliterate
             </button>
           </div>
-          <small class="text-muted d-block mt-1">Click "Transliterate" to convert English to Kannada</small>
+          <small class="text-muted d-block mt-1">Enter English name and click "Transliterate" to auto-convert to Kannada</small>
         </div>
         <div class="mb-3">
-          <label class="form-label">New Name (Full)</label>
-          <div class="kan-ime-wrapper">
-            <input type="text" id="renameNewName" class="form-control" placeholder="English name | ಕನ್ನಡ ಹೆಸರು">
-          </div>
-          <small class="text-muted">Format: English | ಕನ್ನಡ (both names are optional)</small>
+          <label class="form-label">New Name (Auto-generated)</label>
+          <input type="text" id="renameNewName" class="form-control bg-light" placeholder="Result will appear here: English | ಕನ್ನಡ" readonly>
+          <small class="text-muted">Auto-generated: English name + Kannada transliteration</small>
         </div>
         <div id="renameError" class="alert alert-danger d-none" role="alert"></div>
         <div id="renameSuccess" class="alert alert-success d-none" role="alert"></div>
@@ -216,10 +214,29 @@ document.addEventListener('DOMContentLoaded', function() {
       transliterateAndFill(englishName, 'renameNewName');
     });
 
-    // Also allow Enter key in English name field to trigger transliteration
+    // Auto-trigger transliteration when user finishes typing (after 1 second of inactivity)
+    var transliterationTimeout;
+    document.getElementById('renameNewNameEnglish').addEventListener('input', function() {
+      clearTimeout(transliterationTimeout);
+      
+      var englishName = this.value.trim();
+      if (!englishName) {
+        document.getElementById('renameNewName').value = '';
+        return;
+      }
+      
+      // Auto-trigger transliteration after user stops typing
+      transliterationTimeout = setTimeout(function() {
+        console.log('Auto-triggering transliteration after typing stopped');
+        transliterateAndFill(englishName, 'renameNewName');
+      }, 800);
+    });
+
+    // Also allow Enter key to manually trigger transliteration
     document.getElementById('renameNewNameEnglish').addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
         e.preventDefault();
+        clearTimeout(transliterationTimeout);
         document.getElementById('transliterateBtn').click();
       }
     });
