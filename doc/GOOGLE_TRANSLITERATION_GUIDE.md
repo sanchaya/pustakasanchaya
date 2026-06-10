@@ -13,46 +13,65 @@ Transliteration is available in the **Rename** modals for:
 
 ## How to Use
 
-### Step-by-Step
+### Automatic (Recommended)
 
 1. **Click the Rename button** for any publisher, author, or library
-2. **Enter the English name** in the "New Name (English)" field
+2. **Type the English name** in the "New Name (English)" field
    - Example: `Sapna Book House`
-3. **Click the "Transliterate" button** (or press Enter)
-   - The button shows a language icon: 🌐
-   - The "New Name (Full)" field is pre-filled with: `Sapna Book House | `
-4. **Type or paste the Kannada text** in the "New Name (Full)" field
-   - The cursor is already positioned after the pipe `|`
-   - Use the Kannada IME tool (already enabled) to type
-   - Or paste Kannada text if you have it
-   - Example result: `Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್`
+3. **Wait 800ms** or click the "Transliterate" button
+   - Auto-transliteration happens automatically after you stop typing
+   - Or click the ✨ **Transliterate** button to trigger immediately
+4. **Result auto-fills** in the "New Name (Full)" field
+   - Shows: `Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್`
+   - Field is read-only (to prevent accidental edits)
 5. **Click Rename** to save the bilingual name
 
-### Keyboard Shortcut
+### Manual Trigger
 
-- Type the English name in the "New Name (English)" field
-- Press **Enter** to auto-fill the field and position cursor
-- Start typing Kannada immediately using the IME
-- No need to manually click the button or position cursor!
+If auto-transliteration doesn't happen:
+- Click the ✨ **Transliterate** button
+- Or press **Enter** in the English name field
+
+### What Transliteration Does
+
+Converts English → English | ಕನ್ನಡ format:
+
+```
+Input:  Sapna Book House
+Result: Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್
+```
+
+The system uses **two transliteration services**:
+1. **Google Transliteration** (if available)
+2. **Aksharamukha API** (fallback) - always works
 
 ## What It Does
 
-### Transliteration Helper
+### Automatic Transliteration
 
-The "Transliterate" button helps you create bilingual names:
-
-1. Pre-fills the "New Name (Full)" field with `English name | `
-2. Positions the cursor after the pipe
-3. Activates the Kannada IME for typing
-4. You then type or paste the Kannada text
+The system **automatically converts English to Kannada**:
 
 ```
-Before: "Sapna Book House" (English only)
-              ↓ Click Transliterate
-After: "Sapna Book House | " (ready for Kannada)
-              ↓ Type/Paste Kannada
-Result: "Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್" (bilingual)
+Type:     Sapna Book House
+Wait:     800ms (or click button)
+Result:   Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್
 ```
+
+### Dual Transliteration Engine
+
+Two APIs work together for reliability:
+
+1. **Google Transliteration** (Primary)
+   - Fast and accurate
+   - May not always be available
+   
+2. **Aksharamukha API** (Fallback)
+   - Always available
+   - Free, no API key needed
+   - Converts en_US → kn_KN
+
+If Google fails → Automatically tries Aksharamukha  
+If both fail → Shows English-only name
 
 ### Bilingual Names
 
@@ -90,32 +109,45 @@ Penguin Random House | ಪೆಂಗ್ವಿನ್ ರ್ಯಾಂಡಮ್ ಹ�
 
 ## How It Works (Technical)
 
-### JavaScript Implementation
+### Automatic Transliteration Process
 
-The feature uses `transliterateAndFill()` function:
+1. **User types English name**
+   - Example: `Sapna Book House`
 
-```javascript
-// Simple usage
-transliterateAndFill('Sapna Book House', 'renameNewName');
+2. **System waits 800ms** (debounce)
+   - Avoids API calls on every keystroke
+   - Waits for user to stop typing
 
-// Fills the field with:
-// "Sapna Book House | "
-// And positions cursor after the pipe for Kannada entry
+3. **Calls `transliterateAndFill()`**
+   - Tries Google Transliteration API
+   - If fails, tries Aksharamukha API
+   - If both fail, uses English-only
+
+4. **Result auto-fills** in read-only field
+   - Format: `English | ಕನ್ನಡ`
+   - No manual editing needed
+
+### Dual API Architecture
+
+**Google Transliteration** (Primary)
+```
+Request: transliterate('Sapna', 'en', 'kn')
+Result: 'ಸಪ್ನ'
 ```
 
-### Kannada IME
+**Aksharamukha API** (Fallback)
+```
+Request: https://www.aksharamukha.appspot.com/api/transliterate
+         ?text=Sapna&from=en_US&to=kn_KN
+Response: { "result": "ಸಪ್ನ" }
+```
 
-- **IME Tool**: Kannada Input Method Editor (built into the app)
-- **Activation**: Auto-enabled when field is focused
-- **How**: You type English characters, it converts to Kannada
-- **Example**: Type "sapna" → shows "ಸಪ್ನ" as suggestion
+### ES5 Compatible
 
-### No External API Required
-
-- Uses local IME tool (no internet needed for typing)
-- Can type or paste Kannada text
-- Fully functional even without external services
-- More reliable than API-dependent solutions
+- Written in ES5 JavaScript (Rails 4.2 compatible)
+- No external libraries required
+- Works in all modern browsers
+- Minified in production assets
 
 ## Tips & Best Practices
 
@@ -143,25 +175,41 @@ transliterateAndFill('Sapna Book House', 'renameNewName');
 
 ### Common Issues
 
-#### Issue: Field shows "English name | " but I can't type Kannada
+#### Issue: Result field is empty after clicking Transliterate
 
-- The Kannada IME might not be active
-- **Solution**: Click in the field again to activate IME
-- **Check**: Look for IME indicator in the field
-- **Alternate**: Click the language button in the IME panel to switch to Kannada
+**Causes:**
+- Both Google and Aksharamukha APIs failed
+- Internet connection issue
+- English name field is empty
 
-#### Issue: I see a cursor but nothing happens when I type
+**Solutions:**
+1. Try again - sometimes APIs have temporary issues
+2. Check internet connection
+3. Make sure English name is entered
+4. Open DevTools (F12 → Console) to see error messages
 
-- The IME might be disabled
-- **Solution**: Check if IME is active (should show "Kannada" indicator)
-- **Activate**: Click the IME toggle button or press Ctrl+G
-- **Alternative**: Copy and paste Kannada text instead
+#### Issue: Transliteration shows wrong Kannada text
 
-#### Issue: Button doesn't respond
+**Possible causes:**
+- API limitation (some transliterations are non-trivial)
+- Proper nouns might be transliterated as common words
 
-- JavaScript may not have loaded properly
-- **Solution**: Refresh the page and try again
-- **Check**: Open DevTools (F12 → Console) for errors
+**Solutions:**
+1. Manual typing - Enable IME and type correct Kannada
+2. Copy and paste - If you have the correct Kannada text
+3. Contact admin - For frequently needed corrections
+
+#### Issue: Transliteration takes too long
+
+**Normal behavior:**
+- First time: 2-3 seconds (API loading)
+- Subsequent: 1-2 seconds
+- Aksharamukha fallback: 1-2 seconds
+
+**If taking longer than 5 seconds:**
+1. Check internet connection
+2. Try clicking button again
+3. Refresh page and retry
 
 ## Frequently Asked Questions
 
@@ -194,16 +242,35 @@ transliterateAndFill('Sapna Book House', 'renameNewName');
 3. Click the red **Undo** button
 4. The name reverts to the previous value
 
-### Q: Is transliteration instant?
+### Q: How fast is transliteration?
 
-**A**: Yes, the button instantly pre-fills the field and positions the cursor. Then you type Kannada at your own pace using the IME tool.
+**A**: Very fast!
+- First click: 2-3 seconds (APIs load)
+- Subsequent: 1-2 seconds
+- Automatic (after typing): 800ms delay + 1-2 seconds API call
+
+### Q: Does it work if internet is down?
+
+**A**: No, it requires internet for both Google and Aksharamukha APIs. If offline, you must enter the name manually.
 
 ## Requirements
 
-- **No Internet Required**: Works completely offline (uses local IME)
+- **Internet Required**: Both APIs need internet connection
 - **Modern Browser**: Chrome, Firefox, Safari, Edge (all recent versions)
-- **JavaScript Enabled**: Required for the feature to work
-- **Kannada Keyboard/IME**: System should support Kannada input (pre-configured)
+- **JavaScript Enabled**: Required for transliteration to work
+- **No Special Software**: No keyboard configuration needed
+
+### APIs Used
+
+1. **Google Transliteration API**
+   - Loaded from: `www.google.com/inputtools/js/lang_kn.js`
+   - No API key required
+   - May be unavailable in some regions
+
+2. **Aksharamukha API**
+   - Endpoint: `https://www.aksharamukha.appspot.com/api/transliterate`
+   - Free and always available
+   - Fallback when Google fails
 
 ## Browser Compatibility
 
