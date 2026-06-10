@@ -72,3 +72,4 @@ function transliteratePhonetic(text) {
   
   return result;
 }
+;
