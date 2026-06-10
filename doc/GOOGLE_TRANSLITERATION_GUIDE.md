@@ -19,29 +19,39 @@ Transliteration is available in the **Rename** modals for:
 2. **Enter the English name** in the "New Name (English)" field
    - Example: `Sapna Book House`
 3. **Click the "Transliterate" button** (or press Enter)
-   - The button shows a language icon: <i class="fas fa-language"></i>
-   - A dialog appears showing "Transliterating..."
-4. **Result appears in "New Name (Full)" field**
-   - Format: `English name | ಕನ್ನಡ ಹೆಸರು`
-   - Example: `Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್`
-5. **Optional: Edit the Kannada text** if needed
-6. **Click Rename** to save the bilingual name
+   - The button shows a language icon: 🌐
+   - The "New Name (Full)" field is pre-filled with: `Sapna Book House | `
+4. **Type or paste the Kannada text** in the "New Name (Full)" field
+   - The cursor is already positioned after the pipe `|`
+   - Use the Kannada IME tool (already enabled) to type
+   - Or paste Kannada text if you have it
+   - Example result: `Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್`
+5. **Click Rename** to save the bilingual name
 
 ### Keyboard Shortcut
 
 - Type the English name in the "New Name (English)" field
-- Press **Enter** to auto-trigger transliteration
-- No need to click the button!
+- Press **Enter** to auto-fill the field and position cursor
+- Start typing Kannada immediately using the IME
+- No need to manually click the button or position cursor!
 
 ## What It Does
 
-### Transliteration
+### Transliteration Helper
 
-Converts English text to Kannada using Google's Transliteration API:
+The "Transliterate" button helps you create bilingual names:
+
+1. Pre-fills the "New Name (Full)" field with `English name | `
+2. Positions the cursor after the pipe
+3. Activates the Kannada IME for typing
+4. You then type or paste the Kannada text
 
 ```
-Input:  "Abhinava"
-Output: "Sapna Book House | ಅಭಿನವ"
+Before: "Sapna Book House" (English only)
+              ↓ Click Transliterate
+After: "Sapna Book House | " (ready for Kannada)
+              ↓ Type/Paste Kannada
+Result: "Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್" (bilingual)
 ```
 
 ### Bilingual Names
@@ -80,7 +90,7 @@ Penguin Random House | ಪೆಂಗ್ವಿನ್ ರ್ಯಾಂಡಮ್ ಹ�
 
 ## How It Works (Technical)
 
-### JavaScript API
+### JavaScript Implementation
 
 The feature uses `transliterateAndFill()` function:
 
@@ -89,21 +99,23 @@ The feature uses `transliterateAndFill()` function:
 transliterateAndFill('Sapna Book House', 'renameNewName');
 
 // Fills the field with:
-// "Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್"
+// "Sapna Book House | "
+// And positions cursor after the pipe for Kannada entry
 ```
 
-### Google Transliteration API
+### Kannada IME
 
-- **Service**: Google Transliteration API (`google.language.transliterate`)
-- **Language**: Kannada (language code: `kn`)
-- **Loading**: Loaded automatically via `google-transliteration.js`
+- **IME Tool**: Kannada Input Method Editor (built into the app)
+- **Activation**: Auto-enabled when field is focused
+- **How**: You type English characters, it converts to Kannada
+- **Example**: Type "sapna" → shows "ಸಪ್ನ" as suggestion
 
-### Error Handling
+### No External API Required
 
-If transliteration fails:
-- The English text is still placed in the field
-- You can manually add the Kannada text
-- Or just save the English-only name
+- Uses local IME tool (no internet needed for typing)
+- Can type or paste Kannada text
+- Fully functional even without external services
+- More reliable than API-dependent solutions
 
 ## Tips & Best Practices
 
@@ -131,23 +143,25 @@ If transliteration fails:
 
 ### Common Issues
 
-#### Issue: "Transliteration failed - enter manually"
+#### Issue: Field shows "English name | " but I can't type Kannada
 
-- Google API may not be loaded yet
-- **Solution**: Wait a few seconds and try again
-- **Alternative**: Type the Kannada text manually
+- The Kannada IME might not be active
+- **Solution**: Click in the field again to activate IME
+- **Check**: Look for IME indicator in the field
+- **Alternate**: Click the language button in the IME panel to switch to Kannada
 
-#### Issue: Kannada text looks wrong
+#### Issue: I see a cursor but nothing happens when I type
 
-- Google may have transliterated incorrectly
-- **Solution**: Manually fix the Kannada text in the field
-- **Example**: "Sapna" might be "ಸಪ್ನ" instead of "ಸಾಪ್ನ"
+- The IME might be disabled
+- **Solution**: Check if IME is active (should show "Kannada" indicator)
+- **Activate**: Click the IME toggle button or press Ctrl+G
+- **Alternative**: Copy and paste Kannada text instead
 
-#### Issue: Button is disabled/unresponsive
+#### Issue: Button doesn't respond
 
-- JavaScript may not have loaded
+- JavaScript may not have loaded properly
 - **Solution**: Refresh the page and try again
-- **Check**: Open DevTools (F12) and check console for errors
+- **Check**: Open DevTools (F12 → Console) for errors
 
 ## Frequently Asked Questions
 
@@ -182,16 +196,14 @@ If transliteration fails:
 
 ### Q: Is transliteration instant?
 
-**A**: Usually yes (1-2 seconds), but:
-- First time loads Google API (slower, ~5 seconds)
-- Subsequent transliterations are faster
-- Network latency may affect speed
+**A**: Yes, the button instantly pre-fills the field and positions the cursor. Then you type Kannada at your own pace using the IME tool.
 
 ## Requirements
 
-- **Internet Connection**: Required to call Google Transliteration API
+- **No Internet Required**: Works completely offline (uses local IME)
 - **Modern Browser**: Chrome, Firefox, Safari, Edge (all recent versions)
-- **JavaScript Enabled**: Required for transliteration to work
+- **JavaScript Enabled**: Required for the feature to work
+- **Kannada Keyboard/IME**: System should support Kannada input (pre-configured)
 
 ## Browser Compatibility
 
