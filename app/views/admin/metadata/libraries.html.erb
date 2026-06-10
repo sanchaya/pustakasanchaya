@@ -86,15 +86,15 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label">Current Name</label>
+         <div class="mb-3">
+          <label class="form-label">Current Name (English)</label>
           <input type="text" id="renameOldName" class="form-control" readonly>
         </div>
         <div class="mb-3">
-          <label class="form-label">New Name</label>
-          <textarea id="renameNewName" class="form-control" rows="3" placeholder="Type English name here&#10;Auto-transliteration will appear as:&#10;English | ಕನ್ನಡ"></textarea>
+          <label class="form-label">New Name (Kannada)</label>
+          <input type="text" id="renameNewName" class="form-control" readonly>
           <small class="text-muted d-block mt-1">
-            <i class="fas fa-magic"></i> Type English name → Auto-transliterates to Kannada in seconds
+            <i class="fas fa-magic"></i> Automatically transliterated to Kannada
           </small>
         </div>
         <div id="renameError" class="alert alert-danger d-none" role="alert"></div>
@@ -192,47 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
   renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
   mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
   mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
-
-  // Auto-transliteration on input
-  var transliterationTimeout;
-  document.addEventListener('input', function(e) {
-    if (e.target && e.target.id === 'renameNewName') {
-      clearTimeout(transliterationTimeout);
-      
-      var fullText = e.target.value;
-      var lines = fullText.split('\n');
-      var englishText = lines[0].trim();
-      
-      console.log('User typed:', englishText);
-      
-      if (!englishText || englishText.length < 2) {
-        return;
-      }
-      
-      // Already has transliteration separator?
-      if (englishText.indexOf('|') > -1) {
-        return; // User is editing result
-      }
-      
-      // Auto-transliterate after 1 second of inactivity
-      transliterationTimeout = setTimeout(function() {
-        console.log('Triggering transliteration for:', englishText);
-        
-        performTransliteration(englishText, function(kannadaText) {
-          console.log('Transliteration result:', kannadaText);
-          
-          if (kannadaText) {
-            var result = englishText + ' | ' + kannadaText;
-          } else {
-            var result = englishText + ' | (transliteration pending)';
-          }
-          
-          console.log('Setting textarea to:', result);
-          e.target.value = result;
-        });
-      }, 1000);
-    }
-  });
 
   // Use event delegation instead of direct listeners
   document.addEventListener('click', function(e) {
@@ -388,12 +347,12 @@ function openRenameModal(itemName) {
     performTransliteration(itemName, function(kannadaText) {
       console.log('Transliteration result:', kannadaText);
       if (kannadaText) {
-        var result = itemName + ' | ' + kannadaText;
+        document.getElementById('renameNewName').value = kannadaText;
+        console.log('Auto-populated new name (Kannada only):', kannadaText);
       } else {
-        var result = itemName;
+        document.getElementById('renameNewName').value = itemName;
+        console.log('Transliteration failed, using original:', itemName);
       }
-      document.getElementById('renameNewName').value = result;
-      console.log('Auto-populated new name:', result);
     });
     
     // Focus on name field for convenience
