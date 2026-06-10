@@ -101,6 +101,7 @@
       return;
     }
 
+    const row = button.closest('tr');
     console.log('Starting undo for edit:', editId);
 
     fetch('<%= admin_corrections_path %>', {
@@ -118,7 +119,7 @@
       if (!response.ok) {
         return response.text().then(text => {
           console.error('Response text:', text);
-          throw new Error(`HTTP error! status: ${response.status} - ${text}`);
+          throw new Error(`HTTP error! status: ${response.status}`);
         });
       }
       return response.json();
@@ -127,20 +128,43 @@
       console.log('Response data:', data);
       
       if (data && data.success) {
-        console.log('Undo successful, marking row and reloading...');
-        const row = button.closest('tr');
-        if (row) {
-          row.style.opacity = '0.5';
-          row.style.backgroundColor = '#f0f0f0';
-        }
-        button.disabled = false;
-        button.innerHTML = '<i class="fas fa-check"></i> Undone';
+        console.log('Undo successful!');
         
-        // Wait a bit then reload
+        // Immediately hide the row and show success
+        if (row) {
+          // Fade out and remove
+          row.style.transition = 'all 0.3s ease';
+          row.style.opacity = '0';
+          row.style.backgroundColor = '#d4edda';
+          row.style.pointerEvents = 'none';
+          
+          // Remove from DOM after fade
+          setTimeout(() => {
+            row.remove();
+            console.log('Row removed from DOM');
+          }, 300);
+        }
+        
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-check text-success"></i> Undone!';
+        
+        // Show success message
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
+          <strong>Success!</strong> Edit has been undone. The page will refresh in a moment.
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        `;
+        document.querySelector('.card-body').insertBefore(alertDiv, document.querySelector('table'));
+        
+        // Reload page after a delay
         setTimeout(() => {
           console.log('Reloading page...');
           location.reload();
-        }, 1500);
+        }, 2000);
       } else {
         const errorMsg = data && data.error ? data.error : 'Unknown error';
         console.error('Undo failed:', errorMsg);
