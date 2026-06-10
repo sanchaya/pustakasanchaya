@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     post '/duplicates/merge' => 'duplicates#merge', as: :merge_duplicates
     
     get '/corrections' => 'corrections#index', as: :corrections
+    delete '/corrections' => 'corrections#destroy', as: :destroy_correction
     get '/audit-log' => 'corrections#audit_log', as: :audit_log
     
     get '/authors' => 'metadata#authors', as: :authors

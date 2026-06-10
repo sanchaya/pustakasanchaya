@@ -93,15 +93,28 @@
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Undoing...';
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfToken) {
+      alert('Error: CSRF token not found. Please refresh the page.');
+      button.disabled = false;
+      button.innerHTML = '<i class="fas fa-undo"></i> Undo';
+      return;
+    }
+
     fetch('<%= admin_corrections_path %>', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+        'X-CSRF-Token': csrfToken.content
       },
       body: JSON.stringify({ edit_id: editId })
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
       if (data.success) {
         button.closest('tr').style.opacity = '0.5';
@@ -115,6 +128,12 @@
         button.disabled = false;
         button.innerHTML = '<i class="fas fa-undo"></i> Undo';
       }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Error: ' + error.message);
+      button.disabled = false;
+      button.innerHTML = '<i class="fas fa-undo"></i> Undo';
     });
   }
 </script>
