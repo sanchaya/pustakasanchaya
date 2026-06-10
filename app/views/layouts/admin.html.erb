@@ -395,13 +395,14 @@
     </div>
   </div>
 
-  <%= javascript_include_tag "admin" %>
-  <script>
-  $(function() {
-    $('.kan-ime').ime();
-    $('.kan-ime').on('imeActivate', function() {
-      $(this).closest('.input-group, .kan-ime-wrapper').addClass('ime-active');
-    });
+   <%= javascript_include_tag "admin" %>
+   <%= javascript_include_tag "google-transliteration" %>
+   <script>
+   $(function() {
+     $('.kan-ime').ime();
+     $('.kan-ime').on('imeActivate', function() {
+       $(this).closest('.input-group, .kan-ime-wrapper').addClass('ime-active');
+     });
   });
   </script>
 </body>

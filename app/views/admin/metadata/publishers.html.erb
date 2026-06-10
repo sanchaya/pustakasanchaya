@@ -91,10 +91,21 @@
           <input type="text" id="renameOldName" class="form-control" readonly>
         </div>
         <div class="mb-3">
-          <label class="form-label">New Name</label>
-          <div class="kan-ime-wrapper">
-            <input type="text" id="renameNewName" class="form-control" placeholder="Enter new publisher name">
+          <label class="form-label">New Name (English)</label>
+          <div class="input-group">
+            <input type="text" id="renameNewNameEnglish" class="form-control" placeholder="Enter English name">
+            <button class="btn btn-outline-info" type="button" id="transliterateBtn" title="Transliterate to Kannada">
+              <i class="fas fa-language"></i> Transliterate
+            </button>
           </div>
+          <small class="text-muted d-block mt-1">Click "Transliterate" to convert English to Kannada</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">New Name (Full)</label>
+          <div class="kan-ime-wrapper">
+            <input type="text" id="renameNewName" class="form-control" placeholder="English name | ಕನ್ನಡ ಹೆಸರು">
+          </div>
+          <small class="text-muted">Format: English | ಕನ್ನಡ (both names are optional)</small>
         </div>
         <div id="renameError" class="alert alert-danger d-none" role="alert"></div>
         <div id="renameSuccess" class="alert alert-success d-none" role="alert"></div>
@@ -191,6 +202,26 @@ document.addEventListener('DOMContentLoaded', function() {
   renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
   mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
   mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
+
+  // Transliteration button handler
+  document.getElementById('transliterateBtn').addEventListener('click', function() {
+    var englishName = document.getElementById('renameNewNameEnglish').value.trim();
+    if (!englishName) {
+      alert('Please enter an English name first');
+      return;
+    }
+    
+    // Call transliteration function
+    transliterateAndFill(englishName, 'renameNewName');
+  });
+
+  // Also allow Enter key in English name field to trigger transliteration
+  document.getElementById('renameNewNameEnglish').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('transliterateBtn').click();
+    }
+  });
 
   // Use event delegation instead of direct listeners
   document.addEventListener('click', function(e) {
@@ -322,6 +353,7 @@ function submitMergeMultiple() {
 function openRenameModal(itemName) {
   try {
     document.getElementById('renameOldName').value = itemName;
+    document.getElementById('renameNewNameEnglish').value = '';
     document.getElementById('renameNewName').value = '';
     document.getElementById('renameError').classList.add('d-none');
     document.getElementById('renameSuccess').classList.add('d-none');
@@ -340,6 +372,9 @@ function openRenameModal(itemName) {
     modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    
+    // Focus on English name field for convenience
+    document.getElementById('renameNewNameEnglish').focus();
   } catch(e) {
     console.error('Error opening rename modal:', e);
   }
