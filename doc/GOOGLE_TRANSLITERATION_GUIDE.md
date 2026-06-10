@@ -1,161 +1,174 @@
-# Kannada Phonetic Transliteration Feature Guide
+# Kannada IME Rename Feature Guide
 
 ## Overview
 
-The Kannada Transliteration feature automatically converts English names to Kannada (script) when renaming publishers, authors, and libraries. The workflow is simple and automatic—no manual entry required.
-
-**Note:** Transliteration uses phonetic English-to-Kannada mapping (not character-by-character conversion).
+When renaming publishers, authors, and libraries, you can now type in either English or Kannada script using the integrated Kannada IME (Input Method Editor). This allows you to:
+- Keep English names as-is
+- Create bilingual names (e.g., "Sahitya Akademi" or "ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ")
+- Type in any language/script combination
 
 ## Where to Use
 
-Transliteration is available when renaming:
+The Kannada IME is available when renaming:
 - **Admin > Manage Publishers**
 - **Admin > Manage Authors**
 - **Admin > Manage Libraries**
 
 ## How to Use
 
-### Simple 2-Click Workflow
+### Simple Workflow
 
 1. **Click Rename** on any publisher, author, or library
-2. **Review the auto-transliterated Kannada name** that appears instantly
-3. **Click Rename** to confirm (or Cancel to skip)
+2. **Current Name** field shows the existing name
+3. **New Name** field is ready for input with Kannada IME enabled
+4. **Type the new name** using:
+   - English text (typed directly)
+   - Kannada script (using Kannada IME)
+   - Or any combination
+5. **Click Rename** to save
 
-That's it! No typing, no waiting, no copy-paste.
+### Using Kannada IME
 
-### What You'll See
+The Kannada IME is automatically available in the "New Name" field:
 
-**Rename Modal:**
+**To activate Kannada IME:**
+- Start typing in the field
+- The IME will activate (you'll see visual indicator)
+- Type using standard Kannada IME rules
+
+**To deactivate Kannada IME:**
+- Press Escape or click outside the IME panel
+- Return to typing English
+
+**Example:**
 ```
-Current Name (English): [Sahitya Akademi]
-New Name (Kannada):     [ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ]
+Field: [Sahitya Akademi - ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ]
 ```
 
-- **Current Name** (readonly): The existing English name
-- **New Name** (readonly): Auto-transliterated Kannada version
-- Both fields are read-only to prevent manual entry/copy-paste
+## Features
 
-### Behind the Scenes
+✅ **Kannada IME Support** - Full support for Kannada input  
+✅ **Flexible Input** - Mix English and Kannada as needed  
+✅ **No Auto-Conversion** - Full control over what you type  
+✅ **Manual Entry** - You decide what name to use  
+✅ **Bilingual Support** - Create multilingual names if desired  
 
-When you click Rename:
-1. System takes the current (English) name
-2. Instantly transliterates it to Kannada using phonetic mapping
-3. Displays the Kannada result for your review
-4. You either confirm or cancel
+## What Works
 
-## Technical Details
+### English Names
+- Type directly: "Sahitya Akademi"
+- No special handling needed
 
-### Transliteration Method
+### Kannada Names
+- Activate IME and type using standard Kannada input method
+- Result: "ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ"
 
-The system uses **phonetic mapping** rather than API calls:
-- Converts English phonetic spelling to Kannada script
-- No external API dependency (faster, more reliable, no network calls)
-- Maps common English letters/syllables to Kannada equivalents
-- Synchronous operation (instant results)
+### Bilingual Names (Optional)
+- Type both English and Kannada in the same field
+- Separate with space, dash, or pipes as desired
+- Example: "Sahitya Akademi | ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ"
 
-### Supported Mappings
-
-Common English-to-Kannada phonetic mappings:
-
-| English | Kannada | English | Kannada |
-|---------|---------|---------|---------|
-| ka | ಕ | pa | ಪ |
-| kha | ಖ | pha | ಫ |
-| ga | ಗ | ba | ಬ |
-| gha | ಘ | bha | ಭ |
-| cha | ಚ | ma | ಮ |
-| chha | ಛ | ya | ಯ |
-| ja | ಜ | ra | ರ |
-| jha | ಝ | la | ಲ |
-| nya | ಞ | va | ವ |
-| ta | ಟ | sha | ಶ |
-| tha | ಠ | shha | ಷ |
-| da | ಡ | sa | ಸ |
-| dha | ಢ | ha | ಹ |
-
-**Vowels:**
-- a → ಅ, aa → ಆ, i → ಇ, ee → ಈ, u → ಉ, oo → ಊ
-- e → ಎ, ei → ಏ, o → ಒ, oi → ಓ
-
-### Phonetic Transliteration Rules
-
-1. **Multi-character sequences matched first** (e.g., "kha" → ಖ before "ka" → ಕ)
-2. **Case-insensitive** - "SAHITYA" and "sahitya" produce the same result
-3. **Unmatched characters preserved** - spaces, numbers, punctuation passed through as-is
-4. **Instant processing** - no network latency, results appear immediately
-
-## What Works Well
-
-✅ Standard Indian publisher/author names (Sahitya, Akshar, Priya)  
-✅ Names with common Kannada consonants (ka, ga, ta, pa, etc.)  
-✅ Multi-word names (spaces preserved)  
-✅ Numbers and special characters (passed through)  
-
-## Known Limitations
-
-❌ Names with silent vowels or complex English phonetics  
-❌ Non-Latin characters already in the name  
-❌ Very short names or single letters  
-❌ Names with unusual spelling/pronunciation mismatch  
+### Abbreviations & Special Cases
+- Numbers, punctuation, special characters all supported
+- Type naturally as needed
 
 ## Examples
 
-| English Name | Transliterated to Kannada |
-|--------------|---------------------------|
+| Original Name | New Name (Examples) |
+|---------------|-------------------|
 | Sahitya Akademi | ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ |
 | Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್ |
-| Akshar Books | ಅಕ್ಷರ ಬುಕ್ಸ್ |
+| Akshar | ಅಕ್ಷರ |
 | Priya Publications | ಪ್ರಿಯ ಪಬ್ಲಿಕೇಶನ್ಸ್ |
-| Neelam Prakashan | ನೀಲಮ್ ಪ್ರಕಾಶನ್ |
+| Veeraloka Books | ವೀರಲೋಕ ಬುಕ್ಸ್ |
+
+## Kannada IME Rules
+
+The Kannada IME follows standard ITRANS/phonetic rules:
+
+### Basic Consonants
+- k → ಕ, g → ಗ, ch → ಚ, j → ಜ, t → ಟ, d → ಡ, p → ಪ, b → ಬ, m → ಮ, y → ಯ, r → ರ, l → ಲ, v → ವ, sh → ಶ, s → ಸ, h → ಹ, n → ನ
+
+### Vowels
+- a → ಅ, aa → ಆ, i → ಇ, ii → ಈ, u → ಉ, uu → ಊ, e → ಎ, ee → ಏ, o → ಒ, oo → ಓ
+
+### Consonant Clusters
+- kh → ಖ, gh → ಘ, ch → ಚ, chh → ಛ, jh → ಝ, th → ಠ, dh → ಢ, bh → ಭ, ph → ಫ, sh → ಶ, sh → ಷ
+
+**Note:** IME behavior may vary based on system settings and the specific IME implementation.
 
 ## Troubleshooting
 
-### "Kannada name looks wrong"
+### IME Not Activating
+1. Click on the "New Name" field
+2. The IME should activate automatically
+3. If not, check your system's IME settings
 
-If the transliteration doesn't look right, the issue is likely:
-- **English spelling mismatch**: The phonetic approach assumes standard English spelling
-- **Silent letters**: Words with silent consonants won't transliterate correctly
-- **Unusual vowel sounds**: Complex English phonetics may not map perfectly
+### Can't type in Kannada
+- Ensure Kannada IME is installed on your system
+- Check if IME is properly configured
+- Try clicking the field again and typing
 
-### "Can I use a different Kannada spelling?"
+### Can't switch between English and Kannada
+- Press Escape to exit IME mode
+- Type English normally
+- Click field again to activate IME for Kannada
 
-Currently, no—the field is read-only to prevent manual entry. This is by design to ensure consistency. If you need custom spelling, contact admin.
-
-### "What if the name is already partially in Kannada?"
-
-The system expects English input. If the name is already in Kannada or mixed, it will transliterate character-by-character (which may produce unexpected results). Use English-only names for best results.
-
-## FAQ
-
-**Q: Is transliteration required?**  
-A: Yes—when you rename a publisher/author/library, the English name is automatically transliterated to Kannada. You cannot skip this step.
-
-**Q: Can I edit the Kannada result before saving?**  
-A: No—the new name field is read-only. The system prevents manual editing to ensure consistency.
-
-**Q: How accurate is the transliteration?**  
-A: ~85-90% accurate for standard Indian names. Accuracy depends on English spelling phonetics.
-
-**Q: Does it support other Indian languages?**  
-A: Currently only Kannada. Other language support can be added in future versions.
-
-**Q: What if I want to keep the English name as-is?**  
-A: You can click Cancel to skip the rename entirely. The original English name is preserved.
-
-**Q: Will renamed publishers affect existing books?**  
-A: Yes—renaming a publisher updates the publisher reference for all books with that publisher.
+### Text looks wrong after typing
+- IME display is based on system font rendering
+- If font doesn't support Kannada, text may appear incorrect
+- Try refreshing the page or using a different browser
 
 ## Best Practices
 
-1. **Use clear, standard English spelling** - Spell names as they would be pronounced
-2. **Use full names** - E.g., "Sahitya Akademi" instead of just "Sahitya"
-3. **Keep consistency** - Similar names should have similar transliterations
-4. **Review before confirming** - Check the Kannada result makes sense before clicking Rename
-5. **Don't use mixed scripts** - Keep to English-only names for transliteration
+1. **Decide on naming convention first** - Will you use English, Kannada, or both?
+2. **Be consistent** - Similar entities should have similar naming patterns
+3. **Test after typing** - Review the result before clicking Rename
+4. **Use proper spelling** - Correct English/Kannada spelling ensures proper indexing
+5. **Document your choices** - Note which entities use which naming convention
 
-## Technical Notes
+## Limitations
 
-- **No network calls**: Transliteration happens entirely in the browser using phonetic mapping
-- **Instant feedback**: Results appear immediately when you open the modal
-- **Deterministic**: Same input always produces same output
-- **Browser-based**: Works offline, no API dependency
+❌ **No auto-transliteration** - You must type the Kannada yourself  
+❌ **Depends on system IME** - Quality depends on OS/system configuration  
+❌ **No validation** - System accepts any input you provide  
+❌ **No suggestions** - No auto-complete or suggestions available  
+
+## FAQ
+
+**Q: Can I undo a rename?**  
+A: Yes—go to Admin > Corrections & Edits and click Undo on the incorrect rename.
+
+**Q: What if I make a typo?**  
+A: Click Rename again on the same item and fix the name.
+
+**Q: Can I use other scripts (Tamil, Telugu, etc.)?**  
+A: Yes, if you have those IMEs installed on your system and the field supports them.
+
+**Q: Do I have to use Kannada?**  
+A: No—you can keep names in English if you prefer.
+
+**Q: Will the name change affect existing books?**  
+A: Yes—all books with that publisher/author/library will be updated with the new name.
+
+**Q: Can I revert a rename?**  
+A: Yes—use the Undo feature in Corrections & Edits, or rename again with the old name.
+
+**Q: What's the best format for bilingual names?**  
+A: Use "English | ಕನ್ನಡ" format, but any format works. Be consistent across all names.
+
+## Tips for Success
+
+1. **Copy from reliable sources** - Use official publisher/author/library websites for correct names
+2. **Test on small batches first** - Rename a few test items before bulk operations
+3. **Keep audit trail** - The system logs all renames in Corrections & Edits for review
+4. **Use clear naming** - Avoid abbreviations unless necessary
+5. **Verify after rename** - Check that books still appear correctly with new names
+
+## Support
+
+For issues with:
+- **IME not working** - Check your system's language/input settings
+- **Rename not saving** - Check browser console for errors
+- **Text rendering** - Ensure your browser/OS supports Kannada fonts
+- **Other issues** - Contact admin with description of the problem
