@@ -91,19 +91,11 @@
           <input type="text" id="renameOldName" class="form-control" readonly>
         </div>
         <div class="mb-3">
-          <label class="form-label">New Name (English)</label>
-          <div class="input-group">
-            <input type="text" id="renameNewNameEnglish" class="form-control" placeholder="Enter English name" autocomplete="off">
-            <button class="btn btn-outline-info" type="button" id="transliterateBtn" title="Auto-transliterate to Kannada">
-              <i class="fas fa-magic"></i> Transliterate
-            </button>
-          </div>
-          <small class="text-muted d-block mt-1">Enter English name and click "Transliterate" to auto-convert to Kannada</small>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">New Name (Auto-generated)</label>
-          <input type="text" id="renameNewName" class="form-control bg-light" placeholder="Result will appear here: English | ಕನ್ನಡ" readonly>
-          <small class="text-muted">Auto-generated: English name + Kannada transliteration</small>
+          <label class="form-label">New Name</label>
+          <textarea id="renameNewName" class="form-control" rows="3" placeholder="Type English name here&#10;Auto-transliteration will appear as:&#10;English | ಕನ್ನಡ"></textarea>
+          <small class="text-muted d-block mt-1">
+            <i class="fas fa-magic"></i> Type English name → Auto-transliterates to Kannada in seconds
+          </small>
         </div>
         <div id="renameError" class="alert alert-danger d-none" role="alert"></div>
         <div id="renameSuccess" class="alert alert-success d-none" role="alert"></div>
@@ -201,46 +193,26 @@ document.addEventListener('DOMContentLoaded', function() {
   mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
   mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
 
-  // Transliteration button handler
-  if (document.getElementById('transliterateBtn')) {
-    document.getElementById('transliterateBtn').addEventListener('click', function() {
-      var englishName = document.getElementById('renameNewNameEnglish').value.trim();
-      if (!englishName) {
-        alert('Please enter an English name first');
-        return;
-      }
-      
-      // Call transliteration function
-      transliterateAndFill(englishName, 'renameNewName');
-    });
-
-    // Auto-trigger transliteration when user finishes typing (after 1 second of inactivity)
-    var transliterationTimeout;
-    document.getElementById('renameNewNameEnglish').addEventListener('input', function() {
+  // Auto-transliteration on input
+  var transliterationTimeout;
+  document.addEventListener('input', function(e) {
+    if (e.target && e.target.id === 'renameNewName') {
       clearTimeout(transliterationTimeout);
       
-      var englishName = this.value.trim();
-      if (!englishName) {
-        document.getElementById('renameNewName').value = '';
+      var englishText = e.target.value.split('\n')[0].trim(); // Get first line as English
+      
+      if (!englishText) {
+        e.target.value = '';
         return;
       }
       
-      // Auto-trigger transliteration after user stops typing
+      // Auto-transliterate after 800ms of inactivity
       transliterationTimeout = setTimeout(function() {
-        console.log('Auto-triggering transliteration after typing stopped');
-        transliterateAndFill(englishName, 'renameNewName');
+        console.log('Auto-transliterating: ' + englishText);
+        autoTransliterate(englishText, 'renameNewName');
       }, 800);
-    });
-
-    // Also allow Enter key to manually trigger transliteration
-    document.getElementById('renameNewNameEnglish').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        clearTimeout(transliterationTimeout);
-        document.getElementById('transliterateBtn').click();
-      }
-    });
-  }
+    }
+  });
 
   // Use event delegation instead of direct listeners
   document.addEventListener('click', function(e) {
@@ -372,7 +344,6 @@ function submitMergeMultiple() {
 function openRenameModal(authorName) {
   try {
     document.getElementById('renameOldName').value = authorName;
-    document.getElementById('renameNewNameEnglish').value = '';
     document.getElementById('renameNewName').value = '';
     document.getElementById('renameError').classList.add('d-none');
     document.getElementById('renameSuccess').classList.add('d-none');
@@ -392,8 +363,8 @@ function openRenameModal(authorName) {
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     
-    // Focus on English name field for convenience
-    document.getElementById('renameNewNameEnglish').focus();
+    // Focus on name field for convenience
+    document.getElementById('renameNewName').focus();
   } catch(e) {
     console.error('Error opening rename modal:', e);
   }

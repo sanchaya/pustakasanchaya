@@ -1,9 +1,9 @@
-// Kannada Transliteration Helper
-// Automatic transliteration from English to Kannada
-// Primary: Google Transliteration, Fallback: Aksharamukha API
+// Kannada Auto-Transliteration
+// Automatically transliterates English to Kannada as you type
 
-function transliterateAndFill(englishText, targetInputId) {
+function autoTransliterate(englishText, targetInputId) {
   if (!englishText || englishText.trim() === '') {
+    document.getElementById(targetInputId).value = '';
     return;
   }
 
@@ -14,84 +14,46 @@ function transliterateAndFill(englishText, targetInputId) {
   }
 
   // Show loading state
-  targetInput.placeholder = 'Transliterating...';
-  targetInput.disabled = true;
+  targetInput.value = englishText + ' | Transliterating...';
 
-  console.log('Starting transliteration for: ' + englishText);
+  console.log('Transliterating: ' + englishText);
 
-  // Try Google Transliteration first
-  transliterateWithGoogle(englishText, function(kannadaText) {
+  // Try Aksharamukha API first (more reliable)
+  transliterateWithAksharamukha(englishText, function(kannadaText) {
     if (kannadaText) {
-      console.log('Google transliteration successful: ' + kannadaText);
+      console.log('Aksharamukha transliteration successful: ' + kannadaText);
       targetInput.value = englishText + ' | ' + kannadaText;
-      targetInput.placeholder = 'Bilingual name ready';
-      targetInput.disabled = false;
-      targetInput.focus();
     } else {
-      console.log('Google transliteration failed, trying Aksharamukha API');
-      // Fallback to Aksharamukha API
-      transliterateWithAksharamukha(englishText, function(kannadaText) {
-        if (kannadaText) {
-          console.log('Aksharamukha transliteration successful: ' + kannadaText);
-          targetInput.value = englishText + ' | ' + kannadaText;
-          targetInput.placeholder = 'Bilingual name ready (via Aksharamukha)';
-          targetInput.disabled = false;
-          targetInput.focus();
+      console.log('Aksharamukha failed, trying Google');
+      // Fallback to Google
+      transliterateWithGoogle(englishText, function(googleResult) {
+        if (googleResult) {
+          console.log('Google transliteration successful: ' + googleResult);
+          targetInput.value = englishText + ' | ' + googleResult;
         } else {
-          console.warn('Both transliteration methods failed');
-          // Just use English name
-          targetInput.value = englishText;
-          targetInput.placeholder = 'English only (transliteration unavailable)';
-          targetInput.disabled = false;
-          targetInput.focus();
+          console.warn('All transliteration methods failed');
+          targetInput.value = englishText + ' | (transliteration unavailable)';
         }
       });
     }
   });
 }
 
-// Google Transliteration (if available)
-function transliterateWithGoogle(englishText, callback) {
-  try {
-    if (typeof google !== 'undefined' && google.inputtools) {
-      google.inputtools.transliterate(
-        [englishText],
-        'en',
-        'kn',
-        function(result) {
-          if (result && result.length > 0 && result[0].length > 0) {
-            callback(result[0][0]);
-          } else {
-            callback(null);
-          }
-        }
-      );
-    } else {
-      console.log('Google Input Tools not available');
-      callback(null);
-    }
-  } catch (e) {
-    console.error('Google transliteration error:', e);
-    callback(null);
-  }
-}
-
-// Aksharamukha API transliteration (fallback)
+// Aksharamukha API transliteration
 function transliterateWithAksharamukha(englishText, callback) {
   try {
     var apiUrl = 'https://www.aksharamukha.appspot.com/api/transliterate';
     var params = {
       'text': englishText,
-      'to': 'kn_KN', // Kannada script
-      'from': 'en_US' // English
+      'to': 'kn_KN',
+      'from': 'en_US'
     };
 
-    // Build query string
     var queryString = Object.keys(params).map(function(key) {
       return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
     }).join('&');
 
-    console.log('Calling Aksharamukha API...');
+    console.log('Calling Aksharamukha API for: ' + englishText);
 
     fetch(apiUrl + '?' + queryString, {
       method: 'GET',
@@ -116,24 +78,37 @@ function transliterateWithAksharamukha(englishText, callback) {
       }
     })
     .catch(function(error) {
-      console.error('Aksharamukha API error:', error);
+      console.error('Aksharamukha error:', error);
       callback(null);
     });
   } catch (e) {
-    console.error('Aksharamukha transliteration error:', e);
+    console.error('Aksharamukha error:', e);
     callback(null);
   }
 }
 
-// Load Google Input Tools on page load
-document.addEventListener('DOMContentLoaded', function() {
-  // Optionally load Google Input Tools
-  if (typeof google === 'undefined') {
-    var script = document.createElement('script');
-    script.src = 'https://www.google.com/inputtools/js/lang_kn.js';
-    script.onerror = function() {
-      console.log('Google Input Tools not available (OK - will use Aksharamukha)');
-    };
-    document.head.appendChild(script);
+// Google transliteration fallback
+function transliterateWithGoogle(englishText, callback) {
+  try {
+    if (typeof google !== 'undefined' && google.inputtools) {
+      google.inputtools.transliterate(
+        [englishText],
+        'en',
+        'kn',
+        function(result) {
+          if (result && result.length > 0 && result[0].length > 0) {
+            callback(result[0][0]);
+          } else {
+            callback(null);
+          }
+        }
+      );
+    } else {
+      console.log('Google Input Tools not available');
+      callback(null);
+    }
+  } catch (e) {
+    console.error('Google transliteration error:', e);
+    callback(null);
   }
-});
+}
