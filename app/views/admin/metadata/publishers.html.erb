@@ -199,18 +199,38 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.target && e.target.id === 'renameNewName') {
       clearTimeout(transliterationTimeout);
       
-      var englishText = e.target.value.split('\n')[0].trim(); // Get first line as English
+      var fullText = e.target.value;
+      var lines = fullText.split('\n');
+      var englishText = lines[0].trim();
       
-      if (!englishText) {
-        e.target.value = '';
+      console.log('User typed:', englishText);
+      
+      if (!englishText || englishText.length < 2) {
         return;
       }
       
-      // Auto-transliterate after 800ms of inactivity
+      // Already has transliteration separator?
+      if (englishText.indexOf('|') > -1) {
+        return; // User is editing result
+      }
+      
+      // Auto-transliterate after 1 second of inactivity
       transliterationTimeout = setTimeout(function() {
-        console.log('Auto-transliterating: ' + englishText);
-        autoTransliterate(englishText, 'renameNewName');
-      }, 800);
+        console.log('Triggering transliteration for:', englishText);
+        
+        performTransliteration(englishText, function(kannadaText) {
+          console.log('Transliteration result:', kannadaText);
+          
+          if (kannadaText) {
+            var result = englishText + ' | ' + kannadaText;
+          } else {
+            var result = englishText + ' | (transliteration pending)';
+          }
+          
+          console.log('Setting textarea to:', result);
+          e.target.value = result;
+        });
+      }, 1000);
     }
   });
 
