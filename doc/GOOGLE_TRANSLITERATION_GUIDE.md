@@ -2,43 +2,46 @@
 
 ## Overview
 
-The Kannada Transliteration feature automatically converts English names to Kannada (script) when renaming publishers, authors, and libraries. This creates bilingual names (English | ಕನ್ನಡ) for better searchability and localization.
+The Kannada Transliteration feature automatically converts English names to Kannada (script) when renaming publishers, authors, and libraries. The workflow is simple and automatic—no manual entry required.
 
 **Note:** Transliteration uses phonetic English-to-Kannada mapping (not character-by-character conversion).
 
 ## Where to Use
 
-Transliteration is available in the **Rename** modals for:
+Transliteration is available when renaming:
 - **Admin > Manage Publishers**
 - **Admin > Manage Authors**
 - **Admin > Manage Libraries**
 
 ## How to Use
 
-### Basic Workflow
+### Simple 2-Click Workflow
 
-1. **Click the Rename button** for any publisher, author, or library
-2. **Type the English name** in the textarea field
-   - Example: `Sapna Book House`
-3. **Wait 1 second** for auto-transliteration
-   - The system automatically transliterates after you stop typing
-4. **Result appears below the English text** with `|` separator
-   - Shows: `Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್`
-5. **Click Rename** to save the bilingual name
+1. **Click Rename** on any publisher, author, or library
+2. **Review the auto-transliterated Kannada name** that appears instantly
+3. **Click Rename** to confirm (or Cancel to skip)
 
-### How It Works
+That's it! No typing, no waiting, no copy-paste.
 
-- **English input**: Type in Latin script
-- **Wait 1 second**: System waits for you to finish typing
-- **Auto-transliterate**: Phonetic conversion English → Kannada
-- **Format**: `English | ಕನ್ನಡ` (both on same line)
+### What You'll See
 
-### Example
-
+**Rename Modal:**
 ```
-Input:  Sahitya Akademi
-Result: Sahitya Akademi | ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ
+Current Name (English): [Sahitya Akademi]
+New Name (Kannada):     [ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ]
 ```
+
+- **Current Name** (readonly): The existing English name
+- **New Name** (readonly): Auto-transliterated Kannada version
+- Both fields are read-only to prevent manual entry/copy-paste
+
+### Behind the Scenes
+
+When you click Rename:
+1. System takes the current (English) name
+2. Instantly transliterates it to Kannada using phonetic mapping
+3. Displays the Kannada result for your review
+4. You either confirm or cancel
 
 ## Technical Details
 
@@ -46,89 +49,113 @@ Result: Sahitya Akademi | ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ
 
 The system uses **phonetic mapping** rather than API calls:
 - Converts English phonetic spelling to Kannada script
-- No external API dependency (faster, more reliable)
+- No external API dependency (faster, more reliable, no network calls)
 - Maps common English letters/syllables to Kannada equivalents
+- Synchronous operation (instant results)
 
 ### Supported Mappings
 
-Common English-to-Kannada mappings:
+Common English-to-Kannada phonetic mappings:
 
-| English | Kannada |
-|---------|---------|
-| ka, kha | ಕ, ಖ |
-| ga, gha | ಗ, ಘ |
-| cha, chha | ಚ, ಛ |
-| ja, jha | ಜ, ಝ |
-| ta, tha | ಟ, ಠ |
-| da, dha | ಡ, ಢ |
-| pa, pha | ಪ, ಫ |
-| ba, bha | ಬ, ಭ |
-| ma | ಮ |
-| ya, ra, la, va | ಯ, ರ, ಲ, ವ |
-| a, aa, i, ee, u, oo | ಅ, ಆ, ಇ, ಈ, ಉ, ಊ |
+| English | Kannada | English | Kannada |
+|---------|---------|---------|---------|
+| ka | ಕ | pa | ಪ |
+| kha | ಖ | pha | ಫ |
+| ga | ಗ | ba | ಬ |
+| gha | ಘ | bha | ಭ |
+| cha | ಚ | ma | ಮ |
+| chha | ಛ | ya | ಯ |
+| ja | ಜ | ra | ರ |
+| jha | ಝ | la | ಲ |
+| nya | ಞ | va | ವ |
+| ta | ಟ | sha | ಶ |
+| tha | ಠ | shha | ಷ |
+| da | ಡ | sa | ಸ |
+| dha | ಢ | ha | ಹ |
+
+**Vowels:**
+- a → ಅ, aa → ಆ, i → ಇ, ee → ಈ, u → ಉ, oo → ಊ
+- e → ಎ, ei → ಏ, o → ಒ, oi → ಓ
 
 ### Phonetic Transliteration Rules
 
-1. **Multi-character sequences** are matched first (e.g., "kha" → ಖ before "ka" → ಕ)
-2. **Case-insensitive** - "SAPNA" and "sapna" produce the same result
-3. **Unmatched characters** are kept as-is (helpful for special characters, numbers, punctuation)
-4. **Spaces and punctuation** are preserved
+1. **Multi-character sequences matched first** (e.g., "kha" → ಖ before "ka" → ಕ)
+2. **Case-insensitive** - "SAHITYA" and "sahitya" produce the same result
+3. **Unmatched characters preserved** - spaces, numbers, punctuation passed through as-is
+4. **Instant processing** - no network latency, results appear immediately
 
-## Limitations & Notes
+## What Works Well
 
-### What Works Well
-- Standard Indian publisher/author names (Sahitya, Akshar, Priya)
-- Names with common Kannada consonants (ka, ga, ta, pa, etc.)
-- Multi-word names (spaces are preserved)
+✅ Standard Indian publisher/author names (Sahitya, Akshar, Priya)  
+✅ Names with common Kannada consonants (ka, ga, ta, pa, etc.)  
+✅ Multi-word names (spaces preserved)  
+✅ Numbers and special characters (passed through)  
 
-### What May Not Work Perfectly
-- Names with silent vowels or complex English phonetics
-- Non-Latin characters already in the name
-- Very short names or single letters
+## Known Limitations
 
-### Improving Results
+❌ Names with silent vowels or complex English phonetics  
+❌ Non-Latin characters already in the name  
+❌ Very short names or single letters  
+❌ Names with unusual spelling/pronunciation mismatch  
 
-If transliteration isn't perfect:
-1. **Manual editing**: You can manually edit the result before saving
-2. **Copy correct form**: If you know the correct Kannada spelling, paste it directly
-3. **Use alternate English spelling**: Different English spelling → different transliteration
+## Examples
+
+| English Name | Transliterated to Kannada |
+|--------------|---------------------------|
+| Sahitya Akademi | ಸಾಹಿತ್ಯ ಅಕಾದೇಮಿ |
+| Sapna Book House | ಸಪ್ನ ಬುಕ್ ಹೌಸ್ |
+| Akshar Books | ಅಕ್ಷರ ಬುಕ್ಸ್ |
+| Priya Publications | ಪ್ರಿಯ ಪಬ್ಲಿಕೇಶನ್ಸ್ |
+| Neelam Prakashan | ನೀಲಮ್ ಪ್ರಕಾಶನ್ |
 
 ## Troubleshooting
 
-### No transliteration appears
-- **Wait 1+ seconds** after typing for auto-trigger
-- **Check console** (F12 > Console tab) for errors
-- **Type at least 2 characters** before auto-trigger activates
+### "Kannada name looks wrong"
 
-### Transliteration looks wrong
-- **Manual override**: Click in the result area and edit directly before saving
-- **Report**: If consistent issue, report to admin with example name
+If the transliteration doesn't look right, the issue is likely:
+- **English spelling mismatch**: The phonetic approach assumes standard English spelling
+- **Silent letters**: Words with silent consonants won't transliterate correctly
+- **Unusual vowel sounds**: Complex English phonetics may not map perfectly
 
-### Special characters not working
-- Numbers, punctuation, hyphens are preserved as-is
-- Use hyphens, spaces, commas freely in names
+### "Can I use a different Kannada spelling?"
 
-## Best Practices
+Currently, no—the field is read-only to prevent manual entry. This is by design to ensure consistency. If you need custom spelling, contact admin.
 
-1. **Type naturally** - Spell names as they would be pronounced
-2. **Wait for auto-trigger** - Don't rush, let the system complete
-3. **Review before saving** - Check the result makes sense
-4. **Edit if needed** - Feel free to correct the Kannada if needed
-5. **Use consistency** - Similar names should have similar transliterations
+### "What if the name is already partially in Kannada?"
+
+The system expects English input. If the name is already in Kannada or mixed, it will transliterate character-by-character (which may produce unexpected results). Use English-only names for best results.
 
 ## FAQ
 
-**Q: Can I disable transliteration?**
-- A: Yes, just enter the name without waiting for auto-transliteration, then manually type the result
+**Q: Is transliteration required?**  
+A: Yes—when you rename a publisher/author/library, the English name is automatically transliterated to Kannada. You cannot skip this step.
 
-**Q: What if the transliteration is wrong?**
-- A: You can edit it manually before clicking "Rename"
+**Q: Can I edit the Kannada result before saving?**  
+A: No—the new name field is read-only. The system prevents manual editing to ensure consistency.
 
-**Q: Does it support other Indian languages?**
-- A: Currently only Kannada. Other language support can be added in future versions.
+**Q: How accurate is the transliteration?**  
+A: ~85-90% accurate for standard Indian names. Accuracy depends on English spelling phonetics.
 
-**Q: Is transliteration required?**
-- A: No - you can save English-only names or manually enter Kannada if you prefer
+**Q: Does it support other Indian languages?**  
+A: Currently only Kannada. Other language support can be added in future versions.
 
-**Q: How accurate is the transliteration?**
-- A: ~85-90% accurate for standard Indian names. Accuracy depends on English spelling phonetics.
+**Q: What if I want to keep the English name as-is?**  
+A: You can click Cancel to skip the rename entirely. The original English name is preserved.
+
+**Q: Will renamed publishers affect existing books?**  
+A: Yes—renaming a publisher updates the publisher reference for all books with that publisher.
+
+## Best Practices
+
+1. **Use clear, standard English spelling** - Spell names as they would be pronounced
+2. **Use full names** - E.g., "Sahitya Akademi" instead of just "Sahitya"
+3. **Keep consistency** - Similar names should have similar transliterations
+4. **Review before confirming** - Check the Kannada result makes sense before clicking Rename
+5. **Don't use mixed scripts** - Keep to English-only names for transliteration
+
+## Technical Notes
+
+- **No network calls**: Transliteration happens entirely in the browser using phonetic mapping
+- **Instant feedback**: Results appear immediately when you open the modal
+- **Deterministic**: Same input always produces same output
+- **Browser-based**: Works offline, no API dependency
