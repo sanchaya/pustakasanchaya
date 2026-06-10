@@ -87,14 +87,16 @@
       </div>
       <div class="modal-body">
          <div class="mb-3">
-          <label class="form-label">Current Name (English)</label>
+          <label class="form-label">Current Name</label>
           <input type="text" id="renameOldName" class="form-control" readonly>
         </div>
         <div class="mb-3">
-          <label class="form-label">New Name (Kannada)</label>
-          <input type="text" id="renameNewName" class="form-control" readonly>
+          <label class="form-label">New Name</label>
+          <div class="kan-ime-wrapper">
+            <input type="text" id="renameNewName" class="form-control kan-ime" placeholder="Type new name (English or Kannada)">
+          </div>
           <small class="text-muted d-block mt-1">
-            <i class="fas fa-magic"></i> Automatically transliterated to Kannada
+            <i class="fas fa-keyboard"></i> Use Kannada IME to type in Kannada script
           </small>
         </div>
         <div id="renameError" class="alert alert-danger d-none" role="alert"></div>
@@ -341,19 +343,6 @@ function openRenameModal(itemName) {
     modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    
-    // Auto-transliterate the current name and populate new name field
-    console.log('Auto-transliterating current name:', itemName);
-    performTransliteration(itemName, function(kannadaText) {
-      console.log('Transliteration result:', kannadaText);
-      if (kannadaText) {
-        document.getElementById('renameNewName').value = kannadaText;
-        console.log('Auto-populated new name (Kannada only):', kannadaText);
-      } else {
-        document.getElementById('renameNewName').value = itemName;
-        console.log('Transliteration failed, using original:', itemName);
-      }
-    });
     
     // Focus on name field for convenience
     document.getElementById('renameNewName').focus();
