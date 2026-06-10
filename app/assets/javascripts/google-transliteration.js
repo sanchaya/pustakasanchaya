@@ -4,29 +4,30 @@
 function performTransliteration(englishText, callback) {
   console.log('Starting transliteration for:', englishText);
   
-  // Try Aksharamukha API via JSONP
-  var apiUrl = 'https://www.aksharamukha.appspot.com/api/transliterate?text=' + 
-    encodeURIComponent(englishText) + '&from=en_US&to=kn_KN';
+  // Call local Rails endpoint (which proxies to Aksharamukha API)
+  var endpoint = '/admin/transliterate';
   
-  console.log('Calling API:', apiUrl);
+  console.log('Calling endpoint:', endpoint);
   
   // Use jQuery AJAX (available in Rails 4.2)
   jQuery.ajax({
-    url: apiUrl,
-    type: 'GET',
+    url: endpoint,
+    type: 'POST',
     dataType: 'json',
+    data: { text: englishText },
     timeout: 5000,
     success: function(data) {
       console.log('API response:', data);
       if (data && data.result) {
         callback(data.result);
       } else {
-        console.warn('No result in API response');
+        console.warn('No result in API response:', data);
         callback(null);
       }
     },
     error: function(xhr, status, error) {
-      console.error('Aksharamukha API error:', status, error);
+      console.error('Transliteration error:', status, error);
+      console.error('Response:', xhr.responseText);
       callback(null);
     }
   });

@@ -77,6 +77,8 @@ Rails.application.routes.draw do
     get '/suggested-merges' => 'metadata#suggested_merges', as: :suggested_merges
     post '/suggested-merges/apply' => 'metadata#apply_suggestion', as: :apply_suggestion
     post '/suggested-merges/dismiss' => 'metadata#dismiss_suggestion', as: :dismiss_suggestion
+    
+    post '/transliterate' => 'transliterations#transliterate', as: :transliterate
 
     get '/stores' => 'stores#index', as: :stores
     get '/stores/new' => 'stores#new', as: :new_store
