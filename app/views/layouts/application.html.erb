@@ -4,8 +4,11 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= content_for?(:title) ? yield(:title) : 'ಪುಸ್ತಕ ಸಂಚಯ - ಅಂತರ್ಜಾಲ ಕನ್ನಡ ಪುಸ್ತಕ ಪರಿವಿಡಿ' %></title>
-  <meta name="description" content="Discover and access a vast collection of Kannada books online with Pustaka Sanchaya. Search, explore, and connect with a rich digital library.">
+  <title><%= content_for?(:title) ? yield(:title) : 'ಪುಸ್ತಕ ಸಂಚಯ - Kannada Books Index | ಕನ್ನಡ ಪುಸ್ತಕಗಳ ಪರಿವಿಡಿ' %></title>
+  <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : 'ಪುಸ್ತಕ ಸಂಚಯ - Kannada Books Index. ಕನ್ನಡ ಪುಸ್ತಕಗಳ ಅಂತರ್ಜಾಲ ಸಂಗ್ರಹ. ಸಾವಿರಾರು ಕನ್ನಡ ಪುಸ್ತಕಗಳನ್ನು ಹುಡುಕಿ, ಅನ್ವೇಷಿಸಿ ಮತ್ತು ಓದಿ. Kannada Digital Books, Kannada Books Online, ಕನ್ನಡ ಡಿಜಿಟಲ್ ಪುಸ್ತಕಗಳು.' %>">
+  <meta name="keywords" content="<%= content_for?(:meta_keywords) ? yield(:meta_keywords) : 'Kannada Books Index, Kannada Digital Books, Kannada Books Online, Kannada Books, ಕನ್ನಡ ಪುಸ್ತಕಗಳು, ಕನ್ನಡ ಡಿಜಿಟಲ್ ಪುಸ್ತಕಗಳು, ಕನ್ನಡ ಪುಸ್ತಕಗಳ ಪರಿವಿಡಿ, Kannada Literature, Kannada Ebooks, ಕನ್ನಡ ಸಾಹಿತ್ಯ, Kannada Book Search, ಕನ್ನಡ ಪುಸ್ತಕ ಹುಡುಕು, Online Kannada Library, ಕನ್ನಡ ಗ್ರಂಥಾಲಯ' %>">
+  <% if content_for?(:noindex) %><meta name="robots" content="noindex"><% end %>
+  <link rel="canonical" href="<%= request.original_url %>">
   <link rel="icon" type="image/x-icon" href="<%= image_path('favicon.ico') %>">
   <%= csrf_meta_tags %>
   <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -27,12 +30,14 @@
             <span class="icon-bar"></span>
           </button>
           <a href="<%= root_path %> " class="navbar-brand">
-            <%= image_tag('pustaka-logo.png', class: 'header-logo-img', alt: 'ಪುಸ್ತಕ ಸಂಚಯ') %>
+            <%= image_tag('sanchaya-logo.png', class: 'header-logo-img', alt: 'ಪುಸ್ತಕ ಸಂಚಯ') %>
             <span class="header-logo-text"><%= t(:pustaka_sanchaya) %></span>
           </a>
           <div class="navbar-collapse collapse navbar-responsive-collapse">
             <ul class="nav navbar-nav">
               <li> <%= link_to t(:category), categories_path %> </li>
+              <li> <%= link_to 'ಲೇಖಕರು', authors_path %> </li>
+              <li> <%= link_to 'ಪ್ರಕಾಶಕರು', publishers_path %> </li>
               <li> <%= link_to 'ವಿಕಿ', '/wiki' %> </li>
               <li> <%= link_to 'ಮೂಲ', stores_path %> </li>
               <li> <%= link_to t(:about_us), '/about' %> </li>
