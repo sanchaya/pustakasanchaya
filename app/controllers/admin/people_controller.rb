@@ -1,16 +1,24 @@
 class Admin::PeopleController < ApplicationController
+  layout 'admin'
+  before_action :authorize_admin!
   skip_before_action :verify_authenticity_token
 
-  def index
+def index
     @role = params[:role]
+    @search_query = params[:search] || ''
     scope = Person.all
-    
+
     if @role.present?
       scope = scope.where("LOWER(occupation) = ?", @role.downcase)
     end
-    
-    @people = scope.order(:name).page(params[:page]).per(30)
-    
+
+    if @search_query.present?
+      q = @search_query
+      scope = scope.where("name LIKE ? OR name_kannada LIKE ? OR name_latin LIKE ?", "%#{q}%", "%#{q}%", "%#{q}%")
+    end
+
+    @people = Kaminari.paginate_array(scope.order(:name)).page(params[:page]).per(30)
+
     respond_to do |format|
       format.html { render :index }
       format.json { render json: @people }
@@ -70,65 +78,55 @@ class Admin::PeopleController < ApplicationController
     render json: { books: books.map { |b| { id: b.id, name: b.name, author: b.author } } }
   end
 
-  def rename
+def rename
     old_name = params[:old_name] || ''
     new_name = params[:new_name] || ''
-    
     unless old_name.present? && new_name.present?
       return render json: { success: false, error: 'Both names must be specified' }
     end
-    
-    affected = Person.where(name: old_name)
+    affected = Book.where(author: old_name)
     count = affected.count
-    affected.update_all(name: new_name)
-    
+    affected.update_all(author: new_name, author_slug: SlugHelper.slug_for(new_name))
+    Book.bump_search_cache
+    Book.invalidate_slug_cache! if count > 0
+    Person.where(name: old_name).update_all(name: new_name)
     render json: { success: true, renamed_from: old_name, renamed_to: new_name, affected_count: count }
   end
 
   def merge
-    old_id = params[:old_id]
-    new_id = params[:new_id]
-    
-    unless old_id.present? && new_id.present?
-      return render json: { success: false, error: 'Both IDs must be specified' }
+    old_name = params[:old_name] || ''
+    new_name = params[:new_name] || ''
+    unless old_name.present? && new_name.present?
+      return render json: { success: false, error: 'Both names must be specified' }
     end
-    
-    old_person = Person.find_by(id: old_id)
-    new_person = Person.find_by(id: new_id)
-    
-    unless old_person && new_person
-      return render json: { success: false, error: 'One or both people not found' }
-    end
-    
-    # Update books with old author name to new author name
-    Book.where(author: old_person.name).update_all(author: new_person.name)
-    Book.where(translator: old_person.name).update_all(translator: new_person.name)
-    
-    old_person.destroy
-    
-    render json: { success: true, merged_from: old_person.name, merged_to: new_person.name }
+    affected = Book.where(author: old_name)
+    count = affected.count
+    affected.update_all(author: new_name, author_slug: SlugHelper.slug_for(new_name))
+    Book.bump_search_cache
+    Book.invalidate_slug_cache! if count > 0
+    Person.where(name: old_name).destroy_all
+    render json: { success: true, merged_from: old_name, merged_to: new_name, affected_count: count }
   end
 
-  def merge_multiple
+def merge_multiple
     source_ids = params[:source_ids] || []
-    target_id = params[:target_id]
-    
-    unless source_ids.present? && target_id.present?
-      return render json: { success: false, error: 'Source IDs and target ID must be specified' }
+    target_name = params[:target_name] || ''
+
+    unless source_ids.present? && target_name.present?
+      return render json: { success: false, error: 'Source IDs and target name must be specified' }
     end
-    
-    target_person = Person.find_by(id: target_id)
-    unless target_person
-      return render json: { success: false, error: 'Target person not found' }
-    end
-    
+
+    total = 0
     Person.where(id: source_ids).each do |source|
-      Book.where(author: source.name).update_all(author: target_person.name)
-      Book.where(translator: source.name).update_all(translator: target_person.name)
+      next if source.name == target_name
+      count = Book.where(author: source.name).update_all(author: target_name, author_slug: SlugHelper.slug_for(target_name))
+      total += count
       source.destroy
     end
-    
-    render json: { success: true, merged_count: source_ids.length }
+    Book.bump_search_cache
+    Book.invalidate_slug_cache! if total > 0
+
+    render json: { success: true, merged_count: total }
   end
 
   def add_contribution
@@ -146,6 +144,16 @@ class Admin::PeopleController < ApplicationController
   end
 
   private
+
+  def authorize_admin!
+    unless session[:admin_id]
+      redirect_to admin_login_path, alert: 'Please login first'
+    end
+  end
+
+  def current_admin
+    @current_admin ||= Admin.find(session[:admin_id]) if session[:admin_id]
+  end
 
   def admin_person_params
     params.require(:person).permit(:name, :name_kannada, :name_latin, :bio, :birthplace, :nationality, :occupation, :genre, :education)

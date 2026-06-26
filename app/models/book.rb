@@ -17,6 +17,11 @@ class Book < ActiveRecord::Base
 
   def self.bump_search_cache
     Rails.cache.write('search/version', search_cache_version + 1, expires_in: 1.day)
+    Rails.cache.write('stats/version', (stats_cache_version + 1), expires_in: 1.day)
+  end
+
+  def self.stats_cache_version
+    Rails.cache.fetch('stats/version', expires_in: 1.day) { 1 }
   end
 
   def clear_search_cache

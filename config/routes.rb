@@ -25,8 +25,6 @@ Rails.application.routes.draw do
   get '/sitemap.xml' => 'sitemaps#index', defaults: { format: :xml }
   get '/stores' => 'stores#index', as: :stores
   post '/author_suggestions' => 'author_suggestions#create'
-  get '/people' => 'people#index', as: :people
-  get '/people/:id' => 'people#show', as: :person
 
   # Admin routes
   namespace :admin do
@@ -54,10 +52,6 @@ Rails.application.routes.draw do
     
     get '/books' => 'books#index', as: :books
     get '/books/search' => 'books#search', as: :books_search
-    get '/books/bulk' => 'books#bulk_edit', as: :bulk_edit_books
-    post '/books/bulk-preview' => 'books#bulk_preview', as: :bulk_preview_books
-    post '/books/bulk-update' => 'books#bulk_update', as: :bulk_update_books
-    post '/books/bulk-update-selected' => 'books#bulk_update_selected', as: :bulk_update_selected_books
     post '/books/merge-multiple' => 'books->merge_multiple', as: :merge_multiple_books
     get '/books/duplicates' => 'books#duplicates', as: :duplicates_books
     post '/books/merge-duplicates' => 'books#merge_duplicates', as: :merge_duplicates_books
@@ -107,11 +101,11 @@ Rails.application.routes.draw do
     post '/libraries/merge' => 'metadata#merge_libraries', as: :merge_libraries
     post '/libraries/merge-multiple' => 'metadata#merge_multiple_libraries', as: :merge_multiple_libraries
     
-    get '/stores' => 'metadata#stores', as: :manage_stores
-    get '/stores/find-similar' => 'metadata#find_similar_stores', as: :find_similar_stores
-    post '/stores/rename' => 'metadata#rename_store', as: :rename_store
-    post '/stores/merge' => 'metadata#merge_stores', as: :merge_stores
-    post '/stores/merge-multiple' => 'metadata#merge_multiple_stores', as: :merge_multiple_stores
+    get '/meta/stores' => 'metadata#stores', as: :manage_stores
+    get '/meta/stores/find-similar' => 'metadata#find_similar_stores', as: :find_similar_stores
+    post '/meta/stores/rename' => 'metadata#rename_store', as: :rename_store
+    post '/meta/stores/merge' => 'metadata#merge_stores', as: :merge_stores
+    post '/meta/stores/merge-multiple' => 'metadata#merge_multiple_stores', as: :merge_multiple_stores
     
     get '/suggested-merges' => 'metadata#suggested_merges', as: :suggested_merges
     get '/suggested-merges/data' => 'metadata#suggestions_data', as: :suggestions_data

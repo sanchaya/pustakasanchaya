@@ -1,0 +1,68 @@
+<% content_for :page_title do %>
+  Data Statistics
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row text-center">
+          <div class="col-md-2 col-sm-4 mb-3">
+            <div style="font-size: 28px; color: #5F3792; font-weight: bold;"><%= number_with_delimiter(@stats['total_books']) %></div>
+            <small class="text-muted">Total Books</small>
+          </div>
+          <div class="col-md-2 col-sm-4 mb-3">
+            <div style="font-size: 28px; color: #933586; font-weight: bold;"><%= number_with_delimiter(@stats['total_authors']) %></div>
+            <small class="text-muted">Authors</small>
+          </div>
+          <div class="col-md-2 col-sm-4 mb-3">
+            <div style="font-size: 28px; color: #9E3281; font-weight: bold;"><%= number_with_delimiter(@stats['total_publishers']) %></div>
+            <small class="text-muted">Publishers</small>
+          </div>
+          <div class="col-md-2 col-sm-4 mb-3">
+            <div style="font-size: 28px; color: #5F3792; font-weight: bold;"><%= number_with_delimiter(@stats['total_categories']) %></div>
+            <small class="text-muted">Categories</small>
+          </div>
+          <div class="col-md-2 col-sm-4 mb-3">
+            <div style="font-size: 28px; color: #27AE60; font-weight: bold;"><%= number_with_delimiter(@stats['total_libraries']) %></div>
+            <small class="text-muted">Libraries</small>
+          </div>
+          <div class="col-md-2 col-sm-4 mb-3">
+            <div style="font-size: 28px; color: #E8A500; font-weight: bold;"><%= number_with_delimiter(@stats['total_stores']) %></div>
+            <small class="text-muted">Stores</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @year_distribution.any? %>
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #5F3792;">Year Distribution</h5>
+          <div style="max-height: 400px; overflow-y: auto;">
+            <table class="table table-sm table-hover">
+              <thead style="background: #f5f5f5; position: sticky; top: 0;">
+                <tr>
+                  <th>Year</th>
+                  <th class="text-end">Books</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @year_distribution.each do |year, count| %>
+                  <tr>
+                    <td><%= year %></td>
+                    <td class="text-end"><%= number_with_delimiter(count) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

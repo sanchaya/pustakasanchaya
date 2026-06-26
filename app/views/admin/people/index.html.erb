@@ -1,75 +1,298 @@
 <% content_for :page_title do %>Manage People<% end %>
 
-<div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      People
-      <% if @role.present? %>
-        <span class="badge bg-primary ms-2"><%= @role.humanize %></span>
-      <% end %>
-    </h5>
-    <div class="btn-group" role="group">
-      <%= link_to 'All', admin_people_path, class: "btn btn-sm #{@role.blank? ? 'btn-primary' : 'btn-outline-primary'}" %>
-      <%= link_to 'Authors', admin_people_path(role: 'author'), class: "btn btn-sm #{@role == 'author' ? 'btn-primary' : 'btn-outline-primary'}" %>
-      <%= link_to 'Translators', admin_people_path(role: 'translator'), class: "btn btn-sm #{@role == 'translator' ? 'btn-primary' : 'btn-outline-primary'}" %>
-      <%= link_to 'Editors', admin_people_path(role: 'editor'), class: "btn btn-sm #{@role == 'editor' ? 'btn-primary' : 'btn-outline-primary'}" %>
-      <%= link_to 'Illustrators', admin_people_path(role: 'illustrator'), class: "btn btn-sm #{@role == 'illustrator' ? 'btn-primary' : 'btn-outline-primary'}" %>
-      <%= link_to 'Contributors', admin_people_path(role: 'contributor'), class: "btn btn-sm #{@role == 'contributor' ? 'btn-primary' : 'btn-outline-primary'}" %>
-    </div>
+<div class="row mb-4">
+  <div class="col-md-8">
+    <h1>Manage People</h1>
+    <p class="text-muted">Edit, rename and merge people across all books</p>
   </div>
-  <div class="card-body">
-    <div class="d-flex justify-content-between mb-3">
-      <div>
-        <%= link_to '<i class="fas fa-plus"></i> New Person'.html_safe, new_admin_person_path, class: 'btn btn-primary btn-sm' %>
-      </div>
-    </div>
-
-    <% if @people.any? %>
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Kannada Name</th>
-              <th>Role</th>
-              <th>Birthplace</th>
-              <th>Nationality</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @people.each do |person| %>
-              <tr>
-                <td><%= person.name %></td>
-                <td><%= person.name_kannada %></td>
-                <td>
-                  <% if person.occupation.present? %>
-                    <span class="badge bg-secondary"><%= person.occupation %></span>
-                  <% end %>
-                </td>
-                <td><%= person.birthplace %></td>
-                <td><%= person.nationality %></td>
-                <td>
-                  <div class="btn-group btn-group-sm">
-                    <%= link_to admin_person_path(person), class: 'btn btn-outline-primary', title: 'View' do %>
-                      <i class="fas fa-eye"></i>
-                    <% end %>
-                    <%= link_to edit_admin_person_path(person), class: 'btn btn-outline-secondary', title: 'Edit' do %>
-                      <i class="fas fa-edit"></i>
-                    <% end %>
-                    <%= button_to admin_person_path(person), method: :delete, class: 'btn btn-outline-danger', title: 'Delete', data: { confirm: 'Are you sure?' } do %>
-                      <i class="fas fa-trash"></i>
-                    <% end %>
-                  </div>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-      <%= paginate @people %>
-    <% else %>
-      <p class="text-muted">No people found<%= " for role '#{@role}'" if @role.present? %>.</p>
-    <% end %>
+  <div class="col-md-4 text-end">
+    <span class="badge bg-primary fs-6"><%= @people.total_count %> people</span>
   </div>
 </div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="row g-2">
+      <div class="col-md-8">
+        <form method="get" class="mb-0">
+          <input type="text" name="search" class="form-control" placeholder="Search people by name..." value="<%= @search_query %>">
+          <% if @role.present? %><input type="hidden" name="role" value="<%= @role %>"><% end %>
+        </form>
+      </div>
+      <div class="col-md-4">
+        <div class="btn-group w-100" role="group">
+          <%= link_to 'All', admin_people_path, class: "btn btn-sm #{@role.blank? ? 'btn-primary' : 'btn-outline-primary'}" %>
+          <%= link_to 'Authors', admin_people_path(role: 'author'), class: "btn btn-sm #{@role == 'author' ? 'btn-primary' : 'btn-outline-primary'}" %>
+          <%= link_to 'Translators', admin_people_path(role: 'translator'), class: "btn btn-sm #{@role == 'translator' ? 'btn-primary' : 'btn-outline-primary'}" %>
+          <%= link_to 'Editors', admin_people_path(role: 'editor'), class: "btn btn-sm #{@role == 'editor' ? 'btn-primary' : 'btn-outline-primary'}" %>
+          <%= link_to 'Illustrators', admin_people_path(role: 'illustrator'), class: "btn btn-sm #{@role == 'illustrator' ? 'btn-primary' : 'btn-outline-primary'}" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th style="width: 40px;"><input type="checkbox" id="selectAll"></th>
+          <th>Name</th>
+          <th>Kannada Name</th>
+          <th>Role</th>
+          <th>Birthplace</th>
+          <th class="text-end" style="width: 200px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @people.any? %>
+          <% @people.each do |person| %>
+            <tr>
+              <td><input type="checkbox" class="select-item" value="<%= person.id %>" data-name="<%= h(person.name) %>"></td>
+              <td><strong><%= person.name %></strong></td>
+              <td><%= person.name_kannada %></td>
+              <td>
+                <% if person.occupation.present? %>
+                  <span class="badge bg-secondary"><%= person.occupation %></span>
+                <% end %>
+              </td>
+              <td><%= person.birthplace %></td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-outline-primary rename-btn" data-person-id="<%= person.id %>" data-person-name="<%= h(person.name) %>">Rename</button>
+                <button class="btn btn-sm btn-outline-success merge-btn" data-person-id="<%= person.id %>" data-person-name="<%= h(person.name) %>">Merge</button>
+                <%= link_to admin_person_path(person), class: 'btn btn-sm btn-outline-info', title: 'View' do %>
+                  <i class="fas fa-eye"></i>
+                <% end %>
+                <%= link_to edit_admin_person_path(person), class: 'btn btn-sm btn-outline-secondary', title: 'Edit' do %>
+                  <i class="fas fa-edit"></i>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr><td colspan="6" class="text-center text-muted py-4">No people found.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="mt-4" style="margin-bottom: 70px;">
+  <%= paginate @people %>
+</div>
+
+<!-- Selection Toolbar -->
+<div id="selectionToolbar" class="d-none" style="position: fixed; bottom: 0; left: 250px; right: 0; background: #5F3792; color: white; padding: 12px 20px; z-index: 1000; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 -2px 10px rgba(0,0,0,0.2);">
+  <div><strong id="selectedCount">0</strong> person(s) selected</div>
+  <div>
+    <button class="btn btn-light btn-sm me-2" onclick="clearSelection()">Clear</button>
+    <button class="btn btn-warning btn-sm" onclick="openMergeMultipleModal()">Merge Selected</button>
+  </div>
+</div>
+
+<!-- Rename Modal -->
+<div class="modal fade" id="renameModal" aria-modal="true" role="dialog">
+  <div class="modal-dialog"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Rename Person</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <div class="mb-3"><label class="form-label">Current Name</label><input type="text" id="renameOldName" class="form-control" readonly></div>
+      <div class="mb-3">
+        <label class="form-label">New Name</label>
+        <input type="text" id="renameNewName" class="form-control" placeholder="Enter new name">
+      </div>
+      <div id="renameError" class="alert alert-danger d-none"></div>
+      <div id="renameSuccess" class="alert alert-success d-none"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary" onclick="submitRename()">Rename</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- Merge Modal -->
+<div class="modal fade" id="mergeModal" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-lg"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Merge Person</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <div class="mb-3"><label class="form-label">From (will be replaced)</label><input type="text" id="mergeOldName" class="form-control" readonly></div>
+      <div class="mb-3">
+        <label class="form-label">Merge into (target name)</label>
+        <input type="text" id="mergeTargetName" class="form-control" placeholder="Type name to merge with" oninput="findSimilarPeople()">
+      </div>
+      <div id="mergeSimilarList" class="mb-3"></div>
+      <div id="mergeError" class="alert alert-danger d-none"></div>
+      <div id="mergeSuccess" class="alert alert-success d-none"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-danger" onclick="submitMerge()">Merge</button>
+    </div>
+  </div></div>
+</div>
+
+<!-- Merge Multiple Modal -->
+<div class="modal fade" id="mergeMultipleModal" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-lg"><div class="modal-content">
+    <div class="modal-header"><h5 class="modal-title">Merge Selected People</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <div class="mb-3"><label class="form-label">People to merge</label><ul id="mergeSourceList" class="list-group mb-3"></ul></div>
+      <div class="mb-3"><label class="form-label">Merge into (target name)</label><input type="text" id="mergeTargetNameMulti" class="form-control" placeholder="Enter target name"></div>
+      <div id="mergeMultipleError" class="alert alert-danger d-none"></div>
+      <div id="mergeMultipleSuccess" class="alert alert-success d-none"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-danger" onclick="submitMergeMultiple()">Merge All</button>
+    </div>
+  </div></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('selectAll').addEventListener('change', function() {
+    document.querySelectorAll('.select-item').forEach(function(cb) { cb.checked = this.checked; }.bind(this));
+    updateSelectionToolbar();
+  });
+  document.querySelectorAll('.select-item').forEach(function(cb) { cb.addEventListener('change', updateSelectionToolbar); });
+});
+
+function updateSelectionToolbar() {
+  var checked = document.querySelectorAll('.select-item:checked');
+  var toolbar = document.getElementById('selectionToolbar');
+  if (checked.length > 0) {
+    document.getElementById('selectedCount').textContent = checked.length;
+    toolbar.classList.remove('d-none');
+  } else {
+    toolbar.classList.add('d-none');
+  }
+}
+
+function clearSelection() {
+  document.querySelectorAll('.select-item').forEach(function(cb) { cb.checked = false; });
+  document.getElementById('selectAll').checked = false;
+  updateSelectionToolbar();
+}
+
+function getSelectedNames() {
+  return Array.from(document.querySelectorAll('.select-item:checked')).map(function(cb) { return cb.dataset.name; });
+}
+
+function showModal(id) {
+  var m = document.getElementById(id);
+  m.classList.add('show'); m.style.display = 'block'; m.style.position = 'fixed';
+  m.style.top = '0'; m.style.left = '0'; m.style.width = '100%'; m.style.height = '100%';
+  m.style.zIndex = '99999'; m.style.backgroundColor = 'rgba(0,0,0,0.5)';
+  document.body.style.overflow = 'hidden';
+}
+
+function hideModal(id) {
+  var m = document.getElementById(id);
+  m.classList.remove('show'); m.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('[data-bs-dismiss="modal"]')) hideModal(e.target.closest('.modal').id);
+  if (e.target.closest('.rename-btn')) {
+    var btn = e.target.closest('.rename-btn');
+    document.getElementById('renameOldName').value = btn.dataset.personName;
+    document.getElementById('renameNewName').value = '';
+    document.getElementById('renameError').classList.add('d-none');
+    document.getElementById('renameSuccess').classList.add('d-none');
+    showModal('renameModal');
+  }
+  if (e.target.closest('.merge-btn')) {
+    var btn = e.target.closest('.merge-btn');
+    document.getElementById('mergeOldName').value = btn.dataset.personName;
+    document.getElementById('mergeTargetName').value = '';
+    document.getElementById('mergeSimilarList').innerHTML = '';
+    document.getElementById('mergeError').classList.add('d-none');
+    document.getElementById('mergeSuccess').classList.add('d-none');
+    showModal('mergeModal');
+  }
+});
+
+function submitRename() {
+  var oldName = document.getElementById('renameOldName').value;
+  var newName = document.getElementById('renameNewName').value.trim();
+  if (!newName) { document.getElementById('renameError').textContent = 'Please enter a new name'; document.getElementById('renameError').classList.remove('d-none'); return; }
+  fetch('<%= rename_admin_people_path %>', {
+    method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':'<%= form_authenticity_token %>'},
+    body: JSON.stringify({ old_name: oldName, new_name: newName })
+  }).then(function(r){return r.json()}).then(function(data){
+    if (data.success) {
+      document.getElementById('renameSuccess').textContent = 'Renamed! Updated ' + data.affected_count + ' books';
+      document.getElementById('renameSuccess').classList.remove('d-none');
+      setTimeout(function(){location.reload()},1500);
+    } else {
+      document.getElementById('renameError').textContent = data.error; document.getElementById('renameError').classList.remove('d-none');
+    }
+  }).catch(function(e){document.getElementById('renameError').textContent='Error: '+e.message;document.getElementById('renameError').classList.remove('d-none')});
+}
+
+function findSimilarPeople() {
+  var name = document.getElementById('mergeTargetName').value;
+  if (!name || name.trim().length < 2) { document.getElementById('mergeSimilarList').innerHTML = ''; return; }
+  fetch('<%= find_similar_admin_people_path %>?name='+encodeURIComponent(name), {
+    headers: {'X-CSRF-Token':'<%= form_authenticity_token %>'}
+  }).then(function(r){return r.json()}).then(function(data){
+    var list = document.getElementById('mergeSimilarList');
+    if (!data.similar || data.similar.length===0) { list.innerHTML = '<small class="text-muted">No similar names found</small>'; return; }
+    var html = '<div class="list-group">';
+    data.similar.forEach(function(p){ html += '<button type="button" class="list-group-item list-group-item-action select-similar" data-name="'+p.name.replace(/"/g,'&quot;')+'">'+p.name+(p.name_kannada?' ('+p.name_kannada+')':'')+' <small class="text-muted">['+p.occupation+']</small></button>'; });
+    html += '</div>';
+    list.innerHTML = html;
+    list.querySelectorAll('.select-similar').forEach(function(b){ b.addEventListener('click',function(){document.getElementById('mergeTargetName').value=this.dataset.name;list.innerHTML='';}); });
+  });
+}
+
+function submitMerge() {
+  var oldName = document.getElementById('mergeOldName').value;
+  var newName = document.getElementById('mergeTargetName').value.trim();
+  if (!newName) { document.getElementById('mergeError').textContent = 'Please enter target name'; document.getElementById('mergeError').classList.remove('d-none'); return; }
+  if (oldName===newName) { document.getElementById('mergeError').textContent = 'Must be different names'; document.getElementById('mergeError').classList.remove('d-none'); return; }
+  fetch('<%= merge_admin_people_path %>', {
+    method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':'<%= form_authenticity_token %>'},
+    body: JSON.stringify({ old_name: oldName, new_name: newName })
+  }).then(function(r){return r.json()}).then(function(data){
+    if (data.success) {
+      document.getElementById('mergeSuccess').textContent = 'Merged! Updated ' + data.affected_count + ' books';
+      document.getElementById('mergeSuccess').classList.remove('d-none');
+      setTimeout(function(){location.reload()},1500);
+    } else {
+      document.getElementById('mergeError').textContent = data.error; document.getElementById('mergeError').classList.remove('d-none');
+    }
+  }).catch(function(e){document.getElementById('mergeError').textContent='Error: '+e.message;document.getElementById('mergeError').classList.remove('d-none')});
+}
+
+function openMergeMultipleModal() {
+  var names = getSelectedNames();
+  var list = document.getElementById('mergeSourceList');
+  list.innerHTML = '';
+  names.forEach(function(n){var li=document.createElement('li');li.className='list-group-item';li.textContent=n;list.appendChild(li);});
+  document.getElementById('mergeTargetNameMulti').value = '';
+  document.getElementById('mergeMultipleError').classList.add('d-none');
+  document.getElementById('mergeMultipleSuccess').classList.add('d-none');
+  showModal('mergeMultipleModal');
+}
+
+function submitMergeMultiple() {
+  var ids = Array.from(document.querySelectorAll('.select-item:checked')).map(function(cb){return cb.value;});
+  var targetName = document.getElementById('mergeTargetNameMulti').value.trim();
+  if (!targetName) { document.getElementById('mergeMultipleError').textContent = 'Enter target name'; document.getElementById('mergeMultipleError').classList.remove('d-none'); return; }
+  fetch('<%= merge_multiple_admin_people_path %>', {
+    method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':'<%= form_authenticity_token %>'},
+    body: JSON.stringify({ source_ids: ids, target_name: targetName })
+  }).then(function(r){return r.json()}).then(function(data){
+    if (data.success) {
+      document.getElementById('mergeMultipleSuccess').textContent = 'Merged '+data.merged_count+' people!';
+      document.getElementById('mergeMultipleSuccess').classList.remove('d-none');
+      setTimeout(function(){location.reload()},1500);
+    } else {
+      document.getElementById('mergeMultipleError').textContent = data.error||'Failed'; document.getElementById('mergeMultipleError').classList.remove('d-none');
+    }
+  }).catch(function(e){document.getElementById('mergeMultipleError').textContent='Error: '+e.message;document.getElementById('mergeMultipleError').classList.remove('d-none')});
+}
+</script>

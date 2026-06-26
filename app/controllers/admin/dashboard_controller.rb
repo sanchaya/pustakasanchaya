@@ -28,6 +28,21 @@ class Admin::DashboardController < ApplicationController
     @admin = current_admin
   end
 
+  def stats
+    @stats = {
+      'total_books' => Book.count,
+      'total_authors' => Book.where.not(author: [nil, '']).distinct.count(:author),
+      'total_publishers' => Book.where.not(publisher: [nil, '']).distinct.count(:publisher),
+      'total_categories' => Book.where.not(categories: [nil, '']).distinct.count(:categories),
+      'total_libraries' => Book.where.not(library: [nil, '']).distinct.count(:library),
+      'total_stores' => Store.active.count
+    }
+    @year_distribution = Book.where.not(year: [nil, '', '0'])
+                             .where('year >= 1000 AND year <= 2030')
+                             .group(:year).count
+                             .sort
+  end
+
   def update_profile
     @admin = current_admin
 

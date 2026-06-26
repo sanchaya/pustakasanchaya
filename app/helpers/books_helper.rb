@@ -65,7 +65,8 @@ module BooksHelper
     max_store_id = Store.maximum(:id)
     book_count = Book.count
     store_count = Store.count
-    "books/v3/#{max_book_id}/#{book_count}/#{max_store_id}/#{store_count}"
+    stats_ver = Book.stats_cache_version
+    "books/v4/#{max_book_id}/#{book_count}/#{max_store_id}/#{store_count}/#{stats_ver}"
   end
 
   def stats

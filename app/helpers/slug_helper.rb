@@ -47,15 +47,21 @@ module SlugHelper
 
   def author_slug_pairs
     Rails.cache.fetch("slug_pairs:author", expires_in: 24.hours) do
-      pairs = Book.where.not(author: [nil, '']).group(:author).count.sort_by { |_, c| -c }
-      build_slug_pairs_from(pairs)
+      book_counts = Book.where.not(author: [nil, '']).group(:author).count
+      pub_counts = Book.where.not(author: [nil, '']).where.not(publisher: [nil, ''])
+                       .group(:author).distinct.count(:publisher)
+      pairs = book_counts.sort_by { |_, c| -c }
+      build_slug_pairs_from(pairs, book_counts, pub_counts, :publishers)
     end
   end
 
   def publisher_slug_pairs
     Rails.cache.fetch("slug_pairs:publisher", expires_in: 24.hours) do
-      pairs = Book.where.not(publisher: [nil, '']).group(:publisher).count.sort_by { |_, c| -c }
-      build_slug_pairs_from(pairs)
+      book_counts = Book.where.not(publisher: [nil, '']).group(:publisher).count
+      auth_counts = Book.where.not(publisher: [nil, '']).where.not(author: [nil, ''])
+                       .group(:publisher).distinct.count(:author)
+      pairs = book_counts.sort_by { |_, c| -c }
+      build_slug_pairs_from(pairs, book_counts, auth_counts, :authors)
     end
   end
 
@@ -91,7 +97,7 @@ module SlugHelper
     map
   end
 
-  def build_slug_pairs_from(names_and_counts)
+  def build_slug_pairs_from(names_and_counts, count_map = nil, extra_map = nil, extra_key = nil)
     base_counts = Hash.new(0)
     names_and_counts.each { |name, _| base_counts[SlugHelper.slug_for(name)] += 1 }
 
@@ -104,7 +110,9 @@ module SlugHelper
       else
         slug = base
       end
-      { name: name, slug: slug }
+      entry = { name: name, slug: slug, books: count_map ? (count_map[name] || 0) : 0 }
+      entry[extra_key] = extra_map[name] || 0 if extra_key && extra_map
+      entry
     end
   end
 end

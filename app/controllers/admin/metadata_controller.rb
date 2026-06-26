@@ -292,42 +292,28 @@ class Admin::MetadataController < ApplicationController
   private
 
   def compute_author_suggestions
-    cache_key = 'merge_suggestions/authors/v2'
+    cache_key = 'merge_suggestions/authors/v3'
     Rails.cache.fetch(cache_key, expires_in: 1.hour) do
       suggestions = []
       counts = Book.author_counts
 
-      names = counts.keys
       normalized = {}
-      names.each do |name|
+      counts.each do |name, _|
         norm = normalize_name(name)
-        normalized[norm] ||= []
-        normalized[norm] << name
-      end
-
-      normalized.each do |_norm, group|
-        next if group.length < 2
-        target = group.max_by { |n| counts[n] || 0 }
-        group.each do |source|
-          next if source == target
-          suggestions << build_suggestion('author', source, target, counts, 'normalized')
+        normalized[norm] ||= { names: [], max_count: 0, max_name: nil }
+        normalized[norm][:names] << name
+        if (counts[name] || 0) > normalized[norm][:max_count]
+          normalized[norm][:max_count] = (counts[name] || 0)
+          normalized[norm][:max_name] = name
         end
       end
 
-      already = {}
-      suggestions.each { |s| already[[s[:source], s[:target]]] = true }
-
-      names.each_with_index do |name, i|
-        next unless counts[name] && counts[name] > 0
-        names[(i + 1)..-1].each do |other|
-          next unless counts[other] && counts[other] > 0
-          next if already[[name, other]] || already[[other, name]]
-
-          if name.downcase.include?(other.downcase) || other.downcase.include?(name.downcase)
-            target = counts[name] >= counts[other] ? name : other
-            source = target == name ? other : name
-            suggestions << build_suggestion('author', source, target, counts, 'substring')
-          end
+      normalized.each do |_, group|
+        next if group[:names].length < 2
+        target = group[:max_name]
+        group[:names].each do |source|
+          next if source == target
+          suggestions << build_suggestion('author', source, target, counts, 'normalized')
         end
       end
 

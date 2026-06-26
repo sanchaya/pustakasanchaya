@@ -4,7 +4,7 @@
   <div class="card-body">
     <h5>Edit Person: <%= @person.name %></h5>
     
-    <%= form_with model: [:admin, @person], local: true do |f| %>
+    <%= form_for @person, url: admin_person_path(@person), method: :patch, html: { class: 'form' } do |f| %>
       <% if @person.errors.any? %>
         <div class="alert alert-danger">
           <ul class="mb-0">

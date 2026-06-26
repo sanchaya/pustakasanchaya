@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var letterBtns = document.querySelectorAll('.letter-btn');
   var searchTimer;
   var allData = [];
+  var filteredData = [];
+  var displayCount = 0;
+  var pageSize = 20;
 
   function clearLetterActive() {
     letterBtns.forEach(function(b) {
@@ -51,30 +54,49 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function renderList(data) {
+  function renderList() {
+    var data = filteredData;
     if (!data || data.length === 0) {
       resultsDiv.innerHTML = '<p class="text-muted text-center" style="padding: 30px 0; margin: 0;">ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ</p>';
       return;
     }
+    var itemsToShow = data.slice(0, displayCount);
     var html = '';
-    data.forEach(function(item) {
-      html += '<a href="/authors/' + item.slug + '" style="display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">';
-      html += '<span style="flex: 1; font-size: 14px;">' + item.name + '</span>';
-      html += '</a>';
+    itemsToShow.forEach(function(item) {
+      html += '<a href="/authors/' + item.slug + '" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: #333; transition: background 0.15s;">';
+      html += '<span style="font-size: 14px;">' + item.name + '</span>';
+      html += '<span style="font-size: 12px; color: #999; white-space: nowrap; margin-left: 10px;">';
+      if (item.books) html += '<span title="Books"><i class="fa fa-book" style="margin-right:3px;color:#5F3792;"></i>' + item.books + '</span> ';
+      if (item.publishers) html += '<span title="Publishers"><i class="fa fa-building" style="margin-right:3px;color:#933586;"></i>' + item.publishers + '</span>';
+      html += '</span></a>';
     });
-    resultsDiv.innerHTML = '<div style="border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden;">' + html + '</div>';
+    html = '<div style="border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden;">' + html + '</div>';
+    if (displayCount < data.length) {
+      html += '<div style="text-align: center; margin-top: 15px;"><button id="show-more-btn" class="btn btn-sm btn-outline-primary" style="padding: 8px 30px;">ಹೆಚ್ಚು ತೋರಿಸು (' + (data.length - displayCount) + ' ಉಳಿದಿವೆ)</button></div>';
+    } else {
+      html += '<p class="text-muted text-center" style="padding: 10px 0; margin: 0; font-size: 12px;">ಒಟ್ಟು ' + data.length + ' ಫಲಿತಾಂಶಗಳು</p>';
+    }
+    resultsDiv.innerHTML = html;
+    var showMoreBtn = document.getElementById('show-more-btn');
+    if (showMoreBtn) {
+      showMoreBtn.addEventListener('click', function() {
+        displayCount += pageSize;
+        renderList();
+      });
+    }
   }
 
   function loadResults(letter, query) {
-    var filtered = allData;
+    filteredData = allData;
     if (letter) {
-      filtered = filtered.filter(function(item) { return item.name.indexOf(letter) === 0; });
+      filteredData = filteredData.filter(function(item) { return item.name.indexOf(letter) === 0; });
     }
     if (query) {
       var q = query.toLowerCase();
-      filtered = filtered.filter(function(item) { return item.name.toLowerCase().indexOf(q) !== -1; });
+      filteredData = filteredData.filter(function(item) { return item.name.toLowerCase().indexOf(q) !== -1; });
     }
-    renderList(filtered);
+    displayCount = pageSize;
+    renderList();
   }
 
   fetch(window.location.pathname + '?format=json')
