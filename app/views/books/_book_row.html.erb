@@ -1,42 +1,44 @@
+<% book_group = book_row %>
+<% first = book_group.first %>
+<% shown_urls = [] %>
 <tr>
   <td class="thumbnail-cell">
-    <%= book_thumbnail_tag(book_row) %>
+    <%= book_thumbnail_tag(first) %>
   </td>
   <td>
-    <%= book_row['name'] %>
+    <%= first['name'] %>
   </td>
   <td>
-    <%= book_row['author'] %>
+    <%= first['author'] %>
   </td>
   <td>
-    <%= book_row['publisher'] %>
+    <%= first['publisher'] %>
   </td>
   <td>
-    <%= book_row['library'] %>
+    <%= first['year'] %>
   </td>
-   <td>
-    <%= book_row['year'] %>
-  </td>
-   <td>
-  <% shown_urls = [] %>
-  <% is_archive_link = book_row['book_link'].present? && book_row['book_link'].include?('archive.org') %>
- 	<% if store_book?(book_row) && book_row['book_link'].present? && !is_archive_link %>
-    <% unless shown_urls.include?(book_row['book_link']) %>
-      <% shown_urls << book_row['book_link'] %>
-      <%= link_to book_row['book_link'], class: 'buy-link', target: '_blank', title: "#{book_row['library']} - ಖರೀದಿಸಿ" do %> <%= fa_icon "shopping-cart 2x" %> <% end %>
+  <td class="source-links" style="white-space: nowrap;">
+    <% book_group.each do |b| %>
+      <%
+        library = b['library']
+        url = b['book_link'].presence || b['archive_url']
+        next if url.blank? || shown_urls.include?(url) || url.include?('oudl.osmania.ac.in') || url.include?('dli.gov.in')
+        shown_urls << url
+        logo = store_logos[library]
+      %>
+      <span class="source-item" style="display: inline-block; margin-right: 8px;">
+        <% if logo.present? %>
+          <a href="<%= url %>" target="_blank" title="<%= library %>">
+            <img src="<%= logo %>" alt="<%= library %>" style="width: 24px; height: 24px; object-fit: contain; vertical-align: middle;">
+          </a>
+        <% elsif url.include?('archive.org') %>
+          <a href="<%= url %>" target="_blank" title="<%= library || 'Internet Archive' %>">
+            <%= image_tag('internet-archive-logo.png', style: 'width: 24px; height: 24px; vertical-align: middle;') %>
+          </a>
+        <% else %>
+          <a href="<%= url %>" target="_blank" title="<%= library %>" class="source-link" style="font-size: 11px;"><%= library %></a>
+        <% end %>
+      </span>
     <% end %>
- 	<% elsif book_row['book_link'] && !book_row['book_link'].blank? && !broken_link?(book_row['book_link']) && !is_archive_link %>
-    <% unless shown_urls.include?(book_row['book_link']) %>
-      <% shown_urls << book_row['book_link'] %>
-      <%= link_to(book_row['book_link'], target: '_blank') do %> <%= fa_icon "book 2x" %> <% end %>
-    <% end %>
- 	<% end %>
-  <% if book_row['archive_url'].present? && !shown_urls.include?(book_row['archive_url']) %>
-    <% shown_urls << book_row['archive_url'] %>
-    <%= link_to book_row['archive_url'], class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
-  <% elsif is_archive_link && !shown_urls.include?(book_row['book_link']) %>
-    <% shown_urls << book_row['book_link'] %>
-    <%= link_to book_row['book_link'], class: 'archive-url', target: '_blank'  do %> <%= image_tag('internet-archive-logo.png') %> <% end %>
-  <% end %>
   </td>
 </tr>

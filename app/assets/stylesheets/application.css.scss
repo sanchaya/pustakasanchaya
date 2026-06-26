@@ -85,10 +85,10 @@
 .navbar .nav > li > a {
   color: #666;
   font-size: 14px;
-  padding-bottom: 10px;
-  padding-top: 10px;
+  padding: 15px;
   text-shadow: none;
   text-transform: uppercase;
+  line-height: 20px;
 }
 .navbar .nav > li > a:hover {
   background: none repeat scroll 0 0 transparent;
@@ -104,19 +104,37 @@
 .navbar-brand {
   display: flex;
   align-items: center;
-  padding: 8px 15px;
+  padding: 10px 15px;
+  height: 50px;
 }
 
 .header-logo-img {
-  height: 32px;
+  height: 28px;
   width: auto;
   margin-right: 8px;
 }
 
 .header-logo-text {
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
+  line-height: 28px;
+}
+
+.thumbnail-cell {
+  width: 60px;
+  text-align: center;
   vertical-align: middle;
+}
+
+.book-thumbnail {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.book-thumbnail.fallback {
+  opacity: 0.25;
 }
 
 /*Header ended*/
@@ -257,8 +275,8 @@ We need to fix this later and remove below css
 }
 
 .social-nav-right {
-	padding-top: 5px !important;
-	padding-bottom: 5px !important;
+	padding-top: 11px !important;
+	padding-bottom: 11px !important;
 }
 
 /* wiki book layout */
@@ -735,3 +753,195 @@ We need to fix this later and remove below css
      height: 200px;
    }
  }
+
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+  .main-search .search-input-wrap {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .main-search .search-input-wrap .form-control {
+    width: 100% !important;
+  }
+
+  .main-search .search-input-wrap .btn {
+    width: 100%;
+  }
+
+  .navbar-nav {
+    margin: 0;
+  }
+
+  .navbar-nav > li > a {
+    padding: 10px 15px !important;
+  }
+
+  .table-responsive {
+    border: 0;
+    margin-bottom: 0;
+  }
+
+  .table {
+    font-size: 13px;
+  }
+
+  .table th, .table td {
+    padding: 6px 8px !important;
+    white-space: normal;
+  }
+
+  .source-links {
+    white-space: normal !important;
+  }
+
+  .source-item {
+    margin-bottom: 4px;
+  }
+
+  .card-body {
+    padding: 10px;
+  }
+
+  .card-header {
+    padding: 10px;
+  }
+
+  .card-header h4 {
+    font-size: 14px;
+  }
+
+  .card-header .btn-group .btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .letter-bar .letter-btn {
+    min-width: 30px !important;
+    padding: 3px 6px !important;
+    font-size: 11px !important;
+  }
+
+  #results a {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+
+  .year-chart {
+    padding: 15px 10px;
+    margin: 20px auto;
+  }
+
+  .chart-title {
+    font-size: 16px;
+  }
+
+  .chart-info {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .info-item {
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  .chart-canvas-wrapper {
+    height: 220px;
+  }
+
+  .stat-simple {
+    gap: 20px;
+    margin: 20px 0;
+    padding: 15px 0;
+  }
+
+  .stat-num {
+    font-size: 24px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .stat-item {
+    min-width: 80px;
+  }
+
+  .footer {
+    padding: 15px 0;
+    font-size: 12px;
+  }
+
+  .main-content {
+    padding: 0 10px;
+  }
+
+  .navbar-brand {
+    padding: 8px 10px !important;
+    height: auto;
+  }
+
+  .header-logo-img {
+    height: 24px !important;
+  }
+
+  .header-logo-text {
+    font-size: 14px !important;
+    line-height: 24px !important;
+  }
+
+  .navbar-toggle {
+    margin-right: 10px;
+  }
+
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table th, .table td {
+    padding: 4px 6px !important;
+    font-size: 12px;
+  }
+
+  .thumbnail-cell {
+    width: 40px !important;
+  }
+
+  .book-thumbnail {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .source-links img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .card-header .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .card-header .btn-group .btn {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .stat-item {
+    min-width: 70px;
+  }
+
+  .stat-num {
+    font-size: 18px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+}

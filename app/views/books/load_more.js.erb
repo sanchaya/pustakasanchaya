@@ -1,2 +1,3 @@
-$('#book-results tbody').append('<%= j render(partial: "books/book_row", collection: @books, as: :book_row) %>');
+<% store_logos = Store.active.ordered.each_with_object({}) { |s, h| h[s.name] = s.logo } %>
+$('#book-results tbody').append('<%= j render(partial: "books/book_row", collection: @books, as: :book_row, locals: { store_logos: store_logos }) %>');
 $('#load-more-area').html('<%= j render("books/load_more_button", load_more_books: @books) %>');

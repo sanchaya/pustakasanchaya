@@ -1,17 +1,17 @@
+<% store_logos = Store.active.ordered.each_with_object({}) { |s, h| h[s.name] = s.logo } %>
 <table class="table table-striped" id="book-results">
   <thead>
     <tr>
       <th></th>
-      <th>  <%= t :book %> </th>
-      <th>  <%= t :author %> </th>
-      <th>  <%= t :publisher %> </th>
-      <th>  <%= t :library %> </th>
-      <th>  <%= t :year %> </th>
-      <th>  <%= t :book_link %> </th>
+      <th><%= t :book %></th>
+      <th><%= t :author %></th>
+      <th><%= t :publisher %></th>
+      <th><%= t :year %></th>
+      <th><%= t :book_link %></th>
     </tr>
   </thead>
   <tbody>
-    <%= render partial: 'books/book_row', collection: @books, as: :book_row %>
+    <%= render partial: 'books/book_row', collection: @books, as: :book_row, locals: { store_logos: store_logos } %>
   </tbody>
 </table>
 <div id="load-more-area">

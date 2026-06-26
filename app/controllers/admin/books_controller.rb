@@ -77,7 +77,13 @@ class Admin::BooksController < ApplicationController
       params[:description]
     )
 
-    Book.where(source_identifier: @book.source_identifier).update_all(field => new_value)
+    updates = { field => new_value }
+    if field == 'author'
+      updates[:author_slug] = new_value.present? ? SlugHelper.slug_for(new_value) : nil
+    elsif field == 'publisher'
+      updates[:publisher_slug] = new_value.present? ? SlugHelper.slug_for(new_value) : nil
+    end
+    Book.where(source_identifier: @book.source_identifier).update_all(updates)
     Book.bump_search_cache
 
     render json: {
@@ -117,7 +123,13 @@ class Admin::BooksController < ApplicationController
       )
     end
 
-    affected.update_all(field => replace_value)
+    updates = { field => replace_value }
+    if field == 'author'
+      updates[:author_slug] = replace_value.present? ? SlugHelper.slug_for(replace_value) : nil
+    elsif field == 'publisher'
+      updates[:publisher_slug] = replace_value.present? ? SlugHelper.slug_for(replace_value) : nil
+    end
+    affected.update_all(updates)
     Book.bump_search_cache
 
     render json: {
@@ -195,7 +207,14 @@ class Admin::BooksController < ApplicationController
       end
     end
 
-    affected.update_all(updates)
+    slug_updates = {}
+    if updates.key?('author')
+      slug_updates[:author_slug] = updates['author'].present? ? SlugHelper.slug_for(updates['author']) : nil
+    end
+    if updates.key?('publisher')
+      slug_updates[:publisher_slug] = updates['publisher'].present? ? SlugHelper.slug_for(updates['publisher']) : nil
+    end
+    affected.update_all(updates.merge(slug_updates))
     Book.bump_search_cache
 
     render json: {

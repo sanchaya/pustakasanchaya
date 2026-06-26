@@ -1,0 +1,57 @@
+<% content_for :page_title do %>Person: <%= @person.name %><% end %>
+
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0"><%= @person.name %></h5>
+    <div>
+      <%= link_to 'Edit', edit_admin_person_path(@person), class: 'btn btn-sm btn-outline-primary' %>
+      <%= link_to 'Back', admin_people_path, class: 'btn btn-sm btn-outline-secondary' %>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <table class="table table-borderless">
+          <tr>
+            <th style="width: 150px;">Name (Kannada)</th>
+            <td><%= @person.name_kannada.presence || '—' %></td>
+          </tr>
+          <tr>
+            <th>Name (Latin)</th>
+            <td><%= @person.name_latin.presence || '—' %></td>
+          </tr>
+          <tr>
+            <th>Role</th>
+            <td>
+              <% if @person.occupation.present? %>
+                <span class="badge bg-primary"><%= @person.occupation.humanize %></span>
+              <% else %>
+                —
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <th>Birthplace</th>
+            <td><%= @person.birthplace.presence || '—' %></td>
+          </tr>
+          <tr>
+            <th>Nationality</th>
+            <td><%= @person.nationality.presence || '—' %></td>
+          </tr>
+          <tr>
+            <th>Genre</th>
+            <td><%= @person.genre.presence || '—' %></td>
+          </tr>
+          <tr>
+            <th>Education</th>
+            <td><%= @person.education.presence || '—' %></td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <h6>Bio</h6>
+        <p><%= @person.bio.presence || 'No bio available.' %></p>
+      </div>
+    </div>
+  </div>
+</div>

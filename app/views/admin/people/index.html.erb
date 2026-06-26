@@ -1,0 +1,75 @@
+<% content_for :page_title do %>Manage People<% end %>
+
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      People
+      <% if @role.present? %>
+        <span class="badge bg-primary ms-2"><%= @role.humanize %></span>
+      <% end %>
+    </h5>
+    <div class="btn-group" role="group">
+      <%= link_to 'All', admin_people_path, class: "btn btn-sm #{@role.blank? ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to 'Authors', admin_people_path(role: 'author'), class: "btn btn-sm #{@role == 'author' ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to 'Translators', admin_people_path(role: 'translator'), class: "btn btn-sm #{@role == 'translator' ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to 'Editors', admin_people_path(role: 'editor'), class: "btn btn-sm #{@role == 'editor' ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to 'Illustrators', admin_people_path(role: 'illustrator'), class: "btn btn-sm #{@role == 'illustrator' ? 'btn-primary' : 'btn-outline-primary'}" %>
+      <%= link_to 'Contributors', admin_people_path(role: 'contributor'), class: "btn btn-sm #{@role == 'contributor' ? 'btn-primary' : 'btn-outline-primary'}" %>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-between mb-3">
+      <div>
+        <%= link_to '<i class="fas fa-plus"></i> New Person'.html_safe, new_admin_person_path, class: 'btn btn-primary btn-sm' %>
+      </div>
+    </div>
+
+    <% if @people.any? %>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Kannada Name</th>
+              <th>Role</th>
+              <th>Birthplace</th>
+              <th>Nationality</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @people.each do |person| %>
+              <tr>
+                <td><%= person.name %></td>
+                <td><%= person.name_kannada %></td>
+                <td>
+                  <% if person.occupation.present? %>
+                    <span class="badge bg-secondary"><%= person.occupation %></span>
+                  <% end %>
+                </td>
+                <td><%= person.birthplace %></td>
+                <td><%= person.nationality %></td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <%= link_to admin_person_path(person), class: 'btn btn-outline-primary', title: 'View' do %>
+                      <i class="fas fa-eye"></i>
+                    <% end %>
+                    <%= link_to edit_admin_person_path(person), class: 'btn btn-outline-secondary', title: 'Edit' do %>
+                      <i class="fas fa-edit"></i>
+                    <% end %>
+                    <%= button_to admin_person_path(person), method: :delete, class: 'btn btn-outline-danger', title: 'Delete', data: { confirm: 'Are you sure?' } do %>
+                      <i class="fas fa-trash"></i>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= paginate @people %>
+    <% else %>
+      <p class="text-muted">No people found<%= " for role '#{@role}'" if @role.present? %>.</p>
+    <% end %>
+  </div>
+</div>

@@ -27,8 +27,9 @@ class Publisher
     return { success: false, error: 'Publishers cannot be blank' } if old_publisher.blank? || new_publisher.blank?
     affected = Book.where(publisher: old_publisher)
     count = affected.count
-    affected.update_all(publisher: new_publisher)
+    affected.update_all(publisher: new_publisher, publisher_slug: SlugHelper.slug_for(new_publisher))
     Book.bump_search_cache
+    Book.invalidate_slug_cache! if count > 0
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'publisher', old_publisher, new_publisher, editor_email, "Merged publisher: '#{old_publisher}' → '#{new_publisher}'")
     end
@@ -41,8 +42,9 @@ class Publisher
     return { success: false, error: 'Publisher names cannot be blank' } if old_name.blank? || new_name.blank?
     affected = Book.where(publisher: old_name)
     count = affected.count
-    affected.update_all(publisher: new_name)
+    affected.update_all(publisher: new_name, publisher_slug: SlugHelper.slug_for(new_name))
     Book.bump_search_cache
+    Book.invalidate_slug_cache! if count > 0
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'publisher', old_name, new_name, editor_email, "Renamed publisher: '#{old_name}' → '#{new_name}'")
     end

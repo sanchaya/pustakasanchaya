@@ -3,22 +3,54 @@
 <div class="stat-simple">
   <div class="stat-item">
     <i class="fa fa-book" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
-    <span class="stat-num"><%= number_with_delimiter(s['total_books'] || 0) %></span>
-    <span class="stat-label"><%=t :books %></span>
-  </div>
-  <div class="stat-item">
-    <i class="fa fa-building" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
-    <span class="stat-num"><%= number_with_delimiter(s['total_libraries'] || 0) %></span>
-    <span class="stat-label"><%=t :libraries %></span>
+    <%= link_to root_path, class: "stat-link" do %>
+      <span class="stat-num"><%= number_with_delimiter(s['total_books'] || 0) %></span>
+      <span class="stat-label"><%= t :books %></span>
+    <% end %>
   </div>
   <div class="stat-item">
     <i class="fa fa-user" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
-    <span class="stat-num"><%= number_with_delimiter(s['total_authors'] || 0) %></span>
-    <span class="stat-label"><%=t :authors %></span>
+    <%= link_to authors_path, class: "stat-link" do %>
+      <span class="stat-num"><%= number_with_delimiter(s['total_authors'] || 0) %></span>
+      <span class="stat-label"><%= t :authors %></span>
+    <% end %>
   </div>
   <div class="stat-item">
     <i class="fa fa-tags" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
-    <span class="stat-num"><%= number_with_delimiter(s['total_publishers'] || 0) %></span>
-    <span class="stat-label"><%=t :publishers %></span>
+    <%= link_to publishers_path, class: "stat-link" do %>
+      <span class="stat-num"><%= number_with_delimiter(s['total_publishers'] || 0) %></span>
+      <span class="stat-label"><%= t :publishers %></span>
+    <% end %>
+  </div>
+  <div class="stat-item">
+    <i class="fa fa-folder" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
+    <%= link_to categories_path, class: "stat-link" do %>
+      <span class="stat-num"><%= number_with_delimiter(s['total_categories'] || 0) %></span>
+      <span class="stat-label"><%= t :categories %></span>
+    <% end %>
+  </div>
+  <div class="stat-item">
+    <i class="fa fa-shopping-cart" style="font-size: 24px; color: #5F3792; margin-bottom: 8px;"></i>
+    <%= link_to stores_path, class: "stat-link" do %>
+      <span class="stat-num"><%= number_with_delimiter(s['total_stores'] || 0) %></span>
+      <span class="stat-label"><%= t :stores %></span>
+    <% end %>
   </div>
 </div>
+
+<style>
+  .stat-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .stat-link:hover {
+    color: #5F3792;
+    text-decoration: none;
+  }
+  .stat-item:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+</style>

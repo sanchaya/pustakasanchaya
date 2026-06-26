@@ -1,0 +1,76 @@
+<% content_for :page_title do %>New Person<% end %>
+
+<div class="card">
+  <div class="card-body">
+    <h5>New Person</h5>
+    
+    <%= form_with model: [:admin, @person], local: true do |f| %>
+      <% if @person.errors.any? %>
+        <div class="alert alert-danger">
+          <ul class="mb-0">
+            <% @person.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <%= f.label :name, class: 'form-label' %>
+          <%= f.text_field :name, class: 'form-control kan-ime', required: true %>
+        </div>
+        <div class="col-md-6">
+          <%= f.label :name_kannada, class: 'form-label' %>
+          <%= f.text_field :name_kannada, class: 'form-control kan-ime' %>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <%= f.label :name_latin, class: 'form-label' %>
+          <%= f.text_field :name_latin, class: 'form-control' %>
+        </div>
+        <div class="col-md-6">
+          <%= f.label :occupation, class: 'form-label' %>
+          <%= f.select :occupation, 
+              options_for_select(['author', 'translator', 'editor', 'illustrator', 'contributor'], @person.occupation),
+              { include_blank: 'Select role' },
+              class: 'form-select' %>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <%= f.label :birthplace, class: 'form-label' %>
+          <%= f.text_field :birthplace, class: 'form-control kan-ime' %>
+        </div>
+        <div class="col-md-6">
+          <%= f.label :nationality, class: 'form-label' %>
+          <%= f.text_field :nationality, class: 'form-control kan-ime' %>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <%= f.label :genre, class: 'form-label' %>
+          <%= f.text_field :genre, class: 'form-control kan-ime' %>
+        </div>
+        <div class="col-md-6">
+          <%= f.label :education, class: 'form-label' %>
+          <%= f.text_field :education, class: 'form-control kan-ime' %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :bio, class: 'form-label' %>
+        <%= f.text_area :bio, class: 'form-control kan-ime', rows: 4 %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <%= f.submit 'Create Person', class: 'btn btn-primary' %>
+        <%= link_to 'Cancel', admin_people_path, class: 'btn btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

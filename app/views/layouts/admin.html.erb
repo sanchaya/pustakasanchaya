@@ -323,18 +323,52 @@
              <i class="fas fa-book"></i> Books
            </a>
          </li>
-         <li>
-           <a href="<%= admin_authors_path %>" 
-              class="<%= 'active' if current_page?(admin_authors_path) %>">
-             <i class="fas fa-feather"></i> Authors
-           </a>
-         </li>
-         <li>
-           <a href="<%= admin_publishers_path %>" 
-              class="<%= 'active' if current_page?(admin_publishers_path) %>">
-             <i class="fas fa-building"></i> Publishers
-           </a>
-         </li>
+<li class="dropdown">
+            <a href="<%= admin_people_path %>" 
+               class="<%= 'active' if current_page?(admin_people_path) %>"
+               data-bs-toggle="collapse" data-bs-target="#peopleSubmenu" aria-expanded="false">
+              <i class="fas fa-users"></i> People
+              <i class="fas fa-chevron-down ms-auto"></i>
+            </a>
+            <ul class="collapse list-unstyled ms-3" id="peopleSubmenu">
+              <li>
+                <a href="<%= admin_people_path %>" class="<%= 'active' if current_page?(admin_people_path) %>">
+                  <i class="fas fa-list"></i> All People
+                </a>
+              </li>
+              <li>
+                <a href="<%= admin_people_path(role: 'author') %>" class="<%= 'active' if current_page?(admin_people_path(role: 'author')) %>">
+                  <i class="fas fa-feather"></i> Authors
+                </a>
+              </li>
+              <li>
+                <a href="<%= admin_people_path(role: 'translator') %>" class="<%= 'active' if current_page?(admin_people_path(role: 'translator')) %>">
+                  <i class="fas fa-language"></i> Translators
+                </a>
+              </li>
+              <li>
+                <a href="<%= admin_people_path(role: 'editor') %>" class="<%= 'active' if current_page?(admin_people_path(role: 'editor')) %>">
+                  <i class="fas fa-edit"></i> Editors
+                </a>
+              </li>
+              <li>
+                <a href="<%= admin_people_path(role: 'illustrator') %>" class="<%= 'active' if current_page?(admin_people_path(role: 'illustrator')) %>">
+                  <i class="fas fa-paint-brush"></i> Illustrators
+                </a>
+              </li>
+              <li>
+                <a href="<%= admin_people_path(role: 'contributor') %>" class="<%= 'active' if current_page?(admin_people_path(role: 'contributor')) %>">
+                  <i class="fas fa-hands-helping"></i> Contributors
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="<%= admin_publishers_path %>" 
+               class="<%= 'active' if current_page?(admin_publishers_path) %>">
+              <i class="fas fa-building"></i> Publishers
+            </a>
+          </li>
          <li>
            <a href="<%= admin_libraries_path %>" 
               class="<%= 'active' if current_page?(admin_libraries_path) %>">

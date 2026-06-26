@@ -1,0 +1,111 @@
+<% content_for :title, "Publishers - ಪುಸ್ತಕ ಸಂಚಯ" %>
+
+<div style="background: linear-gradient(135deg, #5F3792, #7e57c2); color: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+  <h2 style="margin: 0 0 6px 0; font-size: 22px;">ಪ್ರಕಾಶಕರು</h2>
+  <p style="margin: 0; opacity: 0.9; font-size: 14px;">ಕನ್ನಡ ಪುಸ್ತಕಗಳ ಪ್ರಕಾಶಕರ ಪಟ್ಟಿ. ಅಕ್ಷರ ಆಯ್ಕೆ ಮಾಡಿ ಅಥವಾ ಹುಡುಕಾಟ ನಡೆಸಿ.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div style="margin-bottom: 15px;">
+          <input type="text" id="search-input" class="form-control" placeholder="ಹುಡುಕು ಪ್ರಕಾಶಕರು..." style="font-family: 'Noto Sans Kannada', sans-serif;">
+        </div>
+
+        <%= render 'application/letter_bar' %>
+
+        <div style="margin-bottom: 15px;">
+          <h4 style="margin: 0 0 12px 0; color: #5F3792; font-size: 16px;">ಪ್ರಮುಖ ಪ್ರಕಾಶಕರು</h4>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="popular-publishers"></div>
+        </div>
+
+        <div id="results" style="min-height: 100px;">
+          <p class="text-muted text-center" style="padding: 30px 0; margin: 0;">ಮೇಲಿನ ಅಕ್ಷರ ಆಯ್ಕೆ ಮಾಡಿ ಅಥವಾ ಹುಡುಕಿರಿ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var searchInput = document.getElementById('search-input');
+  var resultsDiv = document.getElementById('results');
+  var popularDiv = document.getElementById('popular-publishers');
+  var letterBtns = document.querySelectorAll('.letter-btn');
+  var searchTimer;
+  var allData = [];
+
+  function clearLetterActive() {
+    letterBtns.forEach(function(b) {
+      b.style.background = '#f8f8f8';
+      b.style.color = '#333';
+    });
+  }
+
+  function setActive(btn) {
+    if (btn) {
+      btn.style.background = '#5F3792';
+      btn.style.color = '#fff';
+    }
+  }
+
+  function renderList(data) {
+    if (!data || data.length === 0) {
+      resultsDiv.innerHTML = '<p class="text-muted text-center" style="padding: 30px 0; margin: 0;">ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ</p>';
+      return;
+    }
+    var html = '';
+    data.forEach(function(item) {
+      html += '<a href="/publishers/' + item.slug + '" style="display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #eee; text-decoration: none; color: #333;">';
+      html += '<span style="flex: 1; font-size: 14px;">' + item.name + '</span>';
+      html += '</a>';
+    });
+    resultsDiv.innerHTML = '<div style="border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden;">' + html + '</div>';
+  }
+
+  function loadResults(letter, query) {
+    var filtered = allData;
+    if (letter) {
+      filtered = filtered.filter(function(item) { return item.name.indexOf(letter) === 0; });
+    }
+    if (query) {
+      var q = query.toLowerCase();
+      filtered = filtered.filter(function(item) { return item.name.toLowerCase().indexOf(q) !== -1; });
+    }
+    renderList(filtered);
+  }
+
+  fetch(window.location.pathname + '?format=json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      allData = data || [];
+      var popular = allData.slice(0, 12);
+      var pHtml = '';
+      popular.forEach(function(item) {
+        pHtml += '<a href="/publishers/' + item.slug + '" style="display: inline-block; padding: 8px 16px; background: #f0edf5; border-radius: 20px; text-decoration: none; color: #5F3792; font-size: 13px; border: 1px solid #e0d8ed;">';
+        pHtml += item.name;
+        pHtml += '</a>';
+      });
+      popularDiv.innerHTML = pHtml;
+    });
+
+  searchInput.addEventListener('keyup', function() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function() {
+      clearLetterActive();
+      loadResults('', searchInput.value.trim());
+    }, 300);
+  });
+
+  letterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      clearLetterActive();
+      setActive(btn);
+      searchInput.value = '';
+      loadResults(btn.getAttribute('data-letter'), '');
+    });
+  });
+});
+</script>

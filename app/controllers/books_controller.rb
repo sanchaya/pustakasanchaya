@@ -4,21 +4,19 @@ class BooksController < ApplicationController
     begin
       if params && params[:search] && !params[:search].blank?
         original_term = params[:search]
-        # URL decoding corruption: U+0CBF (kn i  ಿ) sometimes gets corrupted to U+0CC7 (ೇ) during URL decoding.
-        # Try both the original term and the corruption-fixed variant, merging results.
         fixed_term = params[:search].gsub('ೇ', 'ಿ')
         terms = [original_term, fixed_term].uniq
 
         all_books = terms.flat_map { |term| search_books(term) }
-                        .uniq { |b| b['source_identifier'] || b['name'] }
+                         .uniq { |b| b['source_identifier'] || b['name'] }
 
-        # Sort results
         sort_col = params[:sort].presence_in(%w[name author publisher library year]) || 'name'
         sort_dir = params[:direction].presence_in(%w[asc desc]) || 'asc'
         all_books = all_books.sort_by { |b| (b[sort_col] || '').downcase }
         all_books.reverse! if sort_dir == 'desc'
 
-        @books = Kaminari.paginate_array(all_books).page(params[:page]).per(8)
+        grouped = all_books.group_by { |b| b['name'] }
+        @books = Kaminari.paginate_array(grouped.values).page(params[:page]).per(8)
       end
     rescue StandardError
       @books = Kaminari.paginate_array([]).page(params[:page]).per(8)

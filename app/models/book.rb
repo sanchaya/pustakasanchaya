@@ -8,6 +8,7 @@ class Book < ActiveRecord::Base
   has_many :stores, through: :book_stores
 
   after_save :clear_search_cache
+  after_save :update_slug_columns
   after_destroy :clear_search_cache
 
   def self.search_cache_version
@@ -207,5 +208,35 @@ class Book < ActiveRecord::Base
     return nil if arr.blank?
     return arr.first if arr.length == 1
     YAML.dump(arr)
+  end
+
+  def update_slug_columns
+    prev = previous_changes
+    changes = {}
+    if prev.key?('author') || new_record?
+      changes[:author_slug] = author.present? ? SlugHelper.slug_for(author) : nil
+    end
+    if prev.key?('publisher') || new_record?
+      changes[:publisher_slug] = publisher.present? ? SlugHelper.slug_for(publisher) : nil
+    end
+    update_columns(changes) unless changes.empty?
+  end
+
+  def self.update_author_slugs!(author_name)
+    slug = SlugHelper.slug_for(author_name)
+    where(author: author_name).update_all(author_slug: slug)
+  end
+
+  def self.update_publisher_slugs!(publisher_name)
+    slug = SlugHelper.slug_for(publisher_name)
+    where(publisher: publisher_name).update_all(publisher_slug: slug)
+  end
+
+  def self.invalidate_slug_cache!
+    keys = %w[
+      slug_map:author slug_map:publisher slug_map:category
+      slug_pairs:author slug_pairs:publisher slug_pairs:category
+    ]
+    keys.each { |k| Rails.cache.delete(k) }
   end
 end

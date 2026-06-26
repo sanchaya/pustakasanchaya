@@ -8,14 +8,30 @@ Rails.application.routes.draw do
   get 'books/wiki_info'
   get 'books/wiki_user_info'
   get 'books/capture_user_name'
+  get 'books/fetch_thumbnail' => 'books#fetch_thumbnail'
+  get 'books/debug_search' => 'books#debug_search'
   get '/wiki' => 'books#wiki'
 
-  get '/categories' => 'categories#index'
-  get '/categories/:id' => 'categories#show'
+  get '/categories' => 'categories#index', as: :categories
+  get '/categories/letter_data' => 'categories#letter_data', as: :category_letter_data
+  get '/categories/:slug' => 'categories#show', as: :category
+  get '/authors' => 'authors#index', as: :authors
+  get '/authors/:slug' => 'authors#show', as: :author
+  get '/publishers' => 'publishers#index', as: :publishers
+  get '/publishers/letter_data' => 'publishers#letter_data', as: :publisher_letter_data
+  get '/publishers/:slug' => 'publishers#show', as: :publisher
+  get '/libraries' => 'libraries#index', as: :libraries
+  get '/libraries/:slug' => 'libraries#show', as: :library
+  get '/sitemap.xml' => 'sitemaps#index', defaults: { format: :xml }
   get '/stores' => 'stores#index', as: :stores
+  post '/author_suggestions' => 'author_suggestions#create'
+  get '/people' => 'people#index', as: :people
+  get '/people/:id' => 'people#show', as: :person
 
   # Admin routes
   namespace :admin do
+    # get '/tasks' => 'dashboard#tasks', as: :tasks
+    get '/tasks/status' => 'dashboard#task_status', as: :task_status
     get '/login' => 'sessions#login', as: :login
     post '/login' => 'sessions#login'
     get '/logout' => 'sessions#logout', as: :logout
@@ -29,18 +45,31 @@ Rails.application.routes.draw do
     
     get '/' => 'dashboard#index', as: :dashboard
     get '/dashboard' => 'dashboard#index'
+    get '/stats' => 'dashboard#stats', as: :stats
     get '/profile' => 'dashboard#profile', as: :profile
     post '/profile' => 'dashboard#update_profile', as: :update_profile
     get '/editors' => 'dashboard#editors', as: :editors
+    post '/editors/create' => 'dashboard#create_editor', as: :create_editor
+    post '/editors/change-password' => 'dashboard#change_editor_password', as: :change_editor_password
     
     get '/books' => 'books#index', as: :books
     get '/books/search' => 'books#search', as: :books_search
     get '/books/bulk' => 'books#bulk_edit', as: :bulk_edit_books
     post '/books/bulk-preview' => 'books#bulk_preview', as: :bulk_preview_books
     post '/books/bulk-update' => 'books#bulk_update', as: :bulk_update_books
-    post '/books/merge-multiple' => 'books#merge_multiple', as: :merge_multiple_books
-    post '/books/:id/edit' => 'books#update', as: :update_book
-    get '/books/:id/edit' => 'books#edit', as: :edit_book
+    post '/books/bulk-update-selected' => 'books#bulk_update_selected', as: :bulk_update_selected_books
+    post '/books/merge-multiple' => 'books->merge_multiple', as: :merge_multiple_books
+    get '/books/duplicates' => 'books#duplicates', as: :duplicates_books
+    post '/books/merge-duplicates' => 'books#merge_duplicates', as: :merge_duplicates_books
+    post '/books/:id/fetch_thumbnail' => 'books#fetch_thumbnail', as: :fetch_thumbnail_book
+    post '/books/fetch_thumbnails_bulk' => 'books#fetch_thumbnails_bulk', as: :fetch_thumbnails_bulk_books
+    post '/books/:id/reset_thumbnail_failed' => 'books#reset_thumbnail_failed', as: :reset_thumbnail_failed_book
+    get '/books/:id/edit' => 'books#edit_form', as: :edit_book
+    post '/books/:id/edit' => 'books#update_form', as: :update_book
+    get '/books/:id/edit-form' => 'books#edit_form', as: :edit_form_book
+    post '/books/:id/edit-form' => 'books#update_form', as: :update_form_book
+    delete '/books/:id' => 'books#destroy', as: :destroy_book
+    post '/books/:id/remove_contribution' => 'books#remove_contribution', as: :remove_book_contribution
     
     get '/duplicates' => 'duplicates#index', as: :duplicates
     post '/duplicates/find' => 'duplicates#find', as: :find_duplicates
@@ -50,11 +79,15 @@ Rails.application.routes.draw do
     delete '/corrections' => 'corrections#destroy', as: :destroy_correction
     get '/audit-log' => 'corrections#audit_log', as: :audit_log
     
-    get '/authors' => 'metadata#authors', as: :authors
-    get '/authors/find-similar' => 'metadata#find_similar_authors', as: :find_similar_authors
-    post '/authors/rename' => 'metadata#rename_author', as: :rename_author
-    post '/authors/merge' => 'metadata#merge_authors', as: :merge_authors
-    post '/authors/merge-multiple' => 'metadata#merge_multiple_authors', as: :merge_multiple_authors
+    # admin authors routes disabled – use admin/people for merges
+    # get '/authors' => 'metadata#authors', as: :authors
+    # get '/authors/find-similar' => 'metadata#find_similar_authors', as: :find_similar_authors
+    # post '/authors/rename' => 'metadata#rename_author', as: :rename_author
+    # post '/authors/merge' => 'metadata#merge_authors', as: :merge_authors
+    # post '/authors/merge-multiple' => 'metadata#merge_multiple_authors', as: :merge_multiple_authors
+    # get '/authors/split' => 'metadata#split_authors', as: :split_authors
+    # post '/authors/split' => 'metadata#apply_split_authors', as: :apply_split_authors
+    # post '/authors/dismiss_split' => 'metadata#dismiss_split', as: :dismiss_split_authors
     
     get '/publishers' => 'metadata#publishers', as: :publishers
     get '/publishers/find-similar' => 'metadata#find_similar_publishers', as: :find_similar_publishers
@@ -74,10 +107,17 @@ Rails.application.routes.draw do
     post '/libraries/merge' => 'metadata#merge_libraries', as: :merge_libraries
     post '/libraries/merge-multiple' => 'metadata#merge_multiple_libraries', as: :merge_multiple_libraries
     
+    get '/stores' => 'metadata#stores', as: :manage_stores
+    get '/stores/find-similar' => 'metadata#find_similar_stores', as: :find_similar_stores
+    post '/stores/rename' => 'metadata#rename_store', as: :rename_store
+    post '/stores/merge' => 'metadata#merge_stores', as: :merge_stores
+    post '/stores/merge-multiple' => 'metadata#merge_multiple_stores', as: :merge_multiple_stores
+    
     get '/suggested-merges' => 'metadata#suggested_merges', as: :suggested_merges
+    get '/suggested-merges/data' => 'metadata#suggestions_data', as: :suggestions_data
     post '/suggested-merges/apply' => 'metadata#apply_suggestion', as: :apply_suggestion
     post '/suggested-merges/dismiss' => 'metadata#dismiss_suggestion', as: :dismiss_suggestion
-
+    
     get '/stores' => 'stores#index', as: :stores
     get '/stores/new' => 'stores#new', as: :new_store
     post '/stores' => 'stores#create'
@@ -86,59 +126,26 @@ Rails.application.routes.draw do
     put '/stores/:id' => 'stores#update'
     delete '/stores/:id' => 'stores#destroy'
     post '/stores/:id/toggle' => 'stores#toggle_active', as: :toggle_store
+    
+resources :people, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+      collection do
+        get :find_similar
+        get :search_books
+        post :rename
+        post :merge
+        post :merge_multiple
+      end
+      member do
+        post :add_contribution
+        post :update_contribution
+        delete :remove_contribution
+      end
+    end
+    
+    resources :roles, only: [:index, :create, :update, :destroy], controller: 'roles'
+    
+    get '/author-suggestions' => 'metadata#author_suggestions', as: :author_suggestions
+    post '/author-suggestions/:id/approve' => 'metadata#approve_suggestion', as: :approve_suggestion
+    post '/author-suggestions/:id/reject' => 'metadata#reject_suggestion', as: :reject_suggestion
   end
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end

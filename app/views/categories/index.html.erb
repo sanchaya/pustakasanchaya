@@ -1,34 +1,104 @@
-<div class="category-search-wrap">
-  <input type="text" id="category-search" class="form-control" placeholder="<%= t(:huduku) %> ವಿಭಾಗಗಳು...">
+<% content_for :title, "Categories - ಪುಸ್ತಕ ಸಂಚಯ" %>
+
+<div style="background: linear-gradient(135deg, #5F3792, #7e57c2); color: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+  <h2 style="margin: 0 0 6px 0; font-size: 22px;">ವಿಭಾಗಗಳು</h2>
+  <p style="margin: 0; opacity: 0.9; font-size: 14px;">ಕನ್ನಡ ಪುಸ್ತಕಗಳ ವರ್ಗೀಕೃತ ವಿಭಾಗಗಳನ್ನು ಅನ್ವೇಷಿಸಿ. ಅಕ್ಷರ ಆಯ್ಕೆ ಮಾಡಿ ಅಥವಾ ಹುಡುಕಾಟ ನಡೆಸಿ.</p>
 </div>
 
-<div class="categories-grid" id="categories-grid">
-  <% @categories.each do |category| %>
-    <%= link_to "/categories/#{category['id']}", class: 'category-card', data: { name: category['kn'] } do %>
-      <div class="category-card-inner">
-        <div class="category-icon">
-          <i class="fa fa-book"></i>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <div style="margin-bottom: 15px;">
+          <input type="text" id="search-input" class="form-control" placeholder="ಹುಡುಕು ವಿಭಾಗಗಳು..." style="font-family: 'Noto Sans Kannada', sans-serif;">
         </div>
-        <span class="category-name"><%= category['kn'] %></span>
+
+        <%= render 'application/letter_bar' %>
+
+        <% top_categories = @categories.first(12) %>
+        <div style="margin-bottom: 15px;">
+          <h4 style="margin: 0 0 12px 0; color: #5F3792; font-size: 16px;">ಪ್ರಮುಖ ವಿಭಾಗಗಳು</h4>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <% top_categories.each do |cat| %>
+              <a href="/categories/<%= cat[:slug] %>" style="display: inline-block; padding: 8px 16px; background: #f0edf5; border-radius: 20px; text-decoration: none; color: #5F3792; font-size: 13px; border: 1px solid #e0d8ed;">
+                <%= cat[:name] %>
+              </a>
+            <% end %>
+          </div>
+        </div>
+
+        <div id="results" style="min-height: 100px;">
+          <p class="text-muted text-center" style="padding: 30px 0; margin: 0;">ಮೇಲಿನ ಅಕ್ಷರ ಆಯ್ಕೆ ಮಾಡಿ ಅಥವಾ ಹುಡುಕಿರಿ</p>
+        </div>
       </div>
-    <% end %>
-  <% end %>
+    </div>
+  </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var input = document.getElementById('category-search');
-  if (!input) return;
-  input.addEventListener('keyup', function() {
-    var filter = this.value.trim().toLowerCase();
-    var grid = document.getElementById('categories-grid');
-    var cards = grid.getElementsByClassName('category-card');
-    for (var i = 0; i < cards.length; i++) {
-      var name = cards[i].getAttribute('data-name');
-      if (name) {
-        cards[i].style.display = name.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
-      }
+  var searchInput = document.getElementById('search-input');
+  var resultsDiv = document.getElementById('results');
+  var letterBtns = document.querySelectorAll('.letter-btn');
+  var searchTimer;
+
+  function clearLetterActive() {
+    letterBtns.forEach(function(b) {
+      b.style.background = '#f8f8f8';
+      b.style.color = '#333';
+    });
+  }
+
+  function setActive(btn) {
+    if (btn) {
+      btn.style.background = '#5F3792';
+      btn.style.color = '#fff';
     }
+  }
+
+  function loadResults(letter, query) {
+    var params = '?format=json';
+    if (letter) params += '&letter=' + encodeURIComponent(letter);
+    if (query) params += '&q=' + encodeURIComponent(query);
+
+    resultsDiv.innerHTML = '<p class="text-muted text-center" style="padding: 30px 0; margin: 0;">ದಯವಿಟ್ಟು ನಿರೀಕ್ಷಿಸಿ...</p>';
+
+    fetch(window.location.pathname + params)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || data.length === 0) {
+          resultsDiv.innerHTML = '<p class="text-muted text-center" style="padding: 30px 0; margin: 0;">ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ</p>';
+          return;
+        }
+        var html = '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+        data.forEach(function(item) {
+          html += '<a href="/categories/' + item.slug + '" style="display: inline-block; padding: 8px 16px; background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; text-decoration: none; color: #333; font-size: 13px;">';
+          html += item.name;
+          html += '</a>';
+        });
+        html += '</div>';
+        resultsDiv.innerHTML = html;
+      })
+      .catch(function() {
+        resultsDiv.innerHTML = '<p class="text-danger text-center" style="padding: 30px 0; margin: 0;">ದೋಷ ಸಂಭವಿಸಿದೆ</p>';
+      });
+  }
+
+  searchInput.addEventListener('keyup', function() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function() {
+      clearLetterActive();
+      loadResults('', searchInput.value.trim());
+    }, 300);
+  });
+
+  letterBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      clearLetterActive();
+      setActive(btn);
+      searchInput.value = '';
+      loadResults(btn.getAttribute('data-letter'), '');
+    });
   });
 });
 </script>

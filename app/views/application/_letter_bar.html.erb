@@ -1,0 +1,14 @@
+<div class="letter-bar" style="margin-bottom: 15px;">
+  <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-bottom: 6px;">
+    <button class="letter-btn active" data-letter="" style="min-width: 36px; padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px; background: #5F3792; color: #fff; cursor: pointer; font-size: 13px; font-family: 'Noto Sans Kannada', sans-serif;">ಎಲ್ಲಾ</button>
+    <% %w[ಅ ಆ ಇ ಈ ಉ ಊ ಋ ಎ ಏ ಐ ಒ ಓ ಔ ಅಂ ಅಃ ಕ ಖ ಗ ಘ ಙ ಚ ಛ ಜ ಝ ಞ ಟ ಠ ಡ ಢ ಣ ತ ಥ ದ ಧ ನ ಪ ಫ ಬ ಭ ಮ ಯ ರ ಲ ವ ಶ ಷ ಸ ಹ ಳ].each do |letter| %>
+      <button class="letter-btn" data-letter="<%= letter %>" style="min-width: 36px; padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px; background: #f8f8f8; cursor: pointer; font-size: 13px; font-family: 'Noto Sans Kannada', sans-serif;"><%= letter %></button>
+    <% end %>
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
+    <span style="padding: 5px 8px; color: #999; font-size: 13px;">A-Z</span>
+    <% ('A'..'Z').each do |letter| %>
+      <button class="letter-btn" data-letter="<%= letter %>" style="min-width: 36px; padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px; background: #f8f8f8; cursor: pointer; font-size: 13px; font-family: 'Noto Sans Kannada', sans-serif;"><%= letter %></button>
+    <% end %>
+  </div>
+</div>

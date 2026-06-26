@@ -39,6 +39,27 @@ module BooksHelper
     return file_name + '.djvu'
   end
 
+  def clean_link(url)
+    return '' if url.blank?
+    url.strip
+  end
+
+  def wiki_logo_class(is_present)
+    case is_present
+    when 'true', true then 'wiki-present'
+    when 'false', false then 'wiki-missing'
+    else 'wiki-unknown'
+    end
+  end
+
+  def wiki_logo_title(is_present)
+    case is_present
+    when 'true', true then 'Present in Wikipedia'
+    when 'false', false then 'Not in Wikipedia'
+    else 'Unknown'
+    end
+  end
+
   def book_cache_key
     max_book_id = Book.maximum(:id)
     max_store_id = Store.maximum(:id)
@@ -53,6 +74,8 @@ module BooksHelper
         'total_books' => Book.count,
         'total_authors' => Book.where.not(author: [nil, '']).distinct.count(:author),
         'total_publishers' => Book.where.not(publisher: [nil, '']).distinct.count(:publisher),
+        'total_categories' => Book.where.not(categories: [nil, '']).distinct.count(:categories),
+        'total_libraries' => Book.where.not(library: [nil, '']).distinct.count(:library),
         'total_stores' => Store.active.count,
         'total_store_links' => BookStore.count,
         'stores_with_counts' => Store.active.ordered.joins(:book_stores).group('stores.id', 'stores.name').count('book_stores.id')

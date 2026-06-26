@@ -27,8 +27,9 @@ class Author
     return { success: false, error: 'Authors cannot be blank' } if old_author.blank? || new_author.blank?
     affected = Book.where(author: old_author)
     count = affected.count
-    affected.update_all(author: new_author)
+    affected.update_all(author: new_author, author_slug: SlugHelper.slug_for(new_author))
     Book.bump_search_cache
+    Book.invalidate_slug_cache! if count > 0
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'author', old_author, new_author, editor_email, "Merged author: '#{old_author}' → '#{new_author}'")
     end
@@ -41,8 +42,9 @@ class Author
     return { success: false, error: 'Author names cannot be blank' } if old_name.blank? || new_name.blank?
     affected = Book.where(author: old_name)
     count = affected.count
-    affected.update_all(author: new_name)
+    affected.update_all(author: new_name, author_slug: SlugHelper.slug_for(new_name))
     Book.bump_search_cache
+    Book.invalidate_slug_cache! if count > 0
     affected.find_each do |book|
       Correction.record_edit(book.source_identifier, 'author', old_name, new_name, editor_email, "Renamed author: '#{old_name}' → '#{new_name}'")
     end

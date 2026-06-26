@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include SlugHelper
   protect_from_forgery with: :exception
   before_filter :set_local_language
   before_filter :reject_honeypot

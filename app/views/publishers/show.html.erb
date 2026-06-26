@@ -1,0 +1,72 @@
+<% content_for :title, "#{@publisher_name} - Publishers - ಪುಸ್ತಕ ಸಂಚಯ" %>
+<% store_logos = Store.active.ordered.each_with_object({}) { |s, h| h[s.name] = s.logo } %>
+
+<div style="background: linear-gradient(135deg, #5F3792, #7e57c2); color: #fff; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+  <h2 style="margin: 0 0 6px 0; font-size: 22px;"><%= link_to 'ಪ್ರಕಾಶಕರು', publishers_path, style: 'color: #fff; text-decoration: none;' %> &raquo; <%= @publisher_name %></h2>
+  <p style="margin: 0; opacity: 0.9; font-size: 14px;">ಕನ್ನಡ ಪುಸ್ತಕಗಳ ಪ್ರಕಾಶಕರ ಪಟ್ಟಿ. ಅಕ್ಷರ ಆಯ್ಕೆ ಮಾಡಿ ಅಥವಾ ಹುಡುಕಾಟ ನಡೆಸಿ.</p>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div style="margin-bottom: 15px;">
+      <form action="<%= publishers_path %>" method="get" style="margin: 0;">
+        <input type="text" name="q" class="form-control" placeholder="ಹುಡುಕು ಪ್ರಕಾಶಕರು..." style="font-family: 'Noto Sans Kannada', sans-serif;">
+      </form>
+    </div>
+
+    <%= render 'application/letter_bar' %>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var baseUrl = '<%= publishers_path %>';
+      document.querySelectorAll('.letter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var letter = btn.getAttribute('data-letter');
+          window.location.href = baseUrl + (letter ? '?letter=' + encodeURIComponent(letter) : '');
+        });
+      });
+    });
+    </script>
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0"><%= @publisher_name %> (<%= number_with_delimiter(@books.total_count) %> books)</h4>
+      </div>
+      <div class="card-body p-0">
+        <% if @books.any? %>
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th><%= sort_link('name', 'Title', publisher_path(slug_for(@publisher_name))) %></th>
+                  <th><%= sort_link('author', 'Author', publisher_path(slug_for(@publisher_name))) %></th>
+                  <th><%= sort_link('year', 'Year', publisher_path(slug_for(@publisher_name))) %></th>
+                  <th><%= sort_link('library', 'Source', publisher_path(slug_for(@publisher_name))) %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @books.each do |book| %>
+                  <tr>
+                    <td><%= book['name'] %></td>
+                    <td><%= link_to book['author'], author_path(slug_for(book['author'])) if book['author'].present? %></td>
+                    <td><%= book['year'] %></td>
+                    <td class="source-links" style="white-space: nowrap;">
+                      <%= render 'application/book_source_links', book_source: book, store_logos: store_logos %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center py-5 text-muted">No books found for this publisher.</div>
+        <% end %>
+      </div>
+      <% if @books.total_pages > 1 %>
+        <div class="card-footer">
+          <%= paginate @books, params: { slug: slug_for(@publisher_name) } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
