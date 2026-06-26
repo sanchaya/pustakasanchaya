@@ -1,6 +1,6 @@
 # Pustaka Sanchaya (ಪುಸ್ತಕ ಸಂಚಯ)
 
-Kannada book search portal — aggregates books from digital libraries (Internet Archive, ServantsOfKnowledge, Osmania, DLI, and others) and online stores (Ankita Pustaka, Total Kannada, Navakarnataka, Kannada Book House, etc.) with a searchable catalog, category browsing, author/publisher indexes, and Wikipedia article creation workflow.
+Kannada book search portal — aggregates books from digital libraries (Internet Archive, ServantsOfKnowledge, Osmania, DLI, and others), online stores (Ankita Pustaka, Total Kannada, Navakarnataka, Kannada Book House, etc.), and **ISBNSanchaya** (https://isbn.sanchaya.net — a crowdsourced Kannada ISBN catalog). Features include searchable catalog, category browsing, author/publisher indexes, and Wikipedia article creation workflow.
 
 **Production:** https://pustaka.sanchaya.net  
 **Ruby:** 2.4.6 | **Rails:** 4.2.11.1 | **Database:** MySQL | **Server:** Phusion Passenger + nginx
