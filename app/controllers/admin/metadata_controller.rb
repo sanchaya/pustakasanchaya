@@ -4,10 +4,13 @@ class Admin::MetadataController < ApplicationController
 
   def parse_json_body
     if request.content_type == 'application/json'
-      body = request.body.read
-      if body.present?
-        json_params = JSON.parse(body)
-        params.merge!(json_params)
+      # Check if params already have the data (from middleware)
+      if params[:type].blank? && params[:source].blank? && params[:target].blank?
+        body = request.body.read
+        if body.present?
+          json_params = JSON.parse(body)
+          params.merge!(json_params)
+        end
       end
     end
   end
@@ -263,6 +266,7 @@ class Admin::MetadataController < ApplicationController
 
   def apply_suggestion
     parse_json_body
+    Rails.logger.info "[apply_suggestion] type=#{params[:type]}, source=#{params[:source]}, target=#{params[:target]}"
     type = params[:type]
     source = params[:source]
     target = params[:target]
@@ -279,6 +283,9 @@ class Admin::MetadataController < ApplicationController
     end
 
     render json: result
+  rescue StandardError => e
+    Rails.logger.error "[apply_suggestion] Error: #{e.message}\n#{e.backtrace.join("\n")}"
+    render json: { success: false, error: e.message }, status: 500
   end
 
   def dismiss_suggestion
