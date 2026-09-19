@@ -411,4 +411,37 @@ module BooksHelper
     end
   end
 
+  def get_commons_filename(url)
+    return '' if url.blank?
+    # Extract filename from Wikimedia URL
+    # e.g., https://commons.wikimedia.org/wiki/File:Example.djvu -> Example
+    uri = URI.parse(url) rescue nil
+    return '' unless uri
+    path = uri.path
+    # File: prefix
+    if path =~ %r{/File:([^/]+)}
+      filename = $1
+      # Remove extension
+      filename.sub(/\.(djvu|pdf|jpg|png|tiff?)$/i, '')
+    else
+      ''
+    end
+  end
+
+  def get_wikisource_filename(url)
+    return '' if url.blank?
+    # Extract filename from Wikisource URL
+    # e.g., https://kn.wikisource.org/wiki/Index:Example.djvu -> Example
+    uri = URI.parse(url) rescue nil
+    return '' unless uri
+    path = uri.path
+    # Index: prefix
+    if path =~ %r{/Index:([^/]+)}
+      filename = $1
+      # Remove extension
+      filename.sub(/\.(djvu|pdf|jpg|png|tiff?)$/i, '')
+    else
+      ''
+    end
+  end
 end
