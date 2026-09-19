@@ -394,11 +394,13 @@
     `;
     document.getElementById('editModalBody').innerHTML = html;
     document.getElementById('editForm').dataset.sourceId = data.source_identifier;
+    document.getElementById('editForm').dataset.bookId = data.book.id;
   }
 
   function saveBookEdit() {
     const form = document.getElementById('editForm');
     const sourceId = form.dataset.sourceId;
+    const bookId = form.dataset.bookId;
     const inputs = form.querySelectorAll('input');
 
     inputs.forEach(input => {

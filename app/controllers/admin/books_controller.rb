@@ -50,7 +50,7 @@ class Admin::BooksController < ApplicationController
     @corrections = Correction.edits_for_book(@book.source_identifier)
 
     render json: {
-      book: @book,
+      book: @book.as_json(only: [:id, :name, :author, :publisher, :year, :library, :source_identifier, :thumbnail, :archive_url, :book_link, :categories]),
       source_identifier: @book.source_identifier,
       corrections: @corrections
     }
