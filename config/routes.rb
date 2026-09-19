@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get '/libraries/:slug' => 'libraries#show', as: :library
   get '/sitemap.xml' => 'sitemaps#index', defaults: { format: :xml }
   get '/stores' => 'stores#index', as: :stores
+  post '/stores/suggestion' => 'stores#suggestion', as: :store_suggestion
   post '/author_suggestions' => 'author_suggestions#create'
 
   # Admin routes

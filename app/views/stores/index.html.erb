@@ -20,7 +20,7 @@
 
   <div id="suggestion-form" style="display: none; margin-bottom: 20px;">
     <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: #f8f9fa;">
-      <form action="mailto:info@sanchaya.org" method="post" enctype="text/plain" onsubmit="return prepareSuggestion(event)">
+      <form action="<%= store_suggestion_path %>" method="post" onsubmit="return prepareSuggestion(event)">
         <div style="margin-bottom: 12px;">
           <label style="display: block; margin-bottom: 4px; font-weight: bold;">ನಿಮ್ಮ ಹೆಸರು</label>
           <input type="text" name="name" placeholder="ಐಚ್ಛಿಕ" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
@@ -95,14 +95,14 @@ function prepareSuggestion(event) {
   if (url) body += 'URL: ' + url + '\n';
   if (notes) body += 'ಹೆಚ್ಚಿನ ಮಾಹಿತಿ: ' + notes + '\n';
 
-  form.querySelector('input[name="name"]').name = 'body';
-  form.querySelector('select[name="type"]').remove();
-  form.querySelector('input[name="suggestion[name]"]').remove();
-  form.querySelector('input[name="suggestion[url]"]').remove();
-  form.querySelector('textarea[name="suggestion[notes]"]').remove();
+  // Add hidden body field for server-side processing
+  var hiddenBody = document.createElement('input');
+  hiddenBody.type = 'hidden';
+  hiddenBody.name = 'body';
+  hiddenBody.value = body;
+  form.appendChild(hiddenBody);
 
-  form.querySelector('input[name="body"]').value = body;
-  form.action = 'mailto:info@sanchaya.org?subject=' + encodeURIComponent('ಹೊಸ ಮೂಲ/ಮಳಿಗೆ ಸೂಚನೆ: ' + sname);
+  // Keep all fields - server will process them
   return true;
 }
 </script>
