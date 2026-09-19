@@ -1,11 +1,12 @@
 class CategoriesController < ApplicationController
 
   def index
+    @categories = category_slug_pairs
     respond_to do |format|
       format.html
       format.json do
         begin
-          categories = category_slug_pairs
+          categories = @categories
           query = params[:q].to_s.strip
           letter = params[:letter].to_s.strip
           if query.present?
