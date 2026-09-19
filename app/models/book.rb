@@ -50,29 +50,56 @@ class Book < ActiveRecord::Base
   end
 
   def self.wiki_search
-    wiki_book_url = 'wiki_books'
-    full_url = "#{BASE_URL}/#{wiki_book_url}"
-    return parse_url(full_url).body
+    cache_key = "wiki/books/v#{search_cache_version}"
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      wiki_book_url = 'wiki_books'
+      full_url = "#{BASE_URL}/#{wiki_book_url}"
+      response = parse_url_with_timeout(full_url, 5)
+      response&.success? ? response.body : nil
+    end
+  rescue StandardError => e
+    Rails.logger.error "Wiki search failed: #{e.message}"
+    nil
+  end
+
+  def self.parse_url_with_timeout(url, timeout = 5)
+    HTTParty.get(URI.parse(URI.encode(url)), follow_redirects: true, timeout: timeout)
+  rescue StandardError
+    nil
   end
 
   def self.categories
-    full_url = "#{BASE_URL}/categories"
-    return parse_url(full_url).body
+    cache_key = "wiki/categories/v#{search_cache_version}"
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      full_url = "#{BASE_URL}/categories"
+      response = parse_url_with_timeout(full_url, 5)
+      response&.success? ? response.body : nil
+    end
+  rescue StandardError => e
+    Rails.logger.error "Categories fetch failed: #{e.message}"
+    nil
   end
 
   def self.category_books(id)
-    full_url = "#{BASE_URL}/categories/#{id}"
-    return parse_url(full_url).body
-  end
-
-  def self.parse_url(url)
-    HTTParty.get(URI.parse(URI.encode(url)), follow_redirects: true)
+    cache_key = "wiki/category_books/#{id}/v#{search_cache_version}"
+    Rails.cache.fetch(cache_key, expires_in: 1.hour) do
+      full_url = "#{BASE_URL}/categories/#{id}"
+      response = parse_url_with_timeout(full_url, 5)
+      response&.success? ? response.body : nil
+    end
+  rescue StandardError => e
+    Rails.logger.error "Category books fetch failed: #{e.message}"
+    nil
   end
 
   def self.capture_wiki_user(book_name,is_account, user_name='', book_id=nil, library=nil)
     wiki_user_url = 'wiki_user_info'
     full_url = "#{BASE_URL}/#{wiki_user_url}?book_name=#{book_name}&&is_account=#{is_account}&&user_name=#{user_name}&&book_id=#{book_id}&&library=#{library}"
-    return parse_url(full_url).body
+    response = parse_url_with_timeout(full_url, 5)
+    response&.success? ? response.body : nil
+  rescue StandardError => e
+    Rails.logger.error "Capture wiki user failed: #{e.message}"
+    nil
   end
 
   def self.search_ia(query, page: 1, per_page: 50)
@@ -89,7 +116,9 @@ class Book < ActiveRecord::Base
       }
 
       url = "#{IA_SEARCH_URL}?#{params.to_query}"
-      response = parse_url(url)
+      response = parse_url_with_timeout(url, 10)
+      return { books: [], total: 0, page: page, per_page: per_page } unless response&.success?
+
       data = JSON.parse(response.body)
       docs = data['response']['docs'] || []
       total = data['response']['numFound'] || 0
@@ -97,6 +126,9 @@ class Book < ActiveRecord::Base
       books = docs.map { |doc| ia_doc_to_book(doc) }
       { books: books, total: total, page: page, per_page: per_page }
     end
+  rescue StandardError => e
+    Rails.logger.error "IA search failed: #{e.message}"
+    { books: [], total: 0, page: page, per_page: per_page }
   end
 
   def self.ia_jai_gyan_books(page: 1, per_page: 50)
@@ -111,20 +143,30 @@ class Book < ActiveRecord::Base
     }
 
     url = "#{IA_SEARCH_URL}?#{params.to_query}"
-    response = parse_url(url)
+    response = parse_url_with_timeout(url, 10)
+    return { books: [], total: 0, page: page, per_page: per_page } unless response&.success?
+
     data = JSON.parse(response.body)
     docs = data['response']['docs'] || []
     total = data['response']['numFound'] || 0
 
     books = docs.map { |doc| ia_doc_to_book(doc) }
     { books: books, total: total, page: page, per_page: per_page }
+  rescue StandardError => e
+    Rails.logger.error "IA JaiGyan books failed: #{e.message}"
+    { books: [], total: 0, page: page, per_page: per_page }
   end
 
   def self.ia_book_details(identifier)
     url = "#{IA_ITEM_URL}/#{identifier}"
-    response = parse_url(url)
+    response = parse_url_with_timeout(url, 5)
+    return nil unless response&.success?
+
     JSON.parse(response.body)
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.error "IA book details failed: #{e.message}"
+    nil
+  end
     nil
   end
 
