@@ -87,10 +87,15 @@ def rename
     affected = Book.where(author: old_name)
     count = affected.count
     affected.update_all(author: new_name, author_slug: SlugHelper.slug_for(new_name))
+    # Also update translator field
+    Book.where(translator: old_name).update_all(translator: new_name)
     Book.bump_search_cache
     Book.invalidate_slug_cache! if count > 0
     Person.where(name: old_name).update_all(name: new_name)
     render json: { success: true, renamed_from: old_name, renamed_to: new_name, affected_count: count }
+  rescue StandardError => e
+    Rails.logger.error "Rename people error: #{e.message}\n#{e.backtrace.join("\n")}"
+    render json: { success: false, error: e.message }, status: 500
   end
 
   def merge
@@ -99,13 +104,19 @@ def rename
     unless old_name.present? && new_name.present?
       return render json: { success: false, error: 'Both names must be specified' }
     end
-    affected = Book.where(author: old_name)
-    count = affected.count
-    affected.update_all(author: new_name, author_slug: SlugHelper.slug_for(new_name))
+    count = Book.where(author: old_name).update_all(
+      author: new_name, 
+      author_slug: SlugHelper.slug_for(new_name)
+    )
+    # Also update translator field
+    Book.where(translator: old_name).update_all(translator: new_name)
     Book.bump_search_cache
     Book.invalidate_slug_cache! if count > 0
     Person.where(name: old_name).destroy_all
     render json: { success: true, merged_from: old_name, merged_to: new_name, affected_count: count }
+  rescue StandardError => e
+    Rails.logger.error "Merge people error: #{e.message}\n#{e.backtrace.join("\n")}"
+    render json: { success: false, error: e.message }, status: 500
   end
 
 def merge_multiple
@@ -119,7 +130,15 @@ def merge_multiple
     total = 0
     Person.where(id: source_ids).each do |source|
       next if source.name == target_name
-      count = Book.where(author: source.name).update_all(author: target_name, author_slug: SlugHelper.slug_for(target_name))
+      
+      count = Book.where(author: source.name).update_all(
+        author: target_name, 
+        author_slug: SlugHelper.slug_for(target_name)
+      )
+      # Also update translator field if it exists
+      Book.where(translator: source.name).update_all(
+        translator: target_name
+      )
       total += count
       source.destroy
     end
@@ -127,6 +146,9 @@ def merge_multiple
     Book.invalidate_slug_cache! if total > 0
 
     render json: { success: true, merged_count: total }
+  rescue StandardError => e
+    Rails.logger.error "Merge multiple people error: #{e.message}\n#{e.backtrace.join("\n")}"
+    render json: { success: false, error: e.message }, status: 500
   end
 
   def add_contribution
