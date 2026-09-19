@@ -3,16 +3,21 @@ class AuthorsController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        authors = author_slug_pairs
-        query = params[:q].to_s.strip
-        letter = params[:letter].to_s.strip
-        if query.present?
-          authors = authors.select { |a| a[:name].downcase.include?(query.downcase) }
+        begin
+          authors = author_slug_pairs
+          query = params[:q].to_s.strip
+          letter = params[:letter].to_s.strip
+          if query.present?
+            authors = authors.select { |a| a[:name].downcase.include?(query.downcase) }
+          end
+          if letter.present?
+            authors = authors.select { |a| a[:name].start_with?(letter) }
+          end
+          render json: authors
+        rescue StandardError => e
+          Rails.logger.error "Authors JSON error: #{e.message}\n#{e.backtrace.join("\n")}"
+          render json: { error: 'Failed to load authors' }, status: 500
         end
-        if letter.present?
-          authors = authors.select { |a| a[:name].start_with?(letter) }
-        end
-        render json: authors
       end
     end
   end

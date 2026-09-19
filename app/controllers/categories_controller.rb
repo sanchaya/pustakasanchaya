@@ -1,20 +1,24 @@
 class CategoriesController < ApplicationController
 
   def index
-    @categories = category_slug_pairs
     respond_to do |format|
       format.html
       format.json do
-        query = params[:q].to_s.strip
-        letter = params[:letter].to_s.strip
-        categories = @categories
-        if query.present?
-          categories = categories.select { |c| c[:name].downcase.include?(query.downcase) }
+        begin
+          categories = category_slug_pairs
+          query = params[:q].to_s.strip
+          letter = params[:letter].to_s.strip
+          if query.present?
+            categories = categories.select { |c| c[:name].downcase.include?(query.downcase) }
+          end
+          if letter.present?
+            categories = categories.select { |c| c[:name].start_with?(letter) }
+          end
+          render json: categories
+        rescue StandardError => e
+          Rails.logger.error "Categories JSON error: #{e.message}\n#{e.backtrace.join("\n")}"
+          render json: { error: 'Failed to load categories' }, status: 500
         end
-        if letter.present?
-          categories = categories.select { |c| c[:name].start_with?(letter) }
-        end
-        render json: categories
       end
     end
   end

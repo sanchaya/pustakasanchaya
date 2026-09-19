@@ -3,16 +3,21 @@ class PublishersController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        publishers = publisher_slug_pairs
-        query = params[:q].to_s.strip
-        letter = params[:letter].to_s.strip
-        if query.present?
-          publishers = publishers.select { |p| p[:name].downcase.include?(query.downcase) }
+        begin
+          publishers = publisher_slug_pairs
+          query = params[:q].to_s.strip
+          letter = params[:letter].to_s.strip
+          if query.present?
+            publishers = publishers.select { |p| p[:name].downcase.include?(query.downcase) }
+          end
+          if letter.present?
+            publishers = publishers.select { |p| p[:name].start_with?(letter) }
+          end
+          render json: publishers
+        rescue StandardError => e
+          Rails.logger.error "Publishers JSON error: #{e.message}\n#{e.backtrace.join("\n")}"
+          render json: { error: 'Failed to load publishers' }, status: 500
         end
-        if letter.present?
-          publishers = publishers.select { |p| p[:name].start_with?(letter) }
-        end
-        render json: publishers
       end
     end
   end
