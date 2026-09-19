@@ -305,6 +305,9 @@ class Admin::BooksController < ApplicationController
       preserved_links: all_links.length,
       target_book: target_book
     }
+  rescue StandardError => e
+    Rails.logger.error "Merge multiple books error: #{e.message}\n#{e.backtrace.join("\n")}"
+    render json: { success: false, error: e.message }, status: 500
   end
 
   def destroy
