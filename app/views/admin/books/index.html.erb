@@ -309,7 +309,7 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Merging...';
 
-    fetch('<%= merge_multiple_admin_books_path %>', {
+    fetch('<%= admin_merge_multiple_books_path %>', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
