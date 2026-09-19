@@ -16,6 +16,7 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
       <![endif]-->
       <%= stylesheet_link_tag "application", :media => "all" %>
+      <%= javascript_include_tag "application", "data-turbolinks-track" => true, "data-cfasync" => "false" %>
       <style>
   body {
     font-family: 'Noto Sans Kannada', sans-serif;
@@ -39,7 +40,7 @@
     color: #fff;
   }
 </style>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" data-cfasync="false"></script>
       <%= analytics_init if Rails.env.production? %>
     </head>
     <body>
