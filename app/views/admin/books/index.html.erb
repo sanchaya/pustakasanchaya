@@ -369,26 +369,32 @@
 
   function renderEditForm(data) {
     const book = data.book;
+    
+    // Escape HTML for safe insertion
+    function escapeHtml(text) {
+      return (text || '').replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, ''');
+    }
+    
     const html = `
       <form id="editForm">
         <div class="mb-3-wrapper">
           <label class="form-label">Title</label>
-          <input type="text" class="form-control" data-field="name" value="${(book.name || '').replace(/"/g, '"').replace(/'/g, ''')}">
+          <input type="text" class="form-control" data-field="name" value="${escapeHtml(book.name)}">
         </div>
         <div class="mb-3-wrapper">
           <label class="form-label">Author</label>
-          <input type="text" class="form-control" data-field="author" value="${(book.author || '').replace(/"/g, '"').replace(/'/g, ''')}">
+          <input type="text" class="form-control" data-field="author" value="${escapeHtml(book.author)}">
         </div>
         <div class="mb-3-wrapper">
           <label class="form-label">Publisher</label>
-          <input type="text" class="form-control" data-field="publisher" value="${(book.publisher || '').replace(/"/g, '"').replace(/'/g, ''')}">
+          <input type="text" class="form-control" data-field="publisher" value="${escapeHtml(book.publisher)}">
         </div>
         <div class="mb-3">
           <label class="form-label">Year</label>
-          <input type="number" class="form-control" data-field="year" value="${(book.year || '').replace(/"/g, '"').replace(/'/g, ''')}">
+          <input type="number" class="form-control" data-field="year" value="${escapeHtml(book.year)}">
         </div>
         <div class="alert alert-info">
-          <small><strong>Source:</strong> ${data.source_identifier}</small>
+          <small><strong>Source:</strong> ${escapeHtml(data.source_identifier)}</small>
         </div>
       </form>
     `;

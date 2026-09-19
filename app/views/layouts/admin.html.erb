@@ -436,8 +436,8 @@
     </div>
   </div>
 
-    <%= javascript_include_tag "admin", "data-cfasync" => "false" %>
-    <script data-cfasync="false">
+    <%= javascript_include_tag "admin", "data-cfasync" => "false", "data-turbolinks-track" => "reload" %>
+    <script type="text/javascript" data-cfasync="false">
     $(function() {
       $('.kan-ime').ime();
       $('.kan-ime').on('imeActivate', function() {
