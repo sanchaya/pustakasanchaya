@@ -100,9 +100,12 @@ function initAuthorsIndex() {
   }
 
   fetch(window.location.pathname + '?format=json')
-    .then(function(r) { return r.json(); })
+    .then(function(r) { 
+      if (!r.ok) throw new Error('Failed to load');
+      return r.json(); 
+    })
     .then(function(data) {
-      allData = data || [];
+      allData = Array.isArray(data) ? data : [];
       var popular = allData.slice(0, 12);
       var pHtml = '';
       popular.forEach(function(item) {
@@ -111,21 +114,27 @@ function initAuthorsIndex() {
         pHtml += '</a>';
       });
       popularDiv.innerHTML = pHtml;
+    })
+    .catch(function() {
+      allData = [];
+      popularDiv.innerHTML = '';
     });
 
-  searchInput.addEventListener('keyup', function() {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(function() {
-      clearLetterActive();
-      loadResults('', searchInput.value.trim());
-    }, 300);
-  });
+  if (searchInput) {
+    searchInput.addEventListener('keyup', function() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function() {
+        clearLetterActive();
+        loadResults('', searchInput.value.trim());
+      }, 300);
+    });
+  }
 
   letterBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
       clearLetterActive();
       setActive(btn);
-      searchInput.value = '';
+      if (searchInput) searchInput.value = '';
       loadResults(btn.getAttribute('data-letter'), '');
     });
   });
