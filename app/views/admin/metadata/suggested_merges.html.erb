@@ -69,7 +69,6 @@
     <% if @author_suggestions.empty? %>
       <div class="alert alert-success"><i class="fas fa-check-circle"></i> No author merge suggestions at this time.</div>
     <% else %>
-      <pre class="bg-light p-3 small" style="max-height: 200px; overflow: auto;"><%= JSON.pretty_generate(@author_suggestions.first(3)) %></pre>
       <%= render partial: 'suggestion_list', locals: { suggestions: @author_suggestions, type: 'author' } %>
     <% end %>
   </div>
@@ -79,7 +78,6 @@
     <% if @publisher_suggestions.empty? %>
       <div class="alert alert-success"><i class="fas fa-check-circle"></i> No publisher merge suggestions at this time.</div>
     <% else %>
-      <pre class="bg-light p-3 small" style="max-height: 200px; overflow: auto;"><%= JSON.pretty_generate(@publisher_suggestions.first(3)) %></pre>
       <%= render partial: 'suggestion_list', locals: { suggestions: @publisher_suggestions, type: 'publisher' } %>
     <% end %>
   </div>
@@ -89,7 +87,6 @@
     <% if @book_suggestions.empty? %>
       <div class="alert alert-success"><i class="fas fa-check-circle"></i> No book merge suggestions at this time.</div>
     <% else %>
-      <pre class="bg-light p-3 small" style="max-height: 200px; overflow: auto;"><%= JSON.pretty_generate(@book_suggestions.first(3)) %></pre>
       <%= render partial: 'book_suggestion_list', locals: { suggestions: @book_suggestions } %>
     <% end %>
   </div>
