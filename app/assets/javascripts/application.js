@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
-// require turbolinks
+//= require turbolinks
 //= require jquery.validate
 //= require jquery.ime
 //= require jquery.ime.selector
@@ -22,69 +22,62 @@
 //= require zeroclipboard
 //= require_tree .
 
-$( document ).ready( function () {
+function initializeApp() {
 	// Kannada ime enabled for form 
 	$( '.kan-ime' ).ime();
 
+	// Jquery for home page number count incremental display
+	(function($) {
+		"use strict";
+		function count($this){
+			var current = parseInt($this.html(), 10);
+			current = current + 10; /* Where 50 is increment */  
+			$this.html(++current);
+			if(current > $this.data('count')){
+				$this.html($this.data('count'));
+			} else {    
+				setTimeout(function(){count($this)}, 50);
+			}
+		}         
+		$(".stat-count").each(function() {
+			$(this).data('count', parseInt($(this).html(), 10));
+			$(this).html('0');
+			count($(this));
+		});
+	})(jQuery);
 
+	// Wiki div hide and show
+	var clip = new ZeroClipboard($(".d_clip_button"));
 
-// Jquery for home page number count incremental display
-(function($) {
-	"use strict";
-	function count($this){
-		var current = parseInt($this.html(), 10);
-		current = current + 10; /* Where 50 is increment */  
-		$this.html(++current);
-		if(current > $this.data('count')){
-			$this.html($this.data('count'));
-		} else {    
-			setTimeout(function(){count($this)}, 50);
-		}
-	}         
-	$(".stat-count").each(function() {
-		$(this).data('count', parseInt($(this).html(), 10));
-		$(this).html('0');
-		count($(this));
-	});
-})(jQuery);
-
-// Wiki div hide and show
-
-
-var clip = new ZeroClipboard($(".d_clip_button"))
-
-
-
-$(function() {
-	$("[name=wikiaccount]").click(function(){
+	$("[name=wikiaccount]").off('click').on('click', function(){
 		$('.toHide').hide();
 		$("#blk-"+$(this).val()).show('slow');
 	});
-});
 
+	// validatin added for wiki user info form
+	$("#capture-wiki-id").validate({
+		rules:{
 
-
-
-
-// Wiki styles ended
-
-
-// validatin added for wiki user info form
-$("#capture-wiki-id").validate({
-	rules:{
-
-		'user_name':
-		{
-			required: true
+			'user_name':
+			{
+				required: true
+			}
+		},
+		messages:{
+			'user_name':
+			{
+				required: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಕಿ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ಬೆರಳಚ್ಚು ಮಾಡಿ"
+			}
 		}
-	},
-	messages:{
-		'user_name':
-		{
-			required: "ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಿಕಿ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ಬೆರಳಚ್ಚು ಮಾಡಿ"
-		}
-	}
-});
+	});
 
-});
+	// Ensure Bootstrap collapse works on mobile navbar
+	$('.navbar-toggle').off('click').on('click', function(e) {
+		var target = $(this).data('target');
+		$(target).collapse('toggle');
+	});
+}
 
+$(document).ready(initializeApp);
+$(document).on('page:load', initializeApp);
+$(document).on('turbolinks:load', initializeApp);
