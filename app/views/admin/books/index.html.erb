@@ -214,7 +214,7 @@
   <div class="alert alert-info">
     <i class="fas fa-search"></i> No books found matching "<strong><%= @query %></strong>". Try a different search.
   </div>
-<% end >
+<% end %>
 
 <script>
   document.addEventListener('DOMContentLoaded', initBooksPage);
@@ -309,7 +309,7 @@
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Merging...';
 
-    fetch('<%= admin_books_merge_multiple_path %>', {
+    fetch('<%= merge_multiple_admin_books_path %>', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
