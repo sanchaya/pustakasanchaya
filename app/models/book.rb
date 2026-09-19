@@ -167,8 +167,6 @@ class Book < ActiveRecord::Base
     Rails.logger.error "IA book details failed: #{e.message}"
     nil
   end
-    nil
-  end
 
   def self.ia_doc_to_book(doc)
     identifier = doc['identifier']
