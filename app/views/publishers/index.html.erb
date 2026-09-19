@@ -29,7 +29,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+function initPublishersIndex() {
   var searchInput = document.getElementById('search-input');
   var resultsDiv = document.getElementById('results');
   var popularDiv = document.getElementById('popular-publishers');
@@ -129,5 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
       loadResults(btn.getAttribute('data-letter'), '');
     });
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', initPublishersIndex);
+document.addEventListener('turbolinks:load', initPublishersIndex);
 </script>

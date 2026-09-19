@@ -17,14 +17,19 @@
     <%= render 'application/letter_bar' %>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var baseUrl = '<%= publishers_path %>';
+    function initLetterBar(baseUrl) {
       document.querySelectorAll('.letter-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var letter = btn.getAttribute('data-letter');
           window.location.href = baseUrl + (letter ? '?letter=' + encodeURIComponent(letter) : '');
         });
       });
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+      initLetterBar('<%= publishers_path %>');
+    });
+    document.addEventListener('turbolinks:load', function() {
+      initLetterBar('<%= publishers_path %>');
     });
     </script>
 

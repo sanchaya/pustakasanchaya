@@ -36,7 +36,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+function initCategoriesIndex() {
   var searchInput = document.getElementById('search-input');
   var resultsDiv = document.getElementById('results');
   var letterBtns = document.querySelectorAll('.letter-btn');
@@ -131,5 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
       loadResults(btn.getAttribute('data-letter'), '');
     });
   });
-});
+}
+
+document.addEventListener('DOMContentLoaded', initCategoriesIndex);
+document.addEventListener('turbolinks:load', initCategoriesIndex);
 </script>
