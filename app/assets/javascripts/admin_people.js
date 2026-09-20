@@ -230,7 +230,7 @@ function showModal(id) {
     document.getElementById('mergeTargetNameMulti').value = '';
     document.getElementById('mergeMultipleError').classList.add('d-none');
     document.getElementById('mergeMultipleSuccess').classList.add('d-none');
-    showModal('mergeMultipleModal');
+    showModal('peopleMergeMultipleModal');
     console.log('showModal called');
   }
 
@@ -238,8 +238,8 @@ function showModal(id) {
     var ids = Array.from(document.querySelectorAll('.select-item:checked')).map(function(cb){return cb.value;});
     var targetName = document.getElementById('mergeTargetNameMulti').value.trim();
     if (!targetName) { document.getElementById('mergeMultipleError').textContent = 'Enter target name'; document.getElementById('mergeMultipleError').classList.remove('d-none'); return; }
-    var btn = document.querySelector('#mergeMultipleModal button.btn-danger');
-    var progressContainer = document.getElementById('mergeMultipleProgress') || document.getElementById('mergeMultipleModal');
+    var btn = document.querySelector('#peopleMergeMultipleModal button.btn-danger');
+    var progressContainer = document.getElementById('mergeMultipleProgress') || document.getElementById('peopleMergeMultipleModal');
     showProgress('mergeMultipleProgress', 'Merging ' + ids.length + ' people... This may take a moment.');
     setButtonLoading(btn, true);
     fetchWithTimeout(adminPeoplePaths.mergeMultiple, {
