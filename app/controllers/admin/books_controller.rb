@@ -237,6 +237,8 @@ class Admin::BooksController < ApplicationController
       return render json: { error: 'Target book not found' }, status: 404
     end
 
+    Rails.logger.info "[merge_multiple] Starting merge: target=#{target_id}, sources=#{source_ids.join(',')}"
+
     merged_count = 0
     all_links = []
     all_libraries = Set.new
@@ -250,11 +252,17 @@ class Admin::BooksController < ApplicationController
       all_links << { 'url' => target_book.archive_url, 'type' => 'archive_url', 'library' => target_book.library, 'source_identifier' => target_book.source_identifier }
     end
 
-    source_ids.each do |source_id|
-      next if source_id.to_i == target_id.to_i
+    # Pre-load source books to avoid N+1 queries
+    source_books = Book.where(id: source_ids).where.not(id: target_id).to_a
+    Rails.logger.info "[merge_multiple] Found #{source_books.length} source books"
 
-      source_book = Book.find_by(id: source_id)
-      next unless source_book
+    # Pre-load all book_stores for source books in one query
+    source_book_ids = source_books.map(&:id)
+    all_book_stores = BookStore.where(book_id: source_book_ids).includes(:store).to_a
+    stores_by_book = all_book_stores.group_by(&:book_id)
+
+    source_books.each do |source_book|
+      next if source_book.id == target_id.to_i
 
       all_libraries << source_book.library if source_book.library.present?
 
@@ -276,8 +284,8 @@ class Admin::BooksController < ApplicationController
       target_book.archive_url = source_book.archive_url if target_book.archive_url.blank? && source_book.archive_url.present?
       target_book.book_link = source_book.book_link if target_book.book_link.blank? && source_book.book_link.present?
 
-      # Transfer book_stores from source to target
-      source_book.book_stores.each do |bs|
+      # Transfer book_stores from source to target (using pre-loaded data)
+      (stores_by_book[source_book.id] || []).each do |bs|
         existing = target_book.book_stores.find_by(store_id: bs.store_id)
         unless existing
           BookStore.create!(book_id: target_book.id, store_id: bs.store_id, store_url: bs.store_url, price: bs.price, availability: bs.availability)
@@ -298,6 +306,7 @@ class Admin::BooksController < ApplicationController
 
     Book.bump_search_cache
 
+    Rails.logger.info "[merge_multiple] Completed: merged=#{merged_count}, links=#{all_links.length}"
     render json: {
       success: true,
       message: "Successfully merged #{merged_count} book(s)",
@@ -306,7 +315,7 @@ class Admin::BooksController < ApplicationController
       target_book: target_book
     }
   rescue StandardError => e
-    Rails.logger.error "Merge multiple books error: #{e.message}\n#{e.backtrace.join("\n")}"
+    Rails.logger.error "[merge_multiple] Error: #{e.message}\n#{e.backtrace.join("\n")}"
     render json: { success: false, error: e.message }, status: 500
   end
 
