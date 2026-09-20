@@ -3,18 +3,15 @@ document.addEventListener('DOMContentLoaded', initBooksPage);
 document.addEventListener('turbolinks:load', initBooksPage);
 
 function initBooksPage() {
-  // Only run on books page where these elements exist
   const selectAll = document.getElementById('selectAllBooks');
   if (!selectAll) return;
 
-  // Edit book buttons
   document.querySelectorAll('.edit-book-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       editBook(this.dataset.bookId, this);
     });
   });
 
-  // Bulk selection
   const checkboxes = document.querySelectorAll('.book-checkbox');
   const toolbar = document.getElementById('bulkActionsToolbar');
   const mergeBtn = document.getElementById('bulkMergeBtn');
@@ -28,19 +25,17 @@ function initBooksPage() {
     toolbar.style.display = checked.length > 0 ? 'block' : 'none';
   }
 
-  if (selectAll) {
-    selectAll.addEventListener('change', function() {
-      checkboxes.forEach(cb => cb.checked = this.checked);
-      updateToolbar();
-    });
-  }
+  selectAll.addEventListener('change', function() {
+    checkboxes.forEach(cb => cb.checked = this.checked);
+    updateToolbar();
+  });
 
   checkboxes.forEach(cb => cb.addEventListener('change', updateToolbar));
 
   if (clearBtn) {
     clearBtn.addEventListener('click', function() {
       checkboxes.forEach(cb => cb.checked = false);
-      if (selectAll) selectAll.checked = false;
+      selectAll.checked = false;
       updateToolbar();
     });
   }
@@ -153,40 +148,40 @@ function editBook(bookId, button) {
 }
 
 function escapeHtml(text) {
-  return (text || '')
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/"/g, '"')
-    .replace(/'/g, '');
+  const map = {
+    '&': '&',
+    '<': '<',
+    '>': '>',
+    '"': '"',
+    "'": '&#039;'
+  };
+  return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
 function renderEditForm(data) {
   const book = data.book;
   
-  const html = `
-    <form id="editForm">
-      <div class="mb-3-wrapper">
-        <label class="form-label">Title</label>
-        <input type="text" class="form-control" data-field="name" value="${escapeHtml(book.name)}">
-      </div>
-      <div class="mb-3-wrapper">
-        <label class="form-label">Author</label>
-        <input type="text" class="form-control" data-field="author" value="${escapeHtml(book.author)}">
-      </div>
-      <div class="mb-3-wrapper">
-        <label class="form-label">Publisher</label>
-        <input type="text" class="form-control" data-field="publisher" value="${escapeHtml(book.publisher)}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Year</label>
-        <input type="number" class="form-control" data-field="year" value="${escapeHtml(book.year)}">
-      </div>
-      <div class="alert alert-info">
-        <small><strong>Source:</strong> ${escapeHtml(data.source_identifier)}</small>
-      </div>
-    </form>
-  `;
+  const html = '<form id="editForm">' +
+    '<div class="mb-3-wrapper">' +
+      '<label class="form-label">Title</label>' +
+      '<input type="text" class="form-control" data-field="name" value="' + escapeHtml(book.name) + '">' +
+    '</div>' +
+    '<div class="mb-3-wrapper">' +
+      '<label class="form-label">Author</label>' +
+      '<input type="text" class="form-control" data-field="author" value="' + escapeHtml(book.author) + '">' +
+    '</div>' +
+    '<div class="mb-3-wrapper">' +
+      '<label class="form-label">Publisher</label>' +
+      '<input type="text" class="form-control" data-field="publisher" value="' + escapeHtml(book.publisher) + '">' +
+    '</div>' +
+    '<div class="mb-3">' +
+      '<label class="form-label">Year</label>' +
+      '<input type="number" class="form-control" data-field="year" value="' + escapeHtml(book.year) + '">' +
+    '</div>' +
+    '<div class="alert alert-info">' +
+      '<small><strong>Source:</strong> ' + escapeHtml(data.source_identifier) + '</small>' +
+    '</div>' +
+  '</form>';
   document.getElementById('editModalBody').innerHTML = html;
   document.getElementById('editForm').dataset.sourceId = data.source_identifier;
   document.getElementById('editForm').dataset.bookId = data.book.id;

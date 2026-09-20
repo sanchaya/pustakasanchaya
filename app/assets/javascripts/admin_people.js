@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', initPeoplePage);
 document.addEventListener('turbolinks:load', initPeoplePage);
 
 function initPeoplePage() {
-  // Only run on people page where these elements exist
   const selectAll = document.getElementById('selectAll');
   if (!selectAll) return;
   
@@ -27,7 +26,8 @@ function updateSelectionToolbar() {
 
 function clearSelection() {
   document.querySelectorAll('.select-item').forEach(function(cb) { cb.checked = false; });
-  document.getElementById('selectAll').checked = false;
+  var selectAll = document.getElementById('selectAll');
+  if (selectAll) selectAll.checked = false;
   updateSelectionToolbar();
 }
 
@@ -71,15 +71,16 @@ document.addEventListener('click', function(e) {
 });
 
 function escapeHtml(text) {
-  return (text || '')
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/"/g, '"')
-    .replace(/'/g, '');
+  const map = {
+    '&': '&',
+    '<': '<',
+    '>': '>',
+    '"': '"',
+    "'": '&#039;'
+  };
+  return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// URL paths - set from view via window.AdminPeoplePaths
 var adminPeoplePaths = window.AdminPeoplePaths || {};
 
 function submitRename() {
@@ -162,4 +163,15 @@ function submitMergeMultiple() {
       document.getElementById('mergeMultipleError').textContent = data.error||'Failed'; document.getElementById('mergeMultipleError').classList.remove('d-none');
     }
   }).catch(function(e){document.getElementById('mergeMultipleError').textContent='Error: '+e.message;document.getElementById('mergeMultipleError').classList.remove('d-none')});
+}
+
+function escapeHtml(text) {
+  const map = {
+    '&': '&',
+    '<': '<',
+    '>': '>',
+    '"': '"',
+    "'": '&#039;'
+  };
+  return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
 }

@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', initBulkEdit);
 document.addEventListener('turbolinks:load', initBulkEdit);
 
 function initBulkEdit() {
-  // Only run on bulk edit page
   if (!document.getElementById('field')) return;
 }
 
@@ -59,10 +58,10 @@ function previewChanges() {
       return;
     }
 
-    let html = `<div class="alert alert-success">
-      <strong>Found ${data.preview_count} matching book(s)</strong>
-      ${data.has_more ? '<br><small>(Showing first 50)</small>' : ''}
-    </div>`;
+    let html = '<div class="alert alert-success">' +
+      '<strong>Found ' + data.preview_count + ' matching book(s)</strong>' +
+      (data.has_more ? '<br><small>(Showing first 50)</small>' : '') +
+      '</div>';
 
     html += '<div class="table-responsive"><table class="table table-sm table-hover">';
     html += '<thead style="background: #f5f5f5;"><tr>';
@@ -70,12 +69,12 @@ function previewChanges() {
     html += '</tr></thead><tbody>';
 
     data.preview_books.forEach(book => {
-      html += `<tr>
-        <td><small><strong>${escapeHtml(book.title)}</strong></small></td>
-        <td><small><span class="badge bg-secondary">${escapeHtml(book.library)}</span></small></td>
-        <td><small><code style="background: #ffebee; padding: 2px 4px;">${escapeHtml(book.old_value)}</code></small></td>
-        <td><small><code style="background: #e8f5e9; padding: 2px 4px;">${escapeHtml(book.new_value)}</code></small></td>
-      </tr>`;
+      html += '<tr>' +
+        '<td><small><strong>' + escapeHtml(book.title) + '</strong></small></td>' +
+        '<td><small><span class="badge bg-secondary">' + escapeHtml(book.library) + '</span></small></td>' +
+        '<td><small><code style="background: #ffebee; padding: 2px 4px;">' + escapeHtml(book.old_value) + '</code></small></td>' +
+        '<td><small><code style="background: #e8f5e9; padding: 2px 4px;">' + escapeHtml(book.new_value) + '</code></small></td>' +
+        '</tr>';
     });
 
     html += '</tbody></table></div>';
@@ -101,7 +100,7 @@ function showWarning() {
     return;
   }
 
-  if (!confirm(`Are you sure you want to update all matching books?\n\nField: ${field}\nFind: "${findValue}"\nReplace with: "${replaceValue}"\n\nThis action cannot be easily undone!`)) {
+  if (!confirm('Are you sure you want to update all matching books?\n\nField: ' + field + '\nFind: "' + findValue + '"\nReplace with: "' + replaceValue + '"\n\nThis action cannot be easily undone!')) {
     return;
   }
 
@@ -139,9 +138,9 @@ function applyChanges() {
       return;
     }
 
-    let html = `<div class="alert alert-success">
-      <strong><i class="fas fa-check-circle"></i> Successfully updated ${data.affected_count} book(s)!</strong>
-    </div>`;
+    let html = '<div class="alert alert-success">' +
+      '<strong><i class="fas fa-check-circle"></i> Successfully updated ' + data.affected_count + ' book(s)!</strong>' +
+      '</div>';
 
     html += '<div class="table-responsive"><table class="table table-sm">';
     html += '<thead style="background: #f5f5f5;"><tr>';
@@ -149,11 +148,11 @@ function applyChanges() {
     html += '</tr></thead><tbody>';
 
     data.affected_books.forEach(book => {
-      html += `<tr>
-        <td><small><strong>${escapeHtml(book.title)}</strong></small></td>
-        <td><small><code style="background: #ffebee; padding: 2px 4px;">${escapeHtml(book.old_value)}</code></small></td>
-        <td><small><code style="background: #e8f5e9; padding: 2px 4px;">${escapeHtml(book.new_value)}</code></small></td>
-      </tr>`;
+      html += '<tr>' +
+        '<td><small><strong>' + escapeHtml(book.title) + '</strong></small></td>' +
+        '<td><small><code style="background: #ffebee; padding: 2px 4px;">' + escapeHtml(book.old_value) + '</code></small></td>' +
+        '<td><small><code style="background: #e8f5e9; padding: 2px 4px;">' + escapeHtml(book.new_value) + '</code></small></td>' +
+        '</tr>';
     });
 
     html += '</tbody></table></div>';
@@ -161,8 +160,7 @@ function applyChanges() {
 
     container.innerHTML = html;
 
-    // Clear form
-    const form = document.getElementById('bulkEditForm');
+    var form = document.getElementById('bulkEditForm');
     if (form) form.reset();
   })
   .catch(error => {
@@ -178,5 +176,5 @@ function escapeHtml(text) {
     '"': '"',
     "'": '&#039;'
   };
-  return text.replace(/[&<>"']/g, m => map[m]);
+  return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }

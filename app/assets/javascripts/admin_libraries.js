@@ -127,7 +127,7 @@ function findSimilarLibraries() {
     var list = document.getElementById('mergeSimilarList');
     if (!data.similar || data.similar.length===0) { list.innerHTML = '<small class="text-muted">No similar names found</small>'; return; }
     var html = '<div class="list-group">';
-    data.similar.forEach(function(p){ html += '<button type="button" class="list-group-item list-group-item-action select-similar" data-name="'+p.name.replace(/"/g,'"')+'">'+p.name+' <small class="text-muted">['+p.occupation+']</small></button>'; });
+    data.similar.forEach(function(p){ html += '<button type="button" class="list-group-item list-group-item-action select-similar" data-name="'+p.name.replace(/"/g, '"')+'">'+p.name+' <small class="text-muted">['+p.occupation+']</small></button>'; });
     html += '</div>';
     list.innerHTML = html;
     list.querySelectorAll('.select-similar').forEach(function(b){ b.addEventListener('click',function(){document.getElementById('mergeTargetName').value=this.dataset.name;list.innerHTML='';}); });
