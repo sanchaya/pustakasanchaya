@@ -233,4 +233,14 @@
     };
     return (text || '').replace(/[&<>"']/g, function(m) { return map[m]; });
   }
+
+  // Expose functions needed by inline onclick handlers in the view
+  window.openMergeMultipleModal = openMergeMultipleModal;
+  window.submitMergeMultiple = submitMergeMultiple;
+  window.submitRename = submitRename;
+  window.findSimilarPeople = findSimilarPeople;
+  window.submitMerge = submitMerge;
+  window.showModal = showModal;
+  window.clearSelection = clearSelection;
+  window.getSelectedNames = getSelectedNames;
 })();
