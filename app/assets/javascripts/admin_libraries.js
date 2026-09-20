@@ -7,7 +7,7 @@
     if (!document.getElementById('renameModal')) return;
   }
 
-  let renameModal, mergeModal, mergeMultipleModal;
+  let renameModal, mergeModal, librariesMergeMultipleModal;
 
   function closeModal(modal) {
     if (!modal) return;
@@ -20,7 +20,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     renameModal = new bootstrap.Modal(document.getElementById('renameModal'), { keyboard: false });
     mergeModal = new bootstrap.Modal(document.getElementById('mergeModal'), { keyboard: false });
-    mergeMultipleModal = new bootstrap.Modal(document.getElementById('mergeMultipleModal'), { keyboard: false });
+    librariesMergeMultipleModal = new bootstrap.Modal(document.getElementById('librariesMergeMultipleModal'), { keyboard: false });
 
     document.addEventListener('click', function(e) {
       if (e.target.closest('.rename-btn')) {
@@ -163,7 +163,7 @@
     document.getElementById('mergeTargetNameMulti').value = '';
     document.getElementById('mergeMultipleError').classList.add('d-none');
     document.getElementById('mergeMultipleSuccess').classList.add('d-none');
-    mergeMultipleModal.show();
+    librariesMergeMultipleModal.show();
   }
 
   function submitMergeMultiple() {
