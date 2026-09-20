@@ -104,7 +104,9 @@
                                   <img src="<%= store.logo %>" alt="<%= store.name %>" style="width: 24px; height: 24px; object-fit: contain;">
                                 <% else %>
                                   <span class="badge bg-light text-dark" style="font-size: 0.7rem;"><%= truncate(store.name, length: 8) %></span>
-                                <% end %>
+<% end %>
+
+<%= javascript_include_tag "admin_books", "data-turbolinks-track" => "reload" %>
                               </a>
                             <% end %>
                           </div>
