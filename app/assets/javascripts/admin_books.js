@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', initBooksPage);
 document.addEventListener('turbolinks:load', initBooksPage);
 
 function initBooksPage() {
+  // Only run on books page where these elements exist
+  const selectAll = document.getElementById('selectAllBooks');
+  if (!selectAll) return;
+
   // Edit book buttons
   document.querySelectorAll('.edit-book-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
@@ -11,7 +15,6 @@ function initBooksPage() {
   });
 
   // Bulk selection
-  const selectAll = document.getElementById('selectAllBooks');
   const checkboxes = document.querySelectorAll('.book-checkbox');
   const toolbar = document.getElementById('bulkActionsToolbar');
   const mergeBtn = document.getElementById('bulkMergeBtn');

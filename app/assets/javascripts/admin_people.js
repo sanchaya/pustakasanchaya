@@ -3,7 +3,11 @@ document.addEventListener('DOMContentLoaded', initPeoplePage);
 document.addEventListener('turbolinks:load', initPeoplePage);
 
 function initPeoplePage() {
-  document.getElementById('selectAll').addEventListener('change', function() {
+  // Only run on people page where these elements exist
+  const selectAll = document.getElementById('selectAll');
+  if (!selectAll) return;
+  
+  selectAll.addEventListener('change', function() {
     document.querySelectorAll('.select-item').forEach(function(cb) { cb.checked = this.checked; }.bind(this));
     updateSelectionToolbar();
   });
