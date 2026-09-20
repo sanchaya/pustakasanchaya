@@ -36,17 +36,46 @@
     return Array.from(document.querySelectorAll('.select-item:checked')).map(function(cb) { return cb.dataset.name; });
   }
 
-  function showModal(id) {
+function showModal(id) {
+    console.log('showModal called for:', id);
     var m = document.getElementById(id);
-    m.classList.add('show'); m.style.display = 'block'; m.style.position = 'fixed';
-    m.style.top = '0'; m.style.left = '0'; m.style.width = '100%'; m.style.height = '100%';
-    m.style.zIndex = '99999'; m.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    document.body.style.overflow = 'hidden';
+    if (!m) {
+      console.error('Modal element not found:', id);
+      return;
+    }
+    console.log('Modal element found:', m);
+    
+    // Try Bootstrap 5 modal API first
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      var modal = bootstrap.Modal.getInstance(m) || new bootstrap.Modal(m);
+      modal.show();
+    } else {
+      // Fallback to manual
+      m.classList.add('show'); 
+      m.style.display = 'block'; 
+      m.style.position = 'fixed';
+      m.style.top = '0'; 
+      m.style.left = '0'; 
+      m.style.width = '100%'; 
+      m.style.height = '100%';
+      m.style.zIndex = '99999'; 
+      m.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      document.body.style.overflow = 'hidden';
+    }
+    console.log('Modal shown');
   }
-
+  
   function hideModal(id) {
     var m = document.getElementById(id);
-    m.classList.remove('show'); m.style.display = 'none';
+    if (!m) return;
+    
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      var modal = bootstrap.Modal.getInstance(m);
+      if (modal) modal.hide();
+    } else {
+      m.classList.remove('show'); 
+      m.style.display = 'none';
+    }
     document.body.style.overflow = 'auto';
   }
 
@@ -191,14 +220,18 @@
   }
 
   function openMergeMultipleModal() {
+    console.log('openMergeMultipleModal called');
     var names = getSelectedNames();
+    console.log('Selected names:', names);
     var list = document.getElementById('mergeSourceList');
+    console.log('mergeSourceList element:', list);
     list.innerHTML = '';
     names.forEach(function(n){var li=document.createElement('li');li.className='list-group-item';li.textContent=n;list.appendChild(li);});
     document.getElementById('mergeTargetNameMulti').value = '';
     document.getElementById('mergeMultipleError').classList.add('d-none');
     document.getElementById('mergeMultipleSuccess').classList.add('d-none');
     showModal('mergeMultipleModal');
+    console.log('showModal called');
   }
 
   function submitMergeMultiple() {
