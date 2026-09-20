@@ -16,7 +16,7 @@
 
     <%= render 'application/letter_bar' %>
 
-    <script>
+    <script data-cfasync="false">
     function initLetterBar(baseUrl) {
       document.querySelectorAll('.letter-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {

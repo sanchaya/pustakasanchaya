@@ -52,7 +52,7 @@
   <% books_counts = decade_data.map { |_, b, _, _| b } %>
   <% authors_counts = decade_data.map { |_, _, a, _| a } %>
   <% publishers_counts = decade_data.map { |_, _, _, p| p } %>
-<script>
+<script data-cfasync="false">
 document.addEventListener('DOMContentLoaded', function() {
   var ctx = document.getElementById('yearChart');
   if (!ctx) return;
