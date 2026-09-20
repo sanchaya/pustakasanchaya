@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }.bind(this));
       updateSelectionToolbar();
     });
-  });
+  }
 
   document.querySelectorAll('.select-item').forEach(function(cb) {
     cb.addEventListener('change', updateSelectionToolbar);
