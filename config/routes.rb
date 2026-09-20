@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     
     get '/books' => 'books#index', as: :books
     get '/books/search' => 'books#search', as: :books_search
-    post '/books/merge-multiple' => 'books->merge_multiple', as: :merge_multiple_books
+    post '/books/merge-multiple' => 'books#merge_multiple', as: :merge_multiple_books
     get '/books/duplicates' => 'books#duplicates', as: :duplicates_books
     post '/books/merge-duplicates' => 'books#merge_duplicates', as: :merge_duplicates_books
     post '/books/:id/fetch_thumbnail' => 'books#fetch_thumbnail', as: :fetch_thumbnail_book
