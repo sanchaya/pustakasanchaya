@@ -528,3 +528,14 @@ function showMergeSuccess(msg) {
   el.classList.remove('d-none');
 }
 </script>
+
+<script data-cfasync="false">
+  window.adminAuthorsPaths = {
+    rename: '<%= admin_rename_author_path %>',
+    merge: '<%= admin_merge_authors_path %>',
+    findSimilar: '<%= admin_find_similar_authors_path %>',
+    mergeMultiple: '<%= admin_merge_multiple_authors_path %>'
+  };
+</script>
+
+<%= javascript_include_tag "admin_authors", "data-turbolinks-track" => "reload" %>
