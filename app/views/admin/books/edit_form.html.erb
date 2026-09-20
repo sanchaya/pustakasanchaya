@@ -367,56 +367,17 @@
 </div>
 
 <script data-cfasync="false">
-var selectedPersonId = null;
-var bookId = <%= @book.id %>;
+  window.AdminEditFormPaths = {
+    findSimilar: '<%= find_similar_admin_people_path %>',
+    peoplePath: '<%= admin_people_path %>',
+    addContribution: '/admin/people/:id/contributions/add',
+    updateContribution: '/admin/people/:id/contributions/update',
+    removeContribution: '/admin/people/:id/contributions/remove',
+    bookId: '<%= @book.id %>'
+  };
+</script>
 
-function toggleTranslationFields(checked) {
-  document.getElementById('translationFields').classList.toggle('d-none', !checked);
-}
-
-function searchContributors() {
-  var q = document.getElementById('contributorSearchInput').value;
-  if (!q || q.trim().length < 2) { document.getElementById('contributorSearchResults').innerHTML = ''; return; }
-  fetch('/admin/people/find-similar?q=' + encodeURIComponent(q), {
-    headers: { 'X-CSRF-Token': '<%= form_authenticity_token %>' }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    var results = document.getElementById('contributorSearchResults');
-    if (!data.similar || data.similar.length === 0) {
-      results.innerHTML = '<small class="text-muted">No people found. <a href="<%= admin_people_path %>" target="_blank">Create a new person</a> first.</small>';
-      return;
-    }
-    var html = '<div class="list-group" style="max-height: 250px; overflow-y: auto;">';
-    data.similar.forEach(function(p) {
-      html += '<button type="button" class="list-group-item list-group-item-action person-result" data-person-id="' + p.id + '" onclick="selectPerson(' + p.id + ', \'' + p.name.replace(/'/g, "\\'") + '\')">' + p.name + '</button>';
-    });
-    html += '</div>';
-    results.innerHTML = html;
-  });
-}
-
-function selectPerson(personId, personName) {
-  selectedPersonId = personId;
-  document.getElementById('contributorSearchInput').value = personName;
-  document.getElementById('contributorSearchResults').innerHTML = '';
-}
-
-function submitAddContributor() {
-  if (!selectedPersonId) {
-    document.getElementById('addContributorError').textContent = 'Please select a person';
-    document.getElementById('addContributorError').classList.remove('d-none');
-    return;
-  }
-  var role = document.getElementById('newContributorRole').value;
-  fetch('/admin/people/' + selectedPersonId + '/contributions/add', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': '<%= form_authenticity_token %>' },
-    body: JSON.stringify({ book_id: bookId, role: role })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (data.success) { location.reload(); }
+<%= javascript_include_tag "admin_edit_form", "data-turbolinks-track" => "reload" %>
     else {
       document.getElementById('addContributorError').textContent = data.error || 'Failed to add';
       document.getElementById('addContributorError').classList.remove('d-none');
