@@ -108,7 +108,17 @@
 
 <%= javascript_include_tag "admin_books", "data-turbolinks-track" => "reload" %>
                               </a>
-                            <% end %>
+<% end %>
+
+<script data-cfasync="false">
+  window.AdminBooksPaths = {
+    mergeMultiple: '<%= admin_merge_multiple_books_path %>',
+    editBook: '<%= admin_edit_book_path(id: "BOOK_ID") %>',
+    updateBook: '<%= admin_update_book_path(id: "BOOK_ID") %>'
+  };
+</script>
+
+<%= javascript_include_tag "admin_books", "data-turbolinks-track" => "reload" %>
                           </div>
                         <% else %>
                           <span class="badge bg-secondary"><%= book['library'] %></span>

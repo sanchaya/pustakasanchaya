@@ -91,7 +91,7 @@ function performBulkMerge() {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Merging...';
 
-  fetch('<%= admin_merge_multiple_books_path %>', {
+  fetch(adminBooksPaths.mergeMultiple, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ function editBook(bookId, button) {
   button.disabled = true;
   button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
 
-  fetch('<%= admin_edit_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', bookId))
+  fetch(adminBooksPaths.editBook.replace('BOOK_ID', bookId))
     .then(response => {
       if (!response.ok) {
         throw new Error('HTTP error! status: ' + response.status);
@@ -199,7 +199,7 @@ function saveBookEdit() {
     const field = input.dataset.field;
     const value = input.value;
 
-    fetch('<%= admin_update_book_path(id: "BOOK_ID") %>'.replace('BOOK_ID', bookId), {
+    fetch(adminBooksPaths.updateBook.replace('BOOK_ID', bookId), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

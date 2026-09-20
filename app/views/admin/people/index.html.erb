@@ -282,8 +282,8 @@ function submitMergeMultiple() {
   var ids = Array.from(document.querySelectorAll('.select-item:checked')).map(function(cb){return cb.value;});
   var targetName = document.getElementById('mergeTargetNameMulti').value.trim();
   if (!targetName) { document.getElementById('mergeMultipleError').textContent = 'Enter target name'; document.getElementById('mergeMultipleError').classList.remove('d-none'); return; }
-  fetch('<%= merge_multiple_admin_people_path %>', {
-    method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':'<%= form_authenticity_token %>'},
+  fetch(adminPeoplePaths.mergeMultiple, {
+    method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':document.querySelector('meta[name="csrf-token"]').content},
     body: JSON.stringify({ source_ids: ids, target_name: targetName })
   }).then(function(r){return r.json()}).then(function(data){
     if (data.success) {
@@ -296,5 +296,14 @@ function submitMergeMultiple() {
   }).catch(function(e){document.getElementById('mergeMultipleError').textContent='Error: '+e.message;document.getElementById('mergeMultipleError').classList.remove('d-none')});
 }
 </script>
+
 <script data-cfasync="false">
+  window.AdminPeoplePaths = {
+    rename: '<%= rename_admin_people_path %>',
+    findSimilar: '<%= find_similar_admin_people_path %>',
+    merge: '<%= merge_admin_people_path %>',
+    mergeMultiple: '<%= merge_multiple_admin_people_path %>'
+  };
 </script>
+
+<%= javascript_include_tag "admin_people", "data-turbolinks-track" => "reload" %>
