@@ -522,3 +522,14 @@ function showMergeSuccess(msg) {
   el.classList.remove('d-none');
 }
 </script>
+
+<script data-cfasync="false">
+  window.adminCategoriesPaths = {
+    rename: '<%= admin_rename_category_path %>',
+    merge: '<%= admin_merge_categories_path %>',
+    findSimilar: '<%= admin_find_similar_categories_path %>',
+    mergeMultiple: '<%= admin_merge_multiple_categories_path %>'
+  };
+</script>
+
+<%= javascript_include_tag "admin_categories", "data-turbolinks-track" => "reload" %>

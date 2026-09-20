@@ -528,3 +528,14 @@ function showMergeSuccess(msg) {
   el.classList.remove('d-none');
 }
 </script>
+
+<script data-cfasync="false">
+  window.adminLibrariesPaths = {
+    rename: '<%= admin_rename_library_path %>',
+    merge: '<%= admin_merge_libraries_path %>',
+    findSimilar: '<%= admin_find_similar_libraries_path %>',
+    mergeMultiple: '<%= admin_merge_multiple_libraries_path %>'
+  };
+</script>
+
+<%= javascript_include_tag "admin_libraries", "data-turbolinks-track" => "reload" %>

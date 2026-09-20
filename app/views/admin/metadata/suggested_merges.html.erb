@@ -130,11 +130,11 @@ function dismissSuggestion(type, source, target, btn) {
   var card = btn.closest('.suggestion-card');
   card.classList.add('dismissed');
 
-  fetch('<%= admin_dismiss_suggestion_path %>', {
+  fetch(adminSuggestedMergesPaths.dismiss, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-CSRF-Token': '<%= form_authenticity_token %>'
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
     },
     body: JSON.stringify({ type: type, source: source, target: target })
   })
@@ -142,3 +142,12 @@ function dismissSuggestion(type, source, target, btn) {
   .catch(function(e) { console.error(e); });
 }
 </script>
+
+<script data-cfasync="false">
+  window.adminSuggestedMergesPaths = {
+    apply: '<%= admin_apply_suggestion_path %>',
+    dismiss: '<%= admin_dismiss_suggestion_path %>'
+  };
+</script>
+
+<%= javascript_include_tag "admin_suggested_merges", "data-turbolinks-track" => "reload" %>
