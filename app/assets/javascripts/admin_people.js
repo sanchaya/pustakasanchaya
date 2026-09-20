@@ -219,8 +219,8 @@ function showModal(id) {
     }).catch(function(e){document.getElementById('mergeError').textContent='Error: '+e.message;document.getElementById('mergeError').classList.remove('d-none')}).finally(function(){setButtonLoading(btn, false);});
   }
 
-  function openMergeMultipleModal() {
-    console.log('openMergeMultipleModal called');
+  function openPeopleMergeMultipleModal() {
+    console.log('openPeopleMergeMultipleModal called');
     var names = getSelectedNames();
     console.log('Selected names:', names);
     var list = document.getElementById('mergeSourceList');
@@ -268,7 +268,7 @@ function showModal(id) {
   }
 
   // Expose functions needed by inline onclick handlers in the view
-  window.openMergeMultipleModal = openMergeMultipleModal;
+  window.openPeopleMergeMultipleModal = openPeopleMergeMultipleModal;
   window.submitMergeMultiple = submitMergeMultiple;
   window.submitRename = submitRename;
   window.findSimilarPeople = findSimilarPeople;
