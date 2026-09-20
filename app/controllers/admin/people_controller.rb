@@ -127,27 +127,40 @@ def merge_multiple
       return render json: { success: false, error: 'Source IDs and target name must be specified' }
     end
 
+    Rails.logger.info "[merge_multiple_people] Starting merge: target=#{target_name}, sources=#{source_ids.join(',')}"
+
     total = 0
-    Person.where(id: source_ids).each do |source|
-      next if source.name == target_name
-      
-      count = Book.where(author: source.name).update_all(
-        author: target_name, 
+    sources = Person.where(id: source_ids).where.not(name: target_name).to_a
+    Rails.logger.info "[merge_multiple_people] Found #{sources.length} source people"
+
+    # Batch update all books for all source names at once
+    source_names = sources.map(&:name)
+    
+    if source_names.any?
+      # Single query to update all matching author records
+      author_count = Book.where(author: source_names).update_all(
+        author: target_name,
         author_slug: SlugHelper.slug_for(target_name)
       )
-      # Also update translator field if it exists
-      Book.where(translator: source.name).update_all(
+      
+      # Single query to update all matching translator records
+      translator_count = Book.where(translator: source_names).update_all(
         translator: target_name
       )
-      total += count
-      source.destroy
+      
+      total = author_count + translator_count
+      
+      # Destroy all source people in one query
+      Person.where(id: source_ids).where.not(name: target_name).destroy_all
     end
+
     Book.bump_search_cache
     Book.invalidate_slug_cache! if total > 0
 
+    Rails.logger.info "[merge_multiple_people] Completed: merged=#{total}"
     render json: { success: true, merged_count: total }
   rescue StandardError => e
-    Rails.logger.error "Merge multiple people error: #{e.message}\n#{e.backtrace.join("\n")}"
+    Rails.logger.error "[merge_multiple_people] Error: #{e.message}\n#{e.backtrace.join("\n")}"
     render json: { success: false, error: e.message }, status: 500
   end
 
