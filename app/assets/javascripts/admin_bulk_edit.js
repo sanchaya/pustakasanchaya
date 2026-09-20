@@ -18,6 +18,88 @@
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
   }
 
+  function fetchWithTimeout(url, options, timeoutMs = 300000) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, timeoutMs);
+    options.signal = controller.signal;
+    return fetch(url, options).then(function(response) {
+      clearTimeout(timeoutId);
+      return response;
+    }).catch(function(error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out after 5 minutes. The operation may still be running on the server.');
+      }
+      throw error;
+    });
+  }
+
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
+  function showProgress(containerId, message) {
+    var container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><div class="mt-2">' + escapeHtml(message) + '</div></div>';
+    }
+  }
+
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
+  function fetchWithTimeout(url, options, timeoutMs = 300000) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, timeoutMs);
+    options.signal = controller.signal;
+    return fetch(url, options).then(function(response) {
+      clearTimeout(timeoutId);
+      return response;
+    }).catch(function(error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out after 5 minutes. The operation may still be running on the server.');
+      }
+      throw error;
+    });
+  }
+
+  function showProgress(containerId, message) {
+    var container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><div class="mt-2">' + escapeHtml(message) + '</div></div>';
+    }
+  }
+
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
   function previewChanges() {
     const fieldEl = document.getElementById('field');
     const findValueEl = document.getElementById('findValue');
@@ -36,9 +118,9 @@
     const container = document.getElementById('previewContainer');
     if (!container) return;
     
-    container.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+    showProgress('previewContainer', 'Searching for matching books...');
 
-    fetch(adminBulkEditPaths.preview, {
+    fetchWithTimeout(adminBulkEditPaths.preview, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,7 +132,7 @@
         replace_value: replaceValue,
         scope: scope
       })
-    })
+    }, 120000)
     .then(response => response.json())
     .then(data => {
       if (!data.success) {
@@ -128,9 +210,12 @@
     const container = document.getElementById('previewContainer');
     if (!container) return;
     
-    container.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Applying changes...</span></div></div>';
+    showProgress('previewContainer', 'Applying changes to all matching books... This may take several minutes.');
 
-    fetch(adminBulkEditPaths.apply, {
+    const btn = document.querySelector('.btn-warning');
+    setButtonLoading(btn, true);
+
+    fetchWithTimeout(adminBulkEditPaths.apply, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -142,7 +227,7 @@
         replace_value: replaceValue,
         scope: scope
       })
-    })
+    }, 300000)
     .then(response => response.json())
     .then(data => {
       if (!data.success) {
@@ -177,7 +262,8 @@
     })
     .catch(error => {
       container.innerHTML = '<div class="alert alert-danger">Error: ' + error + '</div>';
-    });
+    })
+    .finally(function() { setButtonLoading(btn, false); });
   }
 
   function escapeHtml(text) {
@@ -189,5 +275,40 @@
       "'": '&#039;'
     };
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+
+  function fetchWithTimeout(url, options, timeoutMs = 300000) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, timeoutMs);
+    options.signal = controller.signal;
+    return fetch(url, options).then(function(response) {
+      clearTimeout(timeoutId);
+      return response;
+    }).catch(function(error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out after 5 minutes. The operation may still be running on the server.');
+      }
+      throw error;
+    });
+  }
+
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
+  function showProgress(containerId, message) {
+    var container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><div class="mt-2">' + escapeHtml(message) + '</div></div>';
+    }
   }
 })();

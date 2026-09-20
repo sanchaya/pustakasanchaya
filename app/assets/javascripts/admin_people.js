@@ -84,11 +84,62 @@
 
   var adminPeoplePaths = window.AdminPeoplePaths || {};
 
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
+  function fetchWithTimeout(url, options, timeoutMs = 120000) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, timeoutMs);
+    options.signal = controller.signal;
+    return fetch(url, options).then(function(response) {
+      clearTimeout(timeoutId);
+      return response;
+    }).catch(function(error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out after ' + (timeoutMs/1000) + ' seconds. The operation may still be running on the server.');
+      }
+      throw error;
+    });
+  }
+
+  function showProgress(containerId, message) {
+    var container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><div class="mt-2">' + escapeHtml(message) + '</div></div>';
+    }
+  }
+
+  var adminPeoplePaths = window.AdminPeoplePaths || {};
+
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
   function submitRename() {
     var oldName = document.getElementById('renameOldName').value;
     var newName = document.getElementById('renameNewName').value.trim();
     if (!newName) { document.getElementById('renameError').textContent = 'Please enter a new name'; document.getElementById('renameError').classList.remove('d-none'); return; }
-    fetch(adminPeoplePaths.rename, {
+    var btn = document.querySelector('#renameModal button.btn-primary');
+    setButtonLoading(btn, true);
+    fetchWithTimeout(adminPeoplePaths.rename, {
       method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':document.querySelector('meta[name="csrf-token"]').content},
       body: JSON.stringify({ old_name: oldName, new_name: newName })
     }).then(function(r){return r.json()}).then(function(data){
@@ -99,13 +150,13 @@
       } else {
         document.getElementById('renameError').textContent = data.error; document.getElementById('renameError').classList.remove('d-none');
       }
-    }).catch(function(e){document.getElementById('renameError').textContent='Error: '+e.message;document.getElementById('renameError').classList.remove('d-none')});
+    }).catch(function(e){document.getElementById('renameError').textContent='Error: '+e.message;document.getElementById('renameError').classList.remove('d-none')}).finally(function(){setButtonLoading(btn, false);});
   }
 
   function findSimilarPeople() {
     var name = document.getElementById('mergeTargetName').value;
     if (!name || name.trim().length < 2) { document.getElementById('mergeSimilarList').innerHTML = ''; return; }
-    fetch(adminPeoplePaths.findSimilar + '?name=' + encodeURIComponent(name), {
+    fetchWithTimeout(adminPeoplePaths.findSimilar + '?name=' + encodeURIComponent(name), {
       headers: {'X-CSRF-Token':document.querySelector('meta[name="csrf-token"]').content}
     }).then(function(r){return r.json()}).then(function(data){
       var list = document.getElementById('mergeSimilarList');
@@ -123,7 +174,9 @@
     var newName = document.getElementById('mergeTargetName').value.trim();
     if (!newName) { document.getElementById('mergeError').textContent = 'Please enter target name'; document.getElementById('mergeError').classList.remove('d-none'); return; }
     if (oldName===newName) { document.getElementById('mergeError').textContent = 'Must be different names'; document.getElementById('mergeError').classList.remove('d-none'); return; }
-    fetch(adminPeoplePaths.merge, {
+    var btn = document.querySelector('#mergeModal button.btn-danger');
+    setButtonLoading(btn, true);
+    fetchWithTimeout(adminPeoplePaths.merge, {
       method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':document.querySelector('meta[name="csrf-token"]').content},
       body: JSON.stringify({ old_name: oldName, new_name: newName })
     }).then(function(r){return r.json()}).then(function(data){
@@ -134,7 +187,7 @@
       } else {
         document.getElementById('mergeError').textContent = data.error; document.getElementById('mergeError').classList.remove('d-none');
       }
-    }).catch(function(e){document.getElementById('mergeError').textContent='Error: '+e.message;document.getElementById('mergeError').classList.remove('d-none')});
+    }).catch(function(e){document.getElementById('mergeError').textContent='Error: '+e.message;document.getElementById('mergeError').classList.remove('d-none')}).finally(function(){setButtonLoading(btn, false);});
   }
 
   function openMergeMultipleModal() {
@@ -152,10 +205,14 @@
     var ids = Array.from(document.querySelectorAll('.select-item:checked')).map(function(cb){return cb.value;});
     var targetName = document.getElementById('mergeTargetNameMulti').value.trim();
     if (!targetName) { document.getElementById('mergeMultipleError').textContent = 'Enter target name'; document.getElementById('mergeMultipleError').classList.remove('d-none'); return; }
-    fetch(adminPeoplePaths.mergeMultiple, {
+    var btn = document.querySelector('#mergeMultipleModal button.btn-danger');
+    var progressContainer = document.getElementById('mergeMultipleProgress') || document.getElementById('mergeMultipleModal');
+    showProgress('mergeMultipleProgress', 'Merging ' + ids.length + ' people... This may take a moment.');
+    setButtonLoading(btn, true);
+    fetchWithTimeout(adminPeoplePaths.mergeMultiple, {
       method: 'POST', headers: {'Content-Type':'application/json','X-CSRF-Token':document.querySelector('meta[name="csrf-token"]').content},
       body: JSON.stringify({ source_ids: ids, target_name: targetName })
-    }).then(function(r){return r.json()}).then(function(data){
+    }, 300000).then(function(r){return r.json()}).then(function(data){
       if (data.success) {
         document.getElementById('mergeMultipleSuccess').textContent = 'Merged '+data.merged_count+' people!';
         document.getElementById('mergeMultipleSuccess').classList.remove('d-none');
@@ -163,7 +220,7 @@
       } else {
         document.getElementById('mergeMultipleError').textContent = data.error||'Failed'; document.getElementById('mergeMultipleError').classList.remove('d-none');
       }
-    }).catch(function(e){document.getElementById('mergeMultipleError').textContent='Error: '+e.message;document.getElementById('mergeMultipleError').classList.remove('d-none')});
+    }).catch(function(e){document.getElementById('mergeMultipleError').textContent='Error: '+e.message;document.getElementById('mergeMultipleError').classList.remove('d-none')}).finally(function(){setButtonLoading(btn, false);});
   }
 
   function escapeHtml(text) {

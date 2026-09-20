@@ -1,5 +1,40 @@
 // Admin Books page functionality
 (function() {
+  function fetchWithTimeout(url, options, timeoutMs = 300000) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, timeoutMs);
+    options.signal = controller.signal;
+    return fetch(url, options).then(function(response) {
+      clearTimeout(timeoutId);
+      return response;
+    }).catch(function(error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out after 5 minutes. The operation may still be running on the server.');
+      }
+      throw error;
+    });
+  }
+
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
+  function showProgress(containerId, message) {
+    var container = document.getElementById(containerId);
+    if (container) {
+      container.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><div class="mt-2">' + escapeHtml(message) + '</div></div>';
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', initBooksPage);
   document.addEventListener('turbolinks:load', initBooksPage);
 
@@ -68,6 +103,34 @@
     modal.show();
   }
 
+  function fetchWithTimeout(url, options, timeoutMs = 300000) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, timeoutMs);
+    options.signal = controller.signal;
+    return fetch(url, options).then(function(response) {
+      clearTimeout(timeoutId);
+      return response;
+    }).catch(function(error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out after 5 minutes. The operation may still be running on the server.');
+      }
+      throw error;
+    });
+  }
+
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.disabled = true;
+      btn.dataset.originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = btn.dataset.originalHtml || btn.innerHTML;
+    }
+  }
+
   function performBulkMerge() {
     const checked = document.querySelectorAll('.book-checkbox:checked');
     const sourceIds = Array.from(checked).map(cb => cb.value);
@@ -87,21 +150,19 @@
     }
 
     const btn = document.getElementById('confirmMergeBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Merging...';
+    setButtonLoading(btn, true);
 
-    fetch(adminBooksPaths.mergeMultiple, {
+    fetchWithTimeout(adminBooksPaths.mergeMultiple, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
       },
       body: JSON.stringify({ source_ids: sourceIds, target_id: targetId })
-    })
+    }, 300000)
     .then(response => response.json())
     .then(data => {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Merge Books';
+      setButtonLoading(btn, false);
       if (data.success) {
         alert(data.message);
         bootstrap.Modal.getInstance(document.getElementById('bulkMergeModal')).hide();
@@ -111,8 +172,7 @@
       }
     })
     .catch(error => {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Merge Books';
+      setButtonLoading(btn, false);
       alert('Error: ' + error.message);
     });
   }
