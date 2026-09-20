@@ -8,7 +8,7 @@ function initEditForm() {
 }
 
 var selectedPersonId = null;
-var bookId = window.AdminEditFormPaths?.bookId || null;
+var bookId = (window.AdminEditFormPaths && window.AdminEditFormPaths.bookId) || null;
 
 function toggleTranslationFields(checked) {
   var el = document.getElementById('translationFields');
@@ -16,7 +16,8 @@ function toggleTranslationFields(checked) {
 }
 
 function searchContributors() {
-  var q = document.getElementById('contributorSearchInput')?.value;
+  var qEl = document.getElementById('contributorSearchInput');
+  var q = qEl && qEl.value;
   if (!q || q.trim().length < 2) {
     var results = document.getElementById('contributorSearchResults');
     if (results) results.innerHTML = '';
@@ -59,7 +60,8 @@ function submitAddContributor() {
     }
     return;
   }
-  var role = document.getElementById('newContributorRole')?.value;
+  var roleEl = document.getElementById('newContributorRole');
+var role = roleEl && roleEl.value;
   fetch(adminEditFormPaths.addContribution.replace(':id', selectedPersonId), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content },
@@ -81,7 +83,8 @@ function submitAddContributor() {
 }
 
 function submitUpdateContributor(contribId) {
-  var role = document.getElementById('contribRole_' + contribId)?.value;
+  var roleEl = document.getElementById('contribRole_' + contribId);
+  var role = roleEl && roleEl.value;
   fetch(adminEditFormPaths.updateContribution.replace(':id', contribId), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content },

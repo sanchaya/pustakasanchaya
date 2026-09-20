@@ -18,10 +18,14 @@ function escapeHtml(text) {
 }
 
 function previewChanges() {
-  const field = document.getElementById('field')?.value;
-  const findValue = document.getElementById('findValue')?.value;
-  const replaceValue = document.getElementById('replaceValue')?.value;
-  const scope = document.getElementById('scope')?.value;
+  const fieldEl = document.getElementById('field');
+  const findValueEl = document.getElementById('findValue');
+  const replaceValueEl = document.getElementById('replaceValue');
+  const scopeEl = document.getElementById('scope');
+  const field = fieldEl && fieldEl.value;
+  const findValue = findValueEl && findValueEl.value;
+  const replaceValue = replaceValueEl && replaceValueEl.value;
+  const scope = scopeEl && scopeEl.value;
 
   if (!field || !findValue || !replaceValue) {
     alert('Please fill in all fields');
@@ -91,9 +95,12 @@ function previewChanges() {
 }
 
 function showWarning() {
-  const field = document.getElementById('field')?.value;
-  const findValue = document.getElementById('findValue')?.value;
-  const replaceValue = document.getElementById('replaceValue')?.value;
+  const fieldEl = document.getElementById('field');
+  const findValueEl = document.getElementById('findValue');
+  const replaceValueEl = document.getElementById('replaceValue');
+  const field = fieldEl && fieldEl.value;
+  const findValue = findValueEl && findValueEl.value;
+  const replaceValue = replaceValueEl && replaceValueEl.value;
 
   if (!field || !findValue || !replaceValue) {
     alert('Please fill in all fields and preview first');
@@ -108,10 +115,14 @@ function showWarning() {
 }
 
 function applyChanges() {
-  const field = document.getElementById('field')?.value;
-  const findValue = document.getElementById('findValue')?.value;
-  const replaceValue = document.getElementById('replaceValue')?.value;
-  const scope = document.getElementById('scope')?.value;
+  const fieldEl = document.getElementById('field');
+  const findValueEl = document.getElementById('findValue');
+  const replaceValueEl = document.getElementById('replaceValue');
+  const scopeEl = document.getElementById('scope');
+  const field = fieldEl && fieldEl.value;
+  const findValue = findValueEl && findValueEl.value;
+  const replaceValue = replaceValueEl && replaceValueEl.value;
+  const scope = scopeEl && scopeEl.value;
 
   const container = document.getElementById('previewContainer');
   if (!container) return;
